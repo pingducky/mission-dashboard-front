@@ -1,0 +1,157 @@
+$mixin-start: (
+        xss: 478.98px,
+        xs: 575px,
+        sm: 667px,
+        md: 768px,
+        lg: 992px,
+        lgx: 1024px,
+        xl: 1200px,
+        xxl: 1400px,
+        xxUltraXl: 1540px,
+        xxxl: 1600px,
+        xxBigScreen: 1800px,
+        xxLargeScreen: 2000px,
+        xxLargestScreen: 2200px,
+        xxGalacticScreen: 2300px
+);
+$mixin-breakpoints: (
+        xSpeS: 425px,
+        xss: 478.98px,
+        xc: 505px,
+        xs: 575px,
+        sm: 666.98px,
+        md: 767.98px,
+        lg: 991.98px,
+        lgx: 1023.98px,
+        xl: 1199.98px,
+        xxl: 1439.98px,
+        xxxl: 1599.98px,
+        xxBigScreen: 1799.98px,
+        xxLargeScreen: 1999.98px,
+        xxLargestScreen: 2199.98px,
+        xxGalacticScreen: 2299.98px
+);
+
+/* Permet d'écrire une seule fois la fonction et ne plus se prendre la tête ensuite sur le format*/
+/* Fonction permettant de définir automatiquement les tailles max des mixins*/
+@mixin mixinBreakpoints($breakpoint) {
+  @if map-has-key($mixin-breakpoints, $breakpoint) {
+    $value: map-get($mixin-breakpoints, $breakpoint);
+    @media (max-width: $value) {
+      @content
+    }
+  } @else {
+    @warn "Unknown `#{$breakpoint}` in $breakpoints";
+  }
+}
+
+@mixin mixinBeetween($breakpoint2, $breakpoint) {
+  @if map-has-key($mixin-breakpoints, $breakpoint) {
+    $value: map-get($mixin-breakpoints, $breakpoint);
+    $value2: map-get($mixin-breakpoints, $breakpoint2);
+    @media (min-width: $value2) and (max-width: $value) {
+      @content
+    }
+  } @else {
+    @warn "Unknown `#{$breakpoint}` in $breakpoints";
+  }
+}
+
+@mixin mixinStart($start) {
+  @if map_has_key($mixin-start, $start) {
+    $value: map_get($mixin-start, $start);
+    @media (min-width: $value) {
+      @content
+    }
+  }
+}
+
+@mixin flexbox {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+}
+
+@mixin flexWrap($arg) {
+  flex-wrap: $arg;
+  -webkit-flex-wrap: $arg;
+  -ms-flex-wrap: $arg;
+}
+
+@mixin transition($args...) {
+  -webkit-transition: $args;
+  -moz-transition: $args;
+  -ms-transition: $args;
+  -o-transition: $args;
+  transition: $args;
+}
+
+@mixin shadow($args...) {
+  box-shadow: $args;
+  -moz-box-shadow: $args;
+  -o-box-shadow: $args;
+  -webkit-box-shadow: $args;
+}
+
+@mixin noSelect() {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+@mixin keyframes($name) {
+  @keyframes #{$name}{
+    @content;
+  }
+  @-webkit-keyframes #{$name} {
+    @content;
+  }
+  @-moz-keyframes #{name} {
+    @content;
+  }
+}
+
+@mixin PoppinsRegular() {
+  font-family: var(--font-poppins);
+  font-weight: 400;
+}
+
+@mixin PoppinsMedium() {
+  font-family: var(--font-poppins);
+  font-weight: 500;
+}
+
+@mixin PoppinsSemiBold() {
+  font-family: var(--font-poppins);
+  font-weight: 700;
+}
+
+@mixin PoppinsBold() {
+  font-family: var(--font-poppins);
+  font-weight: 900;
+}
+
+@mixin PlayfairRegular() {
+  font-family: var(--font-playfair);
+  font-weight: 400;
+}
+
+@mixin PlayfairMedium() {
+  font-family: var(--font-playfair);
+  font-weight: 500;
+}
+
+@mixin PlayfairSemiBold() {
+  font-family: var(--font-playfair);
+  font-weight: 700;
+}
+
+@mixin PlayfairBold() {
+  font-family: var(--font-playfair);
+  font-weight: 900;
+}
