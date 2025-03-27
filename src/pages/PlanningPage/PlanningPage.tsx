@@ -1,5 +1,4 @@
-// STYLE
-import "../app/styles/global.scss";
+import "../../app/styles/global.scss";
 
 const PlanningPage: React.FC = () => {
     return (

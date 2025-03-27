@@ -1,5 +1,6 @@
-@import "colors";
-@import "mixins";
+@use "./colors" as*;
+@use "./mixins" as *;
+@use "./themes" as *;
 
 * {
     margin: 0;
@@ -15,16 +16,13 @@ body {
     font-weight: 400;
     position: relative;
     font-family: var(--font-poppins);
+    font-weight: var(--font-weight-regular);
+    font-size: var(--font-size-text); // Taille par défaut
 }
 
 main {
     margin-top: 75px;
 }
-
-a {
-    color: $blackText;
-}
-
 
 button,
 input,
@@ -43,29 +41,33 @@ textarea {
 }
 
 h1 {
-    font-size: 45px;
+    font-size: var(--font-size-h1);
 }
 
 h2 {
-    font-size: 20px;
+    font-size: var(--font-size-h2);
 }
 
 h3 {
-    font-size: 18px;
+    font-size: var(--font-size-h3);
+}
+
+h4 {
+    font-size: var(--font-size-h4);
 }
 
 // FONTS
 @font-face {
     font-family: 'Poppins';
     src: url('/src/assets/fonts/Poppins-Regular.ttf') format('truetype');
-    font-weight: 400;
+    font-weight: var(--font-weight-regular);
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Poppins';
     src: url('/src/assets/fonts/Poppins-Bold.ttf') format('truetype');
-    font-weight: 700;
+    font-weight: var(--font-weight-bold);
     font-style: normal;
 }
 

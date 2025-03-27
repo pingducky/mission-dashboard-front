@@ -1,2 +1,22 @@
-$greenMagnard : #46913A;
-$redMagnard : #FF6969;
+// Font Weights
+$font-weight-regular: 400;
+$font-weight-bold: 700;
+
+// Font Sizes
+$font-size-h1: 45px;
+$font-size-h2: 20px;
+$font-size-h3: 18px;
+$font-size-h4: 16px;
+$font-size-text: 12px;
+
+// Définition des variables CSS pour utilisation globale
+:root {
+  --font-weight-regular: #{$font-weight-regular};
+  --font-weight-bold: #{$font-weight-bold};
+
+  --font-size-h1: #{$font-size-h1};
+  --font-size-h2: #{$font-size-h2};
+  --font-size-h3: #{$font-size-h3};
+  --font-size-h4: #{$font-size-h4};
+  --font-size-text: #{$font-size-text};
+}

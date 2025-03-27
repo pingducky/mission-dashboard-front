@@ -135,23 +135,3 @@ $mixin-breakpoints: (
   font-family: var(--font-poppins);
   font-weight: 900;
 }
-
-@mixin PlayfairRegular() {
-  font-family: var(--font-playfair);
-  font-weight: 400;
-}
-
-@mixin PlayfairMedium() {
-  font-family: var(--font-playfair);
-  font-weight: 500;
-}
-
-@mixin PlayfairSemiBold() {
-  font-family: var(--font-playfair);
-  font-weight: 700;
-}
-
-@mixin PlayfairBold() {
-  font-family: var(--font-playfair);
-  font-weight: 900;
-}

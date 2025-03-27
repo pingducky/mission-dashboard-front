@@ -1,12 +1,9 @@
-// STYLE
 import "../../app/styles/global.scss";
 
-const DashboardPage: React.FC = () => {
-    return (
-        <div>
-            <p>Dashboard</p>
-        </div>
-    );
-  };
+const DashboardPage: React.FC = () => (
+    <div>
+        <p>Dashboard</p>
+    </div>
+);
   
 export default DashboardPage;
