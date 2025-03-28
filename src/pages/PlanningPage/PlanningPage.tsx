@@ -1,7 +1,9 @@
+import "../../app/styles/global.scss";
+
 const PlanningPage: React.FC = () => {
     return (
         <div>
-            <p>Planning page</p>
+            <h1>Planning page</h1>
         </div>
     );
   };
