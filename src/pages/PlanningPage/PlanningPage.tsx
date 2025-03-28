@@ -7,11 +7,10 @@ const PlanningPage: React.FC = () => {
         <div>
             <p>Planning page</p>
             <IconButton
-                fontSize="large"
-                disabled={false} // ou `true` pour désactiver
+                disabled={false}
                 onClick={() => console.log("Clicked!")}
             >
-                <EditIcon />
+                <EditIcon fontSize="large" /> {/* Ici, on met fontSize sur l'icône, pas le bouton */}
             </IconButton>
         </div>
     );

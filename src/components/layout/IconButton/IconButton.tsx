@@ -1,6 +1,6 @@
 import React from "react";
-import { IconButton as MUIButton } from "@mui/material";
-import { SxProps } from "@mui/system";
+import {IconButton as MUIButton} from "@mui/material";
+import {SxProps} from "@mui/system";
 
 interface IconButtonProps {
     icon: React.ReactNode; // L'icône passée en prop (ex: <DeleteIcon />)
