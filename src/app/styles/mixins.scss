@@ -117,21 +117,21 @@ $mixin-breakpoints: (
 }
 
 @mixin PoppinsRegular() {
-  font-family: var(--font-poppins);
-  font-weight: 400;
+  font-family: var(--font-family-poppins);
+  font-weight: var(--font-weight-regular);
 }
 
 @mixin PoppinsMedium() {
-  font-family: var(--font-poppins);
-  font-weight: 500;
+  font-family: var(--font-family-poppins);
+  font-weight: var(--font-weight-medium);
 }
 
 @mixin PoppinsSemiBold() {
-  font-family: var(--font-poppins);
-  font-weight: 700;
+  font-family: var(--font-family-poppins);
+  font-weight: var(--font-weight-semibold);
 }
 
 @mixin PoppinsBold() {
-  font-family: var(--font-poppins);
-  font-weight: 900;
+  font-family: var(--font-family-poppins);
+  font-weight: var(--font-weight-bold);
 }

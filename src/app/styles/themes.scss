@@ -1,6 +1,11 @@
+// Font Family
+$font-family-poppins: 'Poppins', sans-serif;
+
 // Font Weights
 $font-weight-regular: 400;
-$font-weight-bold: 700;
+$font-weight-medium: 500;
+$font-weight-semibold: 700;
+$font-weight-bold: 900;
 
 // Font Sizes
 $font-size-h1: 45px;
@@ -11,7 +16,11 @@ $font-size-text: 12px;
 
 // Définition des variables CSS pour utilisation globale
 :root {
+  --font-family-poppins: #{$font-family-poppins};
+
   --font-weight-regular: #{$font-weight-regular};
+  --font-weight-medium: #{$font-weight-medium};
+  --font-weight-semibold: #{$font-weight-semibold};
   --font-weight-bold: #{$font-weight-bold};
 
   --font-size-h1: #{$font-size-h1};
