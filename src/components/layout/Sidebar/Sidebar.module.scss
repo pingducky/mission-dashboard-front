@@ -1,5 +1,6 @@
-@import '../../../scss/colors';
-@import '../../../scss/mixins';
+@import '../../../app/styles/global';
+@import '../../../app/styles/colors';
+@import '../../../app/styles/mixins';
 
 .sidebarContainer {
   display: flex;
@@ -69,7 +70,7 @@
     top: 0;
     transition: transform 0.3s ease;
     height: 100%;
-    
+
     &.sidebarLeft {
       left: 0;
       transform: translateX(-100%); // Caché par défaut
