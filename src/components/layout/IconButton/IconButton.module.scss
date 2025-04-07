@@ -16,11 +16,6 @@
     display: flex;
   }
 
-  :global(.MuiButton-startIcon) {
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-  }
-
   &.disabled {
     filter: saturate(0.5);
     opacity: 0.8;

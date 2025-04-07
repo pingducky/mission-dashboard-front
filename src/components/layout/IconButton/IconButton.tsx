@@ -1,5 +1,4 @@
 import React from "react";
-// import {Button} from "@mui/material";
 import IconButtonStyle from "./IconButton.module.scss"
 
 // Interface pour les props du bouton
@@ -52,5 +51,4 @@ const IconButton: React.FC<IconButtonProps> = ({
         </button>
     );
 };
-
 export default IconButton;
