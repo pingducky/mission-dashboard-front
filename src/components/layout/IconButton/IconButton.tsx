@@ -1,52 +1,55 @@
 import React from "react";
-import {IconButton as MUIButton} from "@mui/material";
-import {SxProps} from "@mui/system";
+// import {Button} from "@mui/material";
+import IconButtonStyle from "./IconButton.module.scss"
 
+// Interface pour les props du bouton
 interface IconButtonProps {
-    icon: React.ReactNode; // L'icône passée en prop (ex: <DeleteIcon />)
-    fontSize?: "lg" | "md" | "sm"; // Taille de l'icône
-    color?: string; // Couleur du bouton
-    isActive?: boolean; // État actif du bouton
-    isDisabled?: boolean; // Désactive le bouton
-    onClick?: () => void; // Gestion des clics
-    className?: string; // Classe CSS supplémentaire
+    text: string; // Le texte du bouton
+    color?: string; // Couleur du texte
+    fontWeight?: "regular" | "medium" | "semibold" | "bold"; // Poids de la police
+    isActive?: boolean;
+    isDisabled?: boolean;
+    onClick?: () => void;
+    specialClass?: string;
+    startIcon?: React.ReactNode; // L'icône avant le texte
+    variant: "ghost" | "outlined" | "filled"; // Nouveau variant pour le bouton
+    buttonColor: "white" | "darkblue" | "blue" | "pink" | "black";
+    isRounded: boolean;
 }
 
-const fontSizeMap = {
-    lg: "var(--font-size-lg)",
-    md: "var(--font-size-md)",
-    sm: "var(--font-size-sm)",
-};
-
 const IconButton: React.FC<IconButtonProps> = ({
-                                                   icon,
-                                                   fontSize = "md",
-                                                   color = "var(--color-primary)",
+                                                   text,
+                                                   fontWeight = "Normal", // Valeur par défaut pour fontWeight
                                                    isActive = false,
                                                    isDisabled = false,
                                                    onClick,
-                                                   className = "",
+                                                   specialClass = "",
+                                                   startIcon, // L'icône passée en prop
+                                                   variant = "filled", // Valeur par défaut pour variant
+                                                   buttonColor = "blue",
+                                                   isRounded = true,// Valeur par défaut pour buttonColor
                                                }) => {
-    const styles: SxProps = {
-        fontSize: fontSizeMap[fontSize],
-        color: isActive ? "var(--color-secondary)" : color,
-        opacity: isDisabled ? 0.5 : 1,
-        cursor: isDisabled ? "not-allowed" : "pointer",
-        transition: "0.3s ease-in-out",
-        "&:hover": {
-            opacity: isDisabled ? 0.5 : 0.8,
-        },
-    };
+
+    // Classes dynamiques en fonction des props
+    const buttonClass = `${specialClass} ${IconButtonStyle.iconButtonContainer} 
+                          ${IconButtonStyle[variant]} 
+                          ${IconButtonStyle[buttonColor]} 
+                          ${isActive ? IconButtonStyle.active : ""} 
+                          ${isDisabled ? IconButtonStyle.disabled : ""} 
+                          ${IconButtonStyle[fontWeight]}
+                          ${isRounded ? IconButtonStyle.rounded : ""}`;
 
     return (
-        <MUIButton
-            sx={styles}
+        <button
+            className={buttonClass}
             disabled={isDisabled}
             onClick={isDisabled ? undefined : onClick}
-            className={className}
+            // startIcon={startIcon}
+            // sx={{color}} // Cette couleur pourrait aussi être gérée dans SCSS si tu veux
         >
-            {icon}
-        </MUIButton>
+            {startIcon && <span className={IconButtonStyle.iconBtn}>{startIcon}</span>}
+            {text}
+        </button>
     );
 };
 
