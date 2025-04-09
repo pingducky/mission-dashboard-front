@@ -1,0 +1,122 @@
+@use '../../app/styles/global.scss' as *;
+@use "../../app/styles/colors" as*;
+
+body {
+    background-color: #{$white};
+    height: 100vh;
+}
+.grid-container {
+    display: grid;
+    grid-template-columns: 60vw 40vw;
+    margin: auto 0 !important;
+    width: 100vw !important;
+    height: 100vh;
+    padding: 0 !important;
+    max-width: none !important;
+    h1 {
+        margin: 0 auto;
+        padding: 0;
+        font-size: var(--font-size-h1);
+        font-family: var(--font-weight-semi-bold);
+        color: #{$lightBlue};
+        margin-bottom: 10vh;
+        font-weight: bold;
+    }
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    input[type="text"] {
+        background-color: #{$grayBackground} !important;
+        width: 100%;
+    }
+    button {
+        width: 100%;
+        padding: 15px;
+        border-radius: 40px;
+        background-color: #{$lightBlue};
+        font-size: 18px;
+    }
+    a {
+        margin-left: auto;
+        margin-bottom: 30px;
+        text-decoration: unset;
+        color: #{$darkGray};
+        font-family: var(--font-weight-regular);
+        font-size: var(--font-size-text);
+
+        &:hover {
+            text-decoration: underline !important;
+        }
+    }
+}
+
+.login-form-container {
+    height: fit-content;
+    margin: auto;
+    width: 80%;
+}
+
+.title {
+    width: fit-content;
+    margin: 0 auto;
+}
+
+.link {
+    width: fit-content;
+}
+
+.text-field {
+    border: none !important;
+    width: 100%;
+    margin-bottom: 30px !important;
+}
+
+.register-container {
+    background-color: #{$lightBlue};
+}
+
+.register-block {
+    width: fit-content;
+    margin: 55% auto 0 auto;
+    transform: translateY(-50%);
+    h2, p {
+        color: #{$grayBackground};
+        text-align: center;
+    }
+    h2 {
+        margin: 0 auto 40px auto !important;
+        padding: 0;
+        font-size: 60px;
+        font-family: var(--font-weight-bold);
+        margin-bottom: 10vh;
+        font-weight: bold;
+    }
+    p {
+        margin: 0 auto;
+        padding: 0;
+        font-size: 25px;
+        font-family: var(--font-weight-regular);
+        margin-bottom: 10vh;
+        line-height: 185%;
+    }
+    a {
+        border-radius: 40px;
+        font-size: 25px;
+        padding: 20px 80px;
+        color: #{$white};
+        border-color: #{$white};
+        margin: 0 auto;
+        display: block;
+        width: fit-content;
+        text-align: center;
+    }
+    img {
+        filter: brightness(1);
+    }
+}
