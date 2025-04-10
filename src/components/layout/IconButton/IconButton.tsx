@@ -2,37 +2,71 @@ import React from "react";
 import styles from "./IconButton.module.scss";
 import clsx from "clsx";
 
+type fontWeight = "regular" | "medium" | "semibold" | "bold";
+type variant = "ghost" | "outlined" | "filled";
+type color = "white" | "darkblue" | "blue" | "pink" | "black" | "darkGray";
+
 interface IconButtonProps {
-  text: string; // Le texte du bouton
-  color?: string; // Couleur du texte
-  fontWeight?: "regular" | "medium" | "semibold" | "bold"; // Poids de la police
+  /**
+   * Texte affiché dans le bouton
+   */
+  text: string;
+  /**
+   * Épaisseur de la police (ex. : 'normal', 'bold', etc.)
+   */
+  fontWeight?: fontWeight;
+  /**
+   * Détermine si le bouton est actif (état visuel ou fonctionnel)
+   */
   isActive?: boolean;
+  /**
+   * Désactive le bouton s'il est défini sur true
+   */
   isDisabled?: boolean;
-  onClick?: () => void;
+  /**
+   * Classe CSS supplémentaire à appliquer au bouton
+   */
   specialClass?: string;
+  /**
+   * Icône affichée avant le texte (au début du bouton)
+   */
   startIcon?: React.ReactNode;
-  variant: "ghost" | "outlined" | "filled";
-  buttonColor: "white" | "darkblue" | "blue" | "pink" | "black";
+  /**
+   * Variante de style du bouton (ex. : 'outlined', 'contained', etc.)
+   */
+  variant: variant;
+  /**
+   * Couleur principale du bouton (ex. : 'primary', 'secondary', etc.)
+   */
+  color?: color;
+  /**
+   * Si true, rend les bords du bouton arrondis
+   */
   isRounded: boolean;
+  /**
+   * Fonction appelée lors du clic sur le bouton
+   */
+  onClick?: () => void;
 }
+
 
 const IconButton: React.FC<IconButtonProps> = ({
   text,
-  fontWeight = "Normal",
+  fontWeight = "regular",
   isActive = false,
   isDisabled = false,
-  onClick,
-  specialClass = "",
+  specialClass,
   startIcon,
   variant = "filled",
-  buttonColor = "blue",
+  color  = "blue",
   isRounded = true,
+  onClick,
 }) => {
   const buttonClass = clsx(
     specialClass,
     styles.iconButtonContainer,
     styles[variant],
-    styles[buttonColor],
+    styles[color],
     styles[fontWeight],
     {
       [styles.active]: isActive,
@@ -47,9 +81,14 @@ const IconButton: React.FC<IconButtonProps> = ({
       disabled={isDisabled}
       onClick={isDisabled ? undefined : onClick}
     >
-      {startIcon && <span className={styles.iconBtn}>{startIcon}</span>}
+      {
+        startIcon && <span className={styles.iconBtn}>
+            {startIcon}
+          </span>
+        }
       {text}
     </button>
   );
 };
+
 export default IconButton;

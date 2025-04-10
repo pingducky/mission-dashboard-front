@@ -14,8 +14,8 @@ const PlanningPage: React.FC = () => {
         onClick={() => console.log("Planning clicked!")}
         specialClass={styles.specialButton}
         isDisabled={false}
-        variant={"filled"}
-        buttonColor={"blue"}
+        variant={"ghost"}
+        color={"darkGray"}
         isRounded={false}
       />
     </div>

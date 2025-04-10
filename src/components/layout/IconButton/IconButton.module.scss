@@ -1,6 +1,6 @@
-@use "../../../app/styles/colors"as*;
-@use "../../../app/styles/mixins"as *;
-@use "../../../app/styles/themes"as *;
+@use "../../../app/styles/colors" as*;
+@use "../../../app/styles/mixins" as *;
+@use "../../../app/styles/themes" as *;
 
 .iconButtonContainer {
   display: flex;
@@ -93,6 +93,16 @@
         color: $white;
       }
     }
+
+    &.darkGray {
+      background-color: $darkGray;
+      color: $white;
+
+      &:hover {
+        background-color: $white;
+        color: $darkGray;
+      }
+    }
   }
 
   &.outlined {
@@ -150,6 +160,11 @@
         color: $black;
       }
     }
+
+    &.darkGray {
+      border-color: $darkGray;
+      color: $darkGray;
+    }
   }
 
   &.ghost {
@@ -176,6 +191,10 @@
 
     &.white {
       color: $white;
+    }
+
+    &.darkGray {
+      color: $darkGray;
     }
   }
 }
