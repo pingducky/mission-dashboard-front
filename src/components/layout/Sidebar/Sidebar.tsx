@@ -10,10 +10,10 @@ import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeftOutlined";
 import ChevronRightIcon from "@mui/icons-material/ChevronRightOutlined";
-
-import styles from "./Sidebar.module.scss";
 import { Drawer } from "@mui/material";
 import IconButton from "../IconButton/IconButton";
+
+import styles from "./Sidebar.module.scss";
 
 const Sidebar: React.FC = () => {
   const [open, setOpen] = useState(true);

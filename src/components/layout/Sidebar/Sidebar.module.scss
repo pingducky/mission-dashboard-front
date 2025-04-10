@@ -2,7 +2,6 @@
 @use '../../../app/styles/colors'as *;
 @use '../../../app/styles/mixins'as *;
 
-
 $drawerWidth: 240px;
 $drawerClosedWidth: 60px;
 
@@ -49,7 +48,7 @@ $drawerClosedWidth: 60px;
   top: 50%;
   right: 0;
   transform: translateY(-50%);
-  background-color: #f6f7fb;
+  background-color: $blueBackground;
   border: none;
   border-radius: 20px 0 0 20px;
   width: 28px;
@@ -61,7 +60,7 @@ $drawerClosedWidth: 60px;
   z-index: 10;
 
   svg {
-    color: #6f6fdd;
+    color: $darkBlue;
     font-size: 20px;
   }
 }
@@ -85,8 +84,6 @@ $drawerClosedWidth: 60px;
     display: flex;
     justify-content: center;
   }
-
-  .profilSidebar {}
 }
 
 .iconButtonListParent {
