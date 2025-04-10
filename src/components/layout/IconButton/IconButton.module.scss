@@ -1,0 +1,200 @@
+@use "../../../app/styles/colors" as*;
+@use "../../../app/styles/mixins" as *;
+@use "../../../app/styles/themes" as *;
+
+.iconButtonContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+
+  .iconBtn {
+    display: flex;
+  }
+
+  &.disabled {
+    filter: saturate(0.5);
+    opacity: 0.8;
+    cursor: not-allowed;
+  }
+
+  &.rounded {
+    border-radius: 50px;
+  }
+
+  // Styles dynamiques
+  &.regular {
+    font-weight: var(--font-weight-regular);
+  }
+
+  &.medium {
+    font-weight: var(--font-weight-medium);
+  }
+
+  &.semibold {
+    font-weight: var(--font-weight-semibold);
+  }
+
+  &.bold {
+    font-weight: var(--font-weight-bold);
+  }
+
+  // Gestion des variants
+  &.filled {
+    border: none;
+    color: $white;
+    transition: background-color 0.2s ease-in-out;
+
+    &.blue {
+      background-color: $blue;
+
+      &:hover {
+        background-color: $white;
+        color: $blue;
+      }
+    }
+
+    &.darkblue {
+      background-color: $darkBlue;
+
+      &:hover {
+        background-color: $white;
+        color: $darkBlue;
+      }
+    }
+
+    &.pink {
+      background-color: $pink;
+
+      &:hover {
+        background-color: $white;
+        color: $pink;
+      }
+    }
+
+    &.black {
+      background-color: $black;
+
+      &:hover {
+        background-color: $white;
+        color: $black;
+      }
+    }
+
+    &.white {
+      background-color: $white;
+      color: $black;
+
+      &:hover {
+        background-color: $black;
+        color: $white;
+      }
+    }
+
+    &.darkGray {
+      background-color: $darkGray;
+      color: $white;
+
+      &:hover {
+        background-color: $white;
+        color: $darkGray;
+      }
+    }
+  }
+
+  &.outlined {
+    border: 1px solid;
+    background-color: transparent;
+    color: var(--color-primary);
+    transition: background-color 0.2s ease-in-out;
+
+    &.blue {
+      border-color: $blue;
+      color: $blue;
+
+      &:hover {
+        background-color: $blue;
+        color: $white;
+      }
+    }
+
+    &.darkblue {
+      border-color: $darkBlue;
+      color: $darkBlue;
+
+      &:hover {
+        background-color: $darkBlue;
+        color: $white;
+      }
+    }
+
+    &.pink {
+      border-color: $pink;
+      color: $pink;
+
+      &:hover {
+        background-color: $pink;
+        color: $white;
+      }
+    }
+
+    &.black {
+      border-color: $black;
+      color: $black;
+
+      &:hover {
+        background-color: $black;
+        color: $white;
+      }
+    }
+
+    &.white {
+      border-color: $white;
+      color: $white;
+
+      &:hover {
+        background-color: $white;
+        color: $black;
+      }
+    }
+
+    &.darkGray {
+      border-color: $darkGray;
+      color: $darkGray;
+    }
+  }
+
+  &.ghost {
+    background-color: transparent;
+    border: none;
+    color: var(--color-primary);
+    transition: background-color 0.2s ease-in-out;
+
+    &.blue {
+      color: $blue;
+    }
+
+    &.darkblue {
+      color: $darkBlue;
+    }
+
+    &.pink {
+      color: $pink;
+    }
+
+    &.black {
+      color: $black;
+    }
+
+    &.white {
+      color: $white;
+    }
+
+    &.darkGray {
+      color: $darkGray;
+    }
+  }
+}
