@@ -1,3 +1,5 @@
-.h1 {
-  @include PoppinsRegular();
+:global { // pour eviter le important / priorité
+  .iconButtonContainer {
+    background-color: red;
+  }
 }
