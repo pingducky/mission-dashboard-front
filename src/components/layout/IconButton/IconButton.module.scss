@@ -15,6 +15,11 @@
     display: flex;
   }
 
+  .iconText {
+    transition: all 0.3s ease;
+  }
+  
+
   &.disabled {
     filter: saturate(0.5);
     opacity: 0.8;
