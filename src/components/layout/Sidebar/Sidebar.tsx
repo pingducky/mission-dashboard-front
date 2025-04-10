@@ -1,24 +1,17 @@
 import React, { useState } from "react";
 import clsx from "clsx";
-import {
-  Drawer,
-  IconButton,
-  Button,
-} from "@mui/material";
-// import MenuIcon from "@mui/icons-material/Menu";
-// import { Link } from "react-router-dom";
+
 import LogoCClean53 from "../../../assets/images/LogoCClean53.png";
-// import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
-// import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-// import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-// import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
-// import ListAltOutlinedIcon from '@mui/icons-material/ListAltOutlined';
-// import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
-// import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
-// import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
+import GroupIcon from '@mui/icons-material/Group';
+import ListAltIcon from '@mui/icons-material/ListAlt';
+import ShowChartIcon from '@mui/icons-material/ShowChart';
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 import styles from "./Sidebar.module.scss";
-
+import { Button, Drawer } from "@mui/material";
 const Sidebar: React.FC = () => {
   const [open, setOpen] = useState(true);
 
@@ -44,9 +37,9 @@ const Sidebar: React.FC = () => {
       >
         {/* Bouton centré verticalement à droite */}
         <div className={styles.toggleButton}>
-          <IconButton onClick={toggleDrawer} className={styles.toggleButton}>
+          {/* <IconButton onClick={toggleDrawer} className={styles.toggleButton}>
             {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-          </IconButton>
+          </IconButton> */}
         </div>
 
         <div
@@ -86,34 +79,40 @@ const Sidebar: React.FC = () => {
               </Button>
               <Button
                 variant="outlined"
-                startIcon={<CalendarMonthOutlinedIcon />}
+                startIcon={<GroupIcon />}
               >
                 Delete
               </Button>
               <Button
                 variant="outlined"
-                startIcon={<CalendarMonthOutlinedIcon />}
+                startIcon={<ListAltIcon />}
+              >
+                Delete
+              </Button>
+              <Button
+                variant="outlined"
+                startIcon={<ShowChartIcon />}
               >
                 Delete
               </Button>
             </div>
             {/* <hr/> */}
             <div className={styles.iconButtonList}>
-              <Button
+            <Button
                 variant="outlined"
-                startIcon={<CalendarMonthOutlinedIcon />}
+                startIcon={<NotificationsNoneIcon />}
               >
                 Delete
               </Button>
               <Button
                 variant="outlined"
-                startIcon={<CalendarMonthOutlinedIcon />}
+                startIcon={<PersonOutlineIcon />}
               >
                 Delete
               </Button>
               <Button
                 variant="outlined"
-                startIcon={<CalendarMonthOutlinedIcon />}
+                startIcon={<LogoutIcon />}
               >
                 Delete
               </Button>
