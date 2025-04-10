@@ -64,7 +64,7 @@ const Sidebar: React.FC = () => {
               <IconButton
                 startIcon={<CalendarMonthOutlinedIcon />}
                 text="Planning"
-                fontWeight="regular"
+                fontWeight="bold"
                 onClick={() => console.log("Planning clicked!")}
                 specialClass={styles.specialButton}
                 isDisabled={false}
@@ -76,7 +76,7 @@ const Sidebar: React.FC = () => {
               <IconButton
                 startIcon={<GroupIcon />}
                 text="Salarié"
-                fontWeight="regular"
+                fontWeight="medium"
                 onClick={() => console.log("Planning clicked!")}
                 specialClass={styles.specialButton}
                 isDisabled={false}
