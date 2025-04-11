@@ -2,10 +2,10 @@ import * as React from "react";
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
-import styles from "./LoginForm.module.scss";
 import { userAuthentication } from "../../hooks/userAuthentication";
 import { useNavigate } from "react-router-dom";
 import Button from '@mui/material/Button';
+import styles from "./LoginForm.module.scss";
 
 function LoginForm()  {
     const [email, setEmail] = React.useState("");
@@ -22,24 +22,23 @@ function LoginForm()  {
     }
 
     return (
-        <Box className={styles["login-form-container"]}>
+        <Box className={styles.login_form_container}>
             <h1>Connexion</h1>
             <Box
                 component="form"
-                className={styles["login-form"]}
+                className={styles.login_form}
                 method="post"
             >
                 <TextField
-                    className={styles["text-field"]}
+                    className={styles.text_field}
                     id="email"
                     label="Adresse email"
                     variant="outlined"
                     onChange={(e) => setEmail(e.target.value)}
-                    
                 />
 
                 <TextField
-                    className={styles["text-field"]}
+                    className={styles.text_field}
                     id="password"
                     label="Mot de passe"
                     variant="outlined"
@@ -47,7 +46,7 @@ function LoginForm()  {
                     onChange={(e) => setPassword(e.target.value)}
                 />
 
-                <Link className={styles["link"]} href="/password-reset">
+                <Link className={styles.link} href="/password-reset">
                     Mot de passe oublié ?
                 </Link>
 

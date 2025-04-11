@@ -5,7 +5,7 @@ body {
     background-color: #{$white};
     height: 100vh;
 }
-.grid-container {
+.grid_container {
     background-color: #{$white};
     display: grid;
     grid-template-columns: 60vw 40vw;
@@ -15,11 +15,12 @@ body {
     padding: 0 !important;
     max-width: none !important;
 
-    .register-container {
+    .register_container {
         position: relative;
-        background-image: url("../../assets/images/Rectangle 73.png");
+        background-image: url("../../assets/images/illustration_menage_login_page.png");
         background-size: cover;
         background-blend-mode: overlay;
+
         &::before {
             content: "";
             position: absolute;
@@ -30,20 +31,23 @@ body {
             background-color: #{$lightBlue};
             opacity: 0.9;
         }
+
         img {
             filter: brightness(1);
             width: clamp(80px, 15vw, 200px);
         }
     }
     
-    .register-block {
+    .register_block {
         width: fit-content;
         margin: 55% auto 0 auto;
         transform: translateY(-50%);
+
         h2, p {
             color: #{$grayBackground};
             text-align: center;
         }
+
         h2 {
             margin: 0 auto 40px auto !important;
             padding: 0;
@@ -52,6 +56,7 @@ body {
             margin-bottom: 10vh;
             font-weight: bold;
         }
+
         p {
             margin: 0 auto;
             padding: 0;
@@ -60,6 +65,7 @@ body {
             margin-bottom: 10vh;
             line-height: 185%;
         }
+
         a {
             border-radius: 40px;
             font-size: 25px;

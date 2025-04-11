@@ -1,7 +1,7 @@
 @use '../../app/styles/global.scss' as *;
-@use "../../app/styles/colors" as*;
+@use "../../app/styles/colors" as *;
 
-.login-form-container {
+.login_form_container {
     height: fit-content;
     margin: auto;
     width: 80%;
@@ -17,17 +17,19 @@
         width: fit-content;
     }
 
-    .login-form {
+    .login_form {
         display: flex;
         flex-direction: column;
         width: 80%;
         align-items: center;
         justify-content: center;
         margin: 0 auto;
+
         input[type="text"], input[type="password"] {
             background-color: #{$grayBackground} !important;
             width: 100%;
         }
+
         button {
             width: 100%;
             padding: 15px;
@@ -35,6 +37,7 @@
             background-color: #{$lightBlue};
             font-size: 18px;
         }
+
         a {
             margin-left: auto;
             margin-bottom: 30px;
@@ -48,7 +51,7 @@
             }
         }
     
-        .text-field {
+        .text_field {
             border: none !important;
             width: 100%;
             margin-bottom: 30px !important;

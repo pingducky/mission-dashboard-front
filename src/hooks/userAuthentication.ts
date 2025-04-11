@@ -15,5 +15,4 @@ export const userAuthentication = async (email: string, password: string) => {
     }).catch(error => {
         throw error;
     });
-
 }
