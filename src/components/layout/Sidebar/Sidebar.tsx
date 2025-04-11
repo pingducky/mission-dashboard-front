@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import clsx from "clsx";
 
 import LogoCClean53 from "../../../assets/images/LogoCClean53.png";
+import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import GroupIcon from "@mui/icons-material/Group";
 import ListAltIcon from "@mui/icons-material/ListAlt";
@@ -12,10 +13,16 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeftOutlined";
 import ChevronRightIcon from "@mui/icons-material/ChevronRightOutlined";
 import { Drawer } from "@mui/material";
 import IconButton from "../IconButton/IconButton";
-
 import styles from "./Sidebar.module.scss";
 
-const Sidebar: React.FC = () => {
+interface SidebarProps {
+  /**
+   * Props pour gérer les clicks
+   */
+  onMenuClick: (page: string) => void;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ onMenuClick }) => {
   const [open, setOpen] = useState(true);
 
   const toggleDrawer = () => {
@@ -34,6 +41,12 @@ const Sidebar: React.FC = () => {
           open ? styles.drawerOpen : styles.drawerClosed
         )}
         data-isVisible={open}
+        sx={{
+          '& .MuiDrawer-paper': {
+            position: 'relative',
+            height: '100vh',
+          }
+        }}
         classes={{
           paper: clsx(open ? styles.drawerOpen : styles.drawerClosed),
         }}
@@ -44,8 +57,7 @@ const Sidebar: React.FC = () => {
 
         <div
           role="presentation"
-          onClick={toggleDrawer}
-          onKeyDown={toggleDrawer}
+
           className={styles.sidebarContainer}
         >
           <div className={styles.logoSidebar}>
@@ -62,10 +74,22 @@ const Sidebar: React.FC = () => {
             <div className={styles.iconButtonList}>
               <hr />
               <IconButton
+                startIcon={<HomeOutlinedIcon />}
+                text="Tableau de bord"
+                fontWeight="regular"
+                onClick={() => onMenuClick("dashboard")}
+                specialClass={styles.specialButton}
+                isDisabled={false}
+                variant={"ghost"}
+                color={"darkGray"}
+                isRounded={false}
+              />
+
+              <IconButton
                 startIcon={<CalendarMonthOutlinedIcon />}
                 text="Planning"
                 fontWeight="regular"
-                onClick={() => console.log("Planning clicked!")}
+                onClick={() => onMenuClick("planning")}
                 specialClass={styles.specialButton}
                 isDisabled={false}
                 variant={"ghost"}
@@ -77,7 +101,7 @@ const Sidebar: React.FC = () => {
                 startIcon={<GroupIcon />}
                 text="Salarié"
                 fontWeight="regular"
-                onClick={() => console.log("Planning clicked!")}
+                onClick={() => onMenuClick("salarie")}
                 specialClass={styles.specialButton}
                 isDisabled={false}
                 variant={"ghost"}
@@ -89,7 +113,7 @@ const Sidebar: React.FC = () => {
                 startIcon={<ListAltIcon />}
                 text="Liste missions"
                 fontWeight="regular"
-                onClick={() => console.log("Planning clicked!")}
+                onClick={() => onMenuClick("missions")}
                 specialClass={styles.specialButton}
                 isDisabled={false}
                 variant={"ghost"}
@@ -104,7 +128,7 @@ const Sidebar: React.FC = () => {
                 startIcon={<NotificationsNoneIcon />}
                 text="Notifications"
                 fontWeight="regular"
-                onClick={() => console.log("Planning clicked!")}
+                onClick={() => onMenuClick("notifications")}
                 specialClass={styles.specialButton}
                 isDisabled={false}
                 variant={"ghost"}
@@ -116,7 +140,7 @@ const Sidebar: React.FC = () => {
                 startIcon={<PersonOutlineIcon />}
                 text="Compte"
                 fontWeight="regular"
-                onClick={() => console.log("Planning clicked!")}
+                onClick={() => onMenuClick("compte")}
                 specialClass={styles.specialButton}
                 isDisabled={false}
                 variant={"ghost"}
@@ -128,7 +152,7 @@ const Sidebar: React.FC = () => {
                 startIcon={<LogoutIcon />}
                 text="Se déconnecter"
                 fontWeight="regular"
-                onClick={() => console.log("Planning clicked!")}
+                onClick={() => onMenuClick("logout")}
                 specialClass={styles.specialButton}
                 isDisabled={false}
                 variant={"ghost"}

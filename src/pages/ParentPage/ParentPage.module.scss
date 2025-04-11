@@ -1,0 +1,13 @@
+.parentContainer {
+    display: flex;
+
+    .content {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+
+        .subPage {
+            padding: 20px;
+        }
+    }
+}

@@ -5,6 +5,7 @@
 $drawerWidth: 240px;
 $drawerClosedWidth: 60px;
 
+
 .drawer {
   white-space: nowrap;
   overflow-x: hidden;
@@ -113,4 +114,9 @@ $drawerClosedWidth: 60px;
       }
     }
   }
+}
+
+.MuiDrawer-paper {
+  position: relative;
+  height: 100vh;
 }
