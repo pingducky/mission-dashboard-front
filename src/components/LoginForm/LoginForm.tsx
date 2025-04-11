@@ -15,7 +15,6 @@ function LoginForm()  {
     const handleLogin = async() => {
         const data = await userAuthentication(email, password);
         if (data && data.token) {
-            console.log("Login successful", data);
             localStorage.setItem("token", data.token);
             navigate("/");
         }
