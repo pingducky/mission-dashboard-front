@@ -38,11 +38,12 @@
       transition: background-color 0.2s ease-in-out;
     }
 
-    &:hover, &.active {
-
+    &:hover,
+    &.active {
       .label {
         color: $darkBlue;
       }
+
       .badge {
         background-color: #d5d1ff;
       }
@@ -67,10 +68,7 @@
     height: 100%;
     gap: 10px;
 
-    // padding: 10px;
-
     .filterTab {
-      // flex: 1 1 45%;
       justify-content: center;
       padding: 10px 0;
       width: 100%;
