@@ -30,6 +30,15 @@ $drawerClosedWidth: 60px;
   }
 
   &[data-isVisible="false"] {
+
+    // Responsive pour mobile
+    @include mixinBreakpoints(xs) {
+      .toggleButton {
+        top: 10%;
+      }
+
+    }
+
     .sidebarContainer {
       align-items: initial;
 
@@ -73,12 +82,12 @@ $drawerClosedWidth: 60px;
 
 
 .sidebarContainer {
-  // padding: 30px;
   display: flex;
   flex-direction: column;
   height: 100%;
   gap: 15px;
   padding: 30px 0;
+  box-sizing: border-box;
 
   hr {
     margin: 15px 0;
@@ -124,7 +133,8 @@ $drawerClosedWidth: 60px;
       justify-content: flex-start;
       transition: .15s ease-in-out;
 
-      &:hover {
+      &:hover,
+      &.active {
         border-left: solid 2px $darkBlue;
         background-color: $blueBackground;
         color: $darkBlue;

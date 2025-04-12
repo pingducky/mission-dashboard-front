@@ -22,6 +22,13 @@ const Sidebar: React.FC = () => {
     setOpen(!open);
   };
 
+  const [activeButton, setActiveButton] = useState<string>("");
+
+  const handleClick = (buttonName: string) => {
+    setActiveButton(buttonName);
+    console.log(`${buttonName} clicked!`);
+  };
+
   return (
     <>
       <Drawer
@@ -44,8 +51,8 @@ const Sidebar: React.FC = () => {
 
         <div
           role="presentation"
-          onClick={toggleDrawer}
-          onKeyDown={toggleDrawer}
+          // onClick={toggleDrawer}
+          // onKeyDown={toggleDrawer}
           className={styles.sidebarContainer}
         >
           <div className={styles.logoSidebar}>
@@ -58,15 +65,16 @@ const Sidebar: React.FC = () => {
           </div>
 
           <div className={styles.iconButtonListParent}>
-            
             <div className={styles.iconButtonList}>
               <hr />
               <IconButton
                 startIcon={<CalendarMonthOutlinedIcon />}
                 text="Planning"
                 fontWeight="bold"
-                onClick={() => console.log("Planning clicked!")}
-                specialClass={styles.specialButton}
+                onClick={() => handleClick("planning")}
+                specialClass={clsx(styles.specialButton, {
+                  [styles.active]: activeButton === "planning",
+                })}
                 isDisabled={false}
                 variant={"ghost"}
                 color={"darkGray"}
@@ -77,8 +85,10 @@ const Sidebar: React.FC = () => {
                 startIcon={<GroupIcon />}
                 text="Salarié"
                 fontWeight="medium"
-                onClick={() => console.log("Planning clicked!")}
-                specialClass={styles.specialButton}
+                onClick={() => handleClick("employees")}
+                specialClass={clsx(styles.specialButton, {
+                  [styles.active]: activeButton === "employees",
+                })}
                 isDisabled={false}
                 variant={"ghost"}
                 color={"darkGray"}
@@ -89,8 +99,10 @@ const Sidebar: React.FC = () => {
                 startIcon={<ListAltIcon />}
                 text="Liste missions"
                 fontWeight="regular"
-                onClick={() => console.log("Planning clicked!")}
-                specialClass={styles.specialButton}
+                onClick={() => handleClick("ListMissions")}
+                specialClass={clsx(styles.specialButton, {
+                  [styles.active]: activeButton === "ListMissions",
+                })}
                 isDisabled={false}
                 variant={"ghost"}
                 color={"darkGray"}
@@ -104,8 +116,10 @@ const Sidebar: React.FC = () => {
                 startIcon={<NotificationsNoneIcon />}
                 text="Notifications"
                 fontWeight="regular"
-                onClick={() => console.log("Planning clicked!")}
-                specialClass={styles.specialButton}
+                onClick={() => handleClick("notifications")}
+                specialClass={clsx(styles.specialButton, {
+                  [styles.active]: activeButton === "notifications",
+                })}
                 isDisabled={false}
                 variant={"ghost"}
                 color={"darkGray"}
@@ -116,8 +130,10 @@ const Sidebar: React.FC = () => {
                 startIcon={<PersonOutlineIcon />}
                 text="Compte"
                 fontWeight="regular"
-                onClick={() => console.log("Planning clicked!")}
-                specialClass={styles.specialButton}
+                onClick={() => handleClick("compte")}
+                specialClass={clsx(styles.specialButton, {
+                  [styles.active]: activeButton === "compte",
+                })}
                 isDisabled={false}
                 variant={"ghost"}
                 color={"darkGray"}
@@ -128,8 +144,10 @@ const Sidebar: React.FC = () => {
                 startIcon={<LogoutIcon />}
                 text="Se déconnecter"
                 fontWeight="regular"
-                onClick={() => console.log("Planning clicked!")}
-                specialClass={styles.specialButton}
+                onClick={() => handleClick("deconnexion")}
+                specialClass={clsx(styles.specialButton, {
+                  [styles.active]: activeButton === "deconnexion",
+                })}
                 isDisabled={false}
                 variant={"ghost"}
                 color={"darkGray"}
