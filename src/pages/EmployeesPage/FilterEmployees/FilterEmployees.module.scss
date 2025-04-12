@@ -1,59 +1,79 @@
-.filter-employees {
+@use '../../../app/styles/global'as *;
+@use '../../../app/styles/colors'as *;
+@use '../../../app/styles/mixins'as *;
+
+.filterEmployeesContainer {
+  display: flex;
+  gap: 2rem;
+  height: 50px;
+  background-color: $lightGray;
+  border-radius: 8px;
+  align-items: center;
+  font-family: 'Inter', sans-serif;
+  padding: 0 20px;
+
+  .filterTab {
+    position: relative;
     display: flex;
-    gap: 1.5rem;
-    padding: 1rem;
-    background-color: #f7f8fc;
-    border-radius: 8px;
     align-items: center;
-    font-family: 'Inter', sans-serif;
-  
-    .filter-tab {
-      position: relative;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: #6b6b6b;
-      cursor: pointer;
-      font-weight: 500;
-      padding: 0.25rem 0;
-      transition: color 0.2s ease;
-  
+    gap: 0.5rem;
+    cursor: pointer;
+    font-weight: 500;
+    height: 100%;
+    transition: color 0.2s ease-in-out;
+    background-color: transparent;
+
+    .label {
+      font-weight: var(--font-weight-semibold);
+      color: $darkGray;
+    }
+
+    .badge {
+      background-color: $pastelGrayBlue;
+      color: $darkBlue;
+      border-radius: 8px;
+      padding: 0.1rem 0.5rem;
+      font-size: 0.75rem;
+      font-weight: var(--font-weight-bold);
+      transition: background-color 0.2s ease-in-out;
+    }
+
+    &:hover, &.active {
+
+      .label {
+        color: $darkBlue;
+      }
       .badge {
-        background-color: #edeaff;
-        color: #5d3eff;
-        border-radius: 8px;
-        padding: 0.1rem 0.5rem;
-        font-size: 0.75rem;
-        font-weight: 600;
-        transition: background-color 0.2s ease;
-      }
-  
-      &:hover {
-        color: #3d3d3d;
-  
-        .badge {
-          background-color: #d5d1ff;
-        }
-      }
-  
-      .underline {
-        position: absolute;
-        bottom: -2px;
-        left: 0;
-        width: 100%;
-        height: 2px;
-        background-color: #5d3eff;
-        border-radius: 1px;
-        transition: all 0.2s ease;
-      }
-  
-      &.active {
-        color: #2e2e2e;
-  
-        .badge {
-          background-color: #dedbff;
-        }
+        background-color: #d5d1ff;
       }
     }
+
+    .underline {
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: $darkBlue;
+      border-radius: 1px;
+      transition: all 0.2s ease-in-out;
+    }
   }
-  
+
+  // Responsive pour mobile
+  @include mixinBreakpoints(sm) {
+    flex-direction: column;
+    flex-wrap: wrap;
+    height: 100%;
+    gap: 10px;
+
+    // padding: 10px;
+
+    .filterTab {
+      // flex: 1 1 45%;
+      justify-content: center;
+      padding: 10px 0;
+      width: 100%;
+    }
+  }
+}

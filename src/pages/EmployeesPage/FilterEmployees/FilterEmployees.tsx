@@ -1,33 +1,42 @@
 import React, { useState } from "react";
-import "./FilterEmployees.scss";
+import styles from "./FilterEmployees.module.scss";
 
 type Tab = {
+  id: string;
   label: string;
   count: number;
 };
 
 const tabs: Tab[] = [
-  { label: "Tout les employés", count: 22 },
-  { label: "Employés actifs", count: 18 },
-  { label: "Employés inactifs", count: 4 },
-  { label: "Employés en ligne", count: 3 },
+  { id: "allEmployees", label: "Tous les employés", count: 22 },
+  { id: "activeEmployees", label: "Employés actifs", count: 18 },
+  { id: "inactiveEmployees", label: "Employés inactifs", count: 4 },
+  { id: "onlineEmployees", label: "Employés en ligne", count: 3 },
 ];
 
 const FilterEmployees: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState<number>(0);
 
   return (
-    <div className="filter-employees">
+    <div
+      className={styles.filterEmployeesContainer}
+      data-tab-active={tabs[activeIndex].id}
+    >
       {tabs.map((tab, index) => (
-        <div
-          key={index}
-          className={`filter-tab ${activeIndex === index ? "active" : ""}`}
+        <button
+          key={tab.id}
+          className={`${styles.filterTab} ${
+            activeIndex === index ? styles.active : ""
+          }`}
           onClick={() => setActiveIndex(index)}
+          role="tab"
+          aria-selected={activeIndex === index}
+          data-tab-id={tab.id}
         >
-          <span>{tab.label}</span>
-          <span className="badge">{tab.count}</span>
-          {activeIndex === index && <div className="underline" />}
-        </div>
+          <span className={styles.label}>{tab.label}</span>
+          <span className={styles.badge}>{tab.count}</span>
+          {activeIndex === index && <div className={styles.underline} />}
+        </button>
       ))}
     </div>
   );
