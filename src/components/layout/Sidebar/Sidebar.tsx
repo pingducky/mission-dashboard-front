@@ -17,17 +17,23 @@ import styles from "./Sidebar.module.scss";
 
 interface SidebarProps {
   /**
+   * Page active
+   */
+  activePage: string
+  /**
    * Props pour gérer les clicks
    */
   onMenuClick: (page: string) => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ onMenuClick }) => {
+const Sidebar: React.FC<SidebarProps> = ({ activePage, onMenuClick }) => {
   const [open, setOpen] = useState(true);
 
   const toggleDrawer = () => {
     setOpen(!open);
   };
+
+  console.debug("active page: ", activePage)
 
   return (
     <>
@@ -70,7 +76,6 @@ const Sidebar: React.FC<SidebarProps> = ({ onMenuClick }) => {
           </div>
 
           <div className={styles.iconButtonListParent}>
-            
             <div className={styles.iconButtonList}>
               <hr />
               <IconButton
@@ -78,7 +83,9 @@ const Sidebar: React.FC<SidebarProps> = ({ onMenuClick }) => {
                 text="Tableau de bord"
                 fontWeight="regular"
                 onClick={() => onMenuClick("dashboard")}
-                specialClass={styles.specialButton}
+                specialClass={clsx(styles.specialButton, {
+                  [styles.active]: activePage == "dashboard",
+                })}
                 isDisabled={false}
                 variant={"ghost"}
                 color={"darkGray"}
@@ -88,9 +95,11 @@ const Sidebar: React.FC<SidebarProps> = ({ onMenuClick }) => {
               <IconButton
                 startIcon={<CalendarMonthOutlinedIcon />}
                 text="Planning"
-                fontWeight="regular"
+                fontWeight="bold"
                 onClick={() => onMenuClick("planning")}
-                specialClass={styles.specialButton}
+                specialClass={clsx(styles.specialButton, {
+                  [styles.active]: activePage == "planning",
+                })}
                 isDisabled={false}
                 variant={"ghost"}
                 color={"darkGray"}
@@ -100,9 +109,11 @@ const Sidebar: React.FC<SidebarProps> = ({ onMenuClick }) => {
               <IconButton
                 startIcon={<GroupIcon />}
                 text="Salarié"
-                fontWeight="regular"
+                fontWeight="medium"
+                specialClass={clsx(styles.specialButton, {
+                  [styles.active]: activePage == "salarie",
+                })}
                 onClick={() => onMenuClick("salarie")}
-                specialClass={styles.specialButton}
                 isDisabled={false}
                 variant={"ghost"}
                 color={"darkGray"}
@@ -114,7 +125,9 @@ const Sidebar: React.FC<SidebarProps> = ({ onMenuClick }) => {
                 text="Liste missions"
                 fontWeight="regular"
                 onClick={() => onMenuClick("missions")}
-                specialClass={styles.specialButton}
+                specialClass={clsx(styles.specialButton, {
+                  [styles.active]: activePage == "missions",
+                })}
                 isDisabled={false}
                 variant={"ghost"}
                 color={"darkGray"}
@@ -129,7 +142,9 @@ const Sidebar: React.FC<SidebarProps> = ({ onMenuClick }) => {
                 text="Notifications"
                 fontWeight="regular"
                 onClick={() => onMenuClick("notifications")}
-                specialClass={styles.specialButton}
+                specialClass={clsx(styles.specialButton, {
+                  [styles.active]: activePage == "notifications",
+                })}
                 isDisabled={false}
                 variant={"ghost"}
                 color={"darkGray"}
@@ -141,7 +156,9 @@ const Sidebar: React.FC<SidebarProps> = ({ onMenuClick }) => {
                 text="Compte"
                 fontWeight="regular"
                 onClick={() => onMenuClick("compte")}
-                specialClass={styles.specialButton}
+                specialClass={clsx(styles.specialButton, {
+                  [styles.active]: activePage == "compte",
+                })}
                 isDisabled={false}
                 variant={"ghost"}
                 color={"darkGray"}

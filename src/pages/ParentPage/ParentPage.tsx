@@ -118,7 +118,7 @@ const ParentPage: React.FC = () => {
 
   return (
     <div className={styles.parentContainer}>
-      <Sidebar onMenuClick={(page) => handleNavigation(page, capitalize(page))} />
+      <Sidebar activePage={activePage} onMenuClick={(page) => handleNavigation(page, capitalize(page))} />
 
       <div className={styles.content}>
       <MainTitlePage icon={icon} text={title} />

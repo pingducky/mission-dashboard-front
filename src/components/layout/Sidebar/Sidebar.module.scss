@@ -13,6 +13,11 @@ $drawerClosedWidth: 60px;
   position: relative;
   overflow: visible;
 
+  .drawerOpen,
+  .drawerClosed {
+    border: none;
+  }
+
   .drawerOpen {
     width: 240px;
     transition: width 0.3s ease-in-out;
@@ -26,9 +31,17 @@ $drawerClosedWidth: 60px;
   }
 
   &[data-isVisible="false"] {
+
+    // Responsive pour mobile
+    @include mixinBreakpoints(xs) {
+      .toggleButton {
+        top: 10%;
+      }
+
+    }
+
     .sidebarContainer {
       align-items: initial;
-      padding: 30px 0;
 
       .logoSidebar,
       .profilSidebar {
@@ -36,6 +49,8 @@ $drawerClosedWidth: 60px;
       }
 
       .iconButtonListParent .iconButtonList .specialButton {
+        justify-content: center;
+
         :global(.iconTextGlobal) {
           display: none;
         }
@@ -46,7 +61,7 @@ $drawerClosedWidth: 60px;
 
 .toggleButton {
   position: absolute;
-  top: 50%;
+  top: 60%;
   right: 0;
   transform: translateY(-50%);
   background-color: $blueBackground;
@@ -68,11 +83,12 @@ $drawerClosedWidth: 60px;
 
 
 .sidebarContainer {
-  padding: 30px;
   display: flex;
   flex-direction: column;
   height: 100%;
   gap: 15px;
+  padding: 30px 0;
+  box-sizing: border-box;
 
   hr {
     margin: 15px 0;
@@ -84,6 +100,11 @@ $drawerClosedWidth: 60px;
   .logoSidebar {
     display: flex;
     justify-content: center;
+    margin: 0 30px;
+  }
+
+  .profilSidebar {
+    margin: 30px 30px 0 30px;
   }
 }
 
@@ -98,7 +119,7 @@ $drawerClosedWidth: 60px;
   .iconButtonList {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 0;
     align-items: flex-start;
 
     hr {
@@ -107,7 +128,18 @@ $drawerClosedWidth: 60px;
 
     .specialButton {
       border-radius: 0;
-      border-left: solid 2px blue;
+      border-left: solid 2px transparent;
+      padding: 18px 25px;
+      width: 100%;
+      justify-content: flex-start;
+      transition: .15s ease-in-out;
+
+      &:hover,
+      &.active {
+        border-left: solid 2px $darkBlue;
+        background-color: $blueBackground;
+        color: $darkBlue;
+      }
 
       :global(.iconText) {
         display: none;
