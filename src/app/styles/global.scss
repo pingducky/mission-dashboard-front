@@ -10,8 +10,15 @@
   @include PoppinsRegular();
 }
 
+div#root {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
 body {
   width: 100%;
+  height: 100vh;
   background-color: $grayBackground;
   font-weight: 400;
   position: relative;
