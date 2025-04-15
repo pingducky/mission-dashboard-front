@@ -10,7 +10,7 @@ import styles from "./LoginForm.module.scss";
 function LoginForm()  {
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
-    const navigate = useNavigate();    
+    const navigate = useNavigate();
 
     const handleLogin = async () => {
         const data = await userAuthentication(email, password);
@@ -27,12 +27,17 @@ function LoginForm()  {
                 component="form"
                 className={styles.login_form}
                 method="post"
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    handleLogin();
+                }}
             >
                 <TextField
                     className={styles.text_field}
                     id="email"
                     label="Adresse email"
                     variant="outlined"
+                    required
                     onChange={(e) => setEmail(e.target.value)}
                 />
 
@@ -42,6 +47,7 @@ function LoginForm()  {
                     label="Mot de passe"
                     variant="outlined"
                     type="password"
+                    required
                     onChange={(e) => setPassword(e.target.value)}
                 />
 
@@ -52,8 +58,7 @@ function LoginForm()  {
                 <Button 
                     variant="contained"
                     color="primary"
-                    type="button"
-                    onClick={() => handleLogin()}
+                    type="submit"
                 >
                     Connexion
                 </Button>

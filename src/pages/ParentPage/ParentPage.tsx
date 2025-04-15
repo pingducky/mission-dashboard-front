@@ -9,7 +9,6 @@ import GroupIcon from "@mui/icons-material/Group";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
-import LogoutIcon from "@mui/icons-material/Logout";
 import styles from "./ParentPage.module.scss";
 
 type BreadcrumbItem = {
@@ -68,8 +67,6 @@ const ParentPage: React.FC = () => {
         return { title: "Notifications", icon: <NotificationsNoneIcon /> };
       case "compte":
         return { title: "Compte", icon: <PersonOutlineIcon /> };
-      case "logout":
-        return { title: "Se déconnecter", icon: <LogoutIcon /> };
       default:
         return { title: "Page", icon: <CalendarMonthOutlinedIcon /> };
     }

@@ -30,7 +30,7 @@ $drawerClosedWidth: 60px;
     overflow-x: hidden;
   }
 
-  &[data-isVisible="false"] {
+  &[data-isvisible="false"] {
 
     // Responsive pour mobile
     @include mixinBreakpoints(xs) {

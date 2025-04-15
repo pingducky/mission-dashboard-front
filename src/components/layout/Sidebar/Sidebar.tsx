@@ -14,6 +14,8 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRightOutlined";
 import { Drawer } from "@mui/material";
 import IconButton from "../IconButton/IconButton";
 import styles from "./Sidebar.module.scss";
+import { userLogout } from "../../../hooks/userLogout";
+import { useNavigate } from "react-router-dom";
 
 interface SidebarProps {
   /**
@@ -28,10 +30,20 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ activePage, onMenuClick }) => {
   const [open, setOpen] = useState(true);
+  const navigate = useNavigate();
 
   const toggleDrawer = () => {
     setOpen(!open);
   };
+
+  const Logout = () => {
+    const token = sessionStorage.getItem("token");
+    if (token) {
+      userLogout(token);
+      sessionStorage.removeItem("token");
+    }
+    navigate("/login");
+  }
 
   console.debug("active page: ", activePage)
 
@@ -46,7 +58,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, onMenuClick }) => {
           styles.drawer,
           open ? styles.drawerOpen : styles.drawerClosed
         )}
-        data-isVisible={open}
+        data-isvisible={open}
         sx={{
           '& .MuiDrawer-paper': {
             position: 'relative',
@@ -169,7 +181,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, onMenuClick }) => {
                 startIcon={<LogoutIcon />}
                 text="Se déconnecter"
                 fontWeight="regular"
-                onClick={() => onMenuClick("logout")}
+                onClick={() => Logout()}
                 specialClass={styles.specialButton}
                 isDisabled={false}
                 variant={"ghost"}
