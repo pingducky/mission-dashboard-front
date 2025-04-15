@@ -11,6 +11,7 @@ import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import LogoutIcon from "@mui/icons-material/Logout";
 import styles from "./ParentPage.module.scss";
+import ListEmployeePage from "../ListEmployeePage/ListEmployeePage";
 
 type BreadcrumbItem = {
   label: string;
@@ -51,7 +52,7 @@ const ParentPage: React.FC = () => {
       case "planning":
         return { title: "Planning", icon: <CalendarMonthOutlinedIcon /> };
       case "salarie":
-        return { title: "Salarié", icon: <GroupIcon /> };
+        return { title: "Salariés(?)", icon: <GroupIcon /> };
       case "salarieDetail":
         return {
           title: breadcrumbs[breadcrumbs.length - 1]?.label || "Détails salarié",
@@ -82,14 +83,7 @@ const ParentPage: React.FC = () => {
       case "planning":
         return <div>Planning Page</div>;
       case "salarie":
-        return (
-          <div>
-            <div>Liste des salariés</div>
-            <button onClick={() => handleNavigation("salarieDetail", "Jean Dupont", "1")}>
-              Voir Jean Dupont
-            </button>
-          </div>
-        );
+        return ListEmployeePage(handleNavigation);
       case "salarieDetail":
         return <div>Détails du salarié #{breadcrumbs[breadcrumbs.length - 1].id}</div>;
       case "missions":

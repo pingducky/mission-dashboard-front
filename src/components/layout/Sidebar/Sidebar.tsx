@@ -46,7 +46,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, onMenuClick }) => {
           styles.drawer,
           open ? styles.drawerOpen : styles.drawerClosed
         )}
-        data-isVisible={open}
+        data-isvisible={open}
         sx={{
           '& .MuiDrawer-paper': {
             position: 'relative',
