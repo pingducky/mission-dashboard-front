@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import clsx from "clsx";
 
 import LogoCClean53 from "../../../assets/images/LogoCClean53.png";
@@ -19,7 +19,7 @@ interface SidebarProps {
   /**
    * Page active
    */
-  activePage: string
+  activePage: string;
   /**
    * Props pour gérer les clicks
    */
@@ -28,12 +28,31 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ activePage, onMenuClick }) => {
   const [open, setOpen] = useState(true);
+  const drawerRef = useRef<HTMLDivElement>(null);
 
   const toggleDrawer = () => {
     setOpen(!open);
   };
 
-  console.debug("active page: ", activePage)
+  // Ajout de la détection de clic extérieur (pour mobile)
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const isMobile = window.innerWidth <= 768;
+      if (
+        open &&
+        isMobile &&
+        drawerRef.current &&
+        !drawerRef.current.contains(event.target as Node)
+      ) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [open]);
 
   return (
     <>
@@ -46,26 +65,19 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, onMenuClick }) => {
           styles.drawer,
           open ? styles.drawerOpen : styles.drawerClosed
         )}
-        data-isVisible={open}
-        sx={{
-          '& .MuiDrawer-paper': {
-            position: 'relative',
-            height: '100vh',
-          }
-        }}
+        data-isvisible={open}
         classes={{
-          paper: clsx(open ? styles.drawerOpen : styles.drawerClosed),
+          paper: clsx(
+            styles.drawer,
+            open ? styles.drawerOpen : styles.drawerClosed
+          ),
         }}
       >
         <button onClick={toggleDrawer} className={styles.toggleButton}>
           {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
         </button>
 
-        <div
-          role="presentation"
-
-          className={styles.sidebarContainer}
-        >
+        <div role="presentation" className={styles.sidebarContainer} ref={drawerRef}>
           <div className={styles.logoSidebar}>
             <img src={LogoCClean53} alt="Logo" />
           </div>
