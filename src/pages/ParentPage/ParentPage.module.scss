@@ -1,3 +1,7 @@
+@use '../../app/styles/global.scss'as *;
+@use '../../app/styles/colors.scss'as *;
+@use '../../app/styles/mixins.scss'as *;
+
 .parentContainer {
     display: flex;
 
@@ -9,5 +13,9 @@
         .subPage {
             padding: 20px;
         }
+    }
+
+    @include mixinBreakpoints(xs) {
+        margin-left: 60px;
     }
 }

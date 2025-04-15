@@ -47,14 +47,17 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, onMenuClick }) => {
           open ? styles.drawerOpen : styles.drawerClosed
         )}
         data-isVisible={open}
-        sx={{
-          '& .MuiDrawer-paper': {
-            position: 'relative',
-            height: '100vh',
-          }
-        }}
+        // sx={{
+        //   '& .MuiDrawer-paper': {
+        //     position: 'relative',
+        //     height: '100vh',
+        //   }
+        // }}
         classes={{
-          paper: clsx(open ? styles.drawerOpen : styles.drawerClosed),
+          paper: clsx(
+            styles.drawer,
+            open ? styles.drawerOpen : styles.drawerClosed
+          ),
         }}
       >
         <button onClick={toggleDrawer} className={styles.toggleButton}>
