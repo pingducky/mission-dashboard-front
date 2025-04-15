@@ -36,19 +36,14 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, onMenuClick }) => {
 
   // Ajout de la détection de clic extérieur (pour mobile)
   useEffect(() => {
-    console.log('effect');
     const handleClickOutside = (event: MouseEvent) => {
       const isMobile = window.innerWidth <= 768;
-      console.log(isMobile);
-      console.log(open);
-      console.log(drawerRef.current);
       if (
         open &&
         isMobile &&
         drawerRef.current &&
         !drawerRef.current.contains(event.target as Node)
       ) {
-        console.log('je ferme');
         setOpen(false);
       }
     };
@@ -71,12 +66,6 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, onMenuClick }) => {
           open ? styles.drawerOpen : styles.drawerClosed
         )}
         data-isvisible={open}
-        // sx={{
-        //   '& .MuiDrawer-paper': {
-        //     position: 'relative',
-        //     height: '100vh',
-        //   }
-        // }}
         classes={{
           paper: clsx(
             styles.drawer,
