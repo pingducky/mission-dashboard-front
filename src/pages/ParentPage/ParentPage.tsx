@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import "../../app/styles/global.scss";
 import Sidebar from "../../components/layout/Sidebar/Sidebar";
 import { capitalize, Divider } from "@mui/material";
 import { MainTitlePage } from "./MainPageTitle/MainPageTitle";
@@ -9,10 +8,13 @@ import GroupIcon from "@mui/icons-material/Group";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
-import LogoutIcon from "@mui/icons-material/Logout";
-import styles from "./ParentPage.module.scss";
 import { getUserDataFromToken } from "../../utils/auth";
 import { useUserData } from "../../hooks/useUserData";
+import "../../app/styles/global.scss";
+import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import styles from "./ParentPage.module.scss";
+import { useLogout } from "../../hooks/useLogout";
 
 type BreadcrumbItem = {
   label: string;
@@ -21,6 +23,10 @@ type BreadcrumbItem = {
 };
 
 const ParentPage: React.FC = () => {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+  const logoutMutation = useLogout();
+
   const tokenData = getUserDataFromToken();
 
   useEffect(() => {
@@ -37,14 +43,28 @@ const ParentPage: React.FC = () => {
   ]);
   
   const handleNavigation = (page: string, label: string, id?: string) => {
+    if (page === "logout") {
+      const token = sessionStorage.getItem("token");
+  
+      if (token) {
+        logoutMutation.mutate(token, {
+        });
+      } 
+      logout();
+      navigate("/login");
+  
+      return;
+    }
+  
     if (!id) {
       setBreadcrumbs([{ label, page }]);
     } else {
       setBreadcrumbs((prev) => [...prev, { label, page, id }]);
     }
+  
     setActivePage(page);
   };
-
+  
   const handleBreadcrumbClick = (index: number) => {
     if (index === -1) {
       setBreadcrumbs([{ label: "Dashboard", page: "dashboard" }]);
@@ -80,8 +100,6 @@ const ParentPage: React.FC = () => {
         return { title: "Notifications", icon: <NotificationsNoneIcon /> };
       case "compte":
         return { title: "Compte", icon: <PersonOutlineIcon /> };
-      case "logout":
-        return { title: "Se déconnecter", icon: <LogoutIcon /> };
       default:
         return { title: "Page", icon: <CalendarMonthOutlinedIcon /> };
     }
