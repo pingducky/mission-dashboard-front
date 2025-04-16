@@ -1,0 +1,144 @@
+@use '../../app/styles/global.scss' as *;
+@use "../../app/styles/colors" as *;
+@use "../../app/styles/mixins.scss" as *;
+
+
+.employee_box {
+    background-color: $white;
+    padding: 20px;
+    border-radius: 20px;
+    position: relative;
+
+    .employee_letters {
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        line-height: 50px;
+        padding: 5px;
+        background-color: $pastelGrayBlue;
+        color: $darkBlue;
+        display: block;
+        text-align: center;
+        font-size: 23px;
+        position: relative;
+        margin-bottom: 10px;
+
+        &:not(.online) {
+            &::after {
+                content: "";
+                background-color: $red;
+                width: 10px;
+                height: 10px;
+                display: block;
+                position: absolute;
+                border-radius: 50%;
+                right: 5px;
+                bottom: 5px;
+            }
+        }
+
+        &::after {
+            content: "";
+            background-color: $connected;
+            width: 10px;
+            height: 10px;
+            display: block;
+            position: absolute;
+            border-radius: 50%;
+            right: 5px;
+            bottom: 5px;
+        }
+    }
+
+    .ellipsise {
+        background-color: $darkGray;
+        height: 7px;
+        width: 7px;
+        position: absolute;
+        border-radius: 50%;
+        right: 30px;
+        top: 40px;
+
+        &::before {
+            content: "";
+            background-color: inherit;
+            height: inherit;
+            width: inherit;
+            position: relative;
+            right: 10px;
+            display: block;
+            border-radius: inherit;
+        }
+
+        &::after {
+            content: "";
+            background-color: inherit;
+            height: inherit;
+            width: inherit;
+            position: relative;
+            left: 10px;
+            display: block;
+            border-radius: inherit;
+            bottom: 7px;
+        }
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    h3 {
+        @include PoppinsMedium();
+        color: $darkBlue;
+        font-size: 15px;
+        font-size: 13px;
+    }
+
+    p {
+        @include PoppinsSemiBold();
+        color: $darkGray;
+        font-size: 13px;
+        margin: 10px 0;
+        font-size: var(--font-size-text);
+    }
+
+    .employee_infos {
+        background-color: $lightGrayBackground;
+        padding: 10px;
+        border-radius: 15px;
+
+
+        .flex_container {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;            
+
+            div {
+                &:last-child {
+                    text-align: right;
+                }
+
+                h4 {
+                    @include PoppinsSemiBold();
+                    color: $darkGray;
+                }
+
+                p {
+                    @include PoppinsSemiBold();
+                    color: $black;
+                }
+            }
+        }
+
+        .icon_info {
+            display: flex;
+            justify-content: start;
+            align-items: center;
+            gap: 15px;
+
+            * {
+                color: $black;
+            }
+        }
+    }
+}

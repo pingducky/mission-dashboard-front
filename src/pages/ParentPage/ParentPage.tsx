@@ -14,6 +14,7 @@ import styles from "./ParentPage.module.scss";
 import { getUserDataFromToken } from "../../utils/auth";
 import { useUserData } from "../../hooks/useUserData";
 import ListEmployeePage from "../ListEmployeePage/ListEmployeePage";
+import { useListEmployee } from "../../hooks/getAllEmployees";
 
 type BreadcrumbItem = {
   label: string;
@@ -66,7 +67,7 @@ const ParentPage: React.FC = () => {
       case "planning":
         return { title: "Planning", icon: <CalendarMonthOutlinedIcon /> };
       case "salarie":
-        return { title: "Salariés(?)", icon: <GroupIcon /> };
+        return { title: "Salariés ("+employeeCount+")", icon: <GroupIcon /> };
       case "salarieDetail":
         return {
           title: breadcrumbs[breadcrumbs.length - 1]?.label || "Détails salarié",
@@ -90,6 +91,9 @@ const ParentPage: React.FC = () => {
     }
   };
 
+  const { data: employeeData } = useListEmployee(activePage);
+  const employeeCount = employeeData?.length ?? 0;
+
   const renderContent = () => {
     switch (activePage) {
       case "dashboard":
@@ -97,7 +101,7 @@ const ParentPage: React.FC = () => {
       case "planning":
         return <div>Planning Page</div>;
       case "salarie":
-        return ListEmployeePage(handleNavigation);
+        return ListEmployeePage(handleNavigation, employeeData ?? []);
       case "salarieDetail":
         return <div>Détails du salarié #{breadcrumbs[breadcrumbs.length - 1].id}</div>;
       case "missions":
