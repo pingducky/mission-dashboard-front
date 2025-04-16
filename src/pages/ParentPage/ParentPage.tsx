@@ -21,17 +21,15 @@ type BreadcrumbItem = {
 };
 
 const ParentPage: React.FC = () => {
-  const userData = getUserDataFromToken();
+  const tokenData = getUserDataFromToken();
 
   useEffect(() => {
-    if (!userData) {
+    if (!tokenData) {
       window.location.href = '/login';
     }
-  }, [userData]);
+  }, [tokenData]);
 
-  const { data } = useUserData(); // { loading, error}
-
-  console.log("data : ", data)
+  const { data: userData, isLoading } = useUserData();
 
   const [activePage, setActivePage] = useState<string>("dashboard");
   const [breadcrumbs, setBreadcrumbs] = useState<BreadcrumbItem[]>([
@@ -132,7 +130,13 @@ const ParentPage: React.FC = () => {
 
   return (
     <div className={styles.parentContainer}>
-      <Sidebar activePage={activePage} onMenuClick={(page) => handleNavigation(page, capitalize(page))} />
+      <Sidebar
+        isLoading={isLoading}
+        activePage={activePage}
+        name={userData?.lastName}
+        firstname={userData?.firstName}
+        onMenuClick={(page) => handleNavigation(page, capitalize(page))}
+      />
 
       <div className={styles.content}>
       <MainTitlePage icon={icon} text={title} />
