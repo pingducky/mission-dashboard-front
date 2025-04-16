@@ -5,20 +5,29 @@ import Link from '@mui/material/Link';
 import { userAuthentication } from "../../hooks/userAuthentication";
 import { useNavigate } from "react-router-dom";
 import Button from '@mui/material/Button';
+import { useAuth } from "../../context/AuthContext";
 import styles from "./LoginForm.module.scss";
 
 function LoginForm()  {
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
-    const navigate = useNavigate();    
+    const navigate = useNavigate();
+    const { login } = useAuth();
 
     const handleLogin = async () => {
-        const data = await userAuthentication(email, password);
-        if (data && data.token) {
-            sessionStorage.setItem("token", data.token);
-            navigate("/");
+        try {
+            const data = await userAuthentication(email, password);
+            if (data?.token) {
+                login(data.token);
+                navigate("/");
+            } else {
+                alert("Identifiants incorrects");
+            }
+        } catch (err) {
+            console.error("Erreur lors de la connexion", err);
+            alert("Erreur de connexion");
         }
-    }
+    };
 
     return (
         <Box className={styles.login_form_container}>
@@ -53,13 +62,13 @@ function LoginForm()  {
                     variant="contained"
                     color="primary"
                     type="button"
-                    onClick={() => handleLogin()}
+                    onClick={handleLogin}
                 >
                     Connexion
                 </Button>
             </Box>
         </Box>
-    )
+    );
 }
 
 export default LoginForm;

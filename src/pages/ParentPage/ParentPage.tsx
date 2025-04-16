@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../../app/styles/global.scss";
 import Sidebar from "../../components/layout/Sidebar/Sidebar";
-import { Divider } from "@mui/material";
+import { capitalize, Divider } from "@mui/material";
 import { MainTitlePage } from "./MainPageTitle/MainPageTitle";
 import BreadcrumbNav from "./BreadcrumbNav/BreadcrumbNav";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
@@ -11,6 +11,8 @@ import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import LogoutIcon from "@mui/icons-material/Logout";
 import styles from "./ParentPage.module.scss";
+import { getUserDataFromToken } from "../../utils/auth";
+import { useUserData } from "../../hooks/useUserData";
 import ListEmployeePage from "../ListEmployeePage/ListEmployeePage";
 
 type BreadcrumbItem = {
@@ -20,11 +22,23 @@ type BreadcrumbItem = {
 };
 
 const ParentPage: React.FC = () => {
-  const [activePage, setActivePage] = useState<string>("planning");
-  const [breadcrumbs, setBreadcrumbs] = useState<BreadcrumbItem[]>([
-    { label: "Planning", page: "planning" },
-  ]);
+  const userData = getUserDataFromToken();
 
+  useEffect(() => {
+    if (!userData) {
+      window.location.href = '/login';
+    }
+  }, [userData]);
+
+  const { data } = useUserData(); // { loading, error}
+
+  console.log("data : ", data)
+
+  const [activePage, setActivePage] = useState<string>("dashboard");
+  const [breadcrumbs, setBreadcrumbs] = useState<BreadcrumbItem[]>([
+    { label: "Dashboard", page: "dashboard" },
+  ]);
+  
   const handleNavigation = (page: string, label: string, id?: string) => {
     if (!id) {
       setBreadcrumbs([{ label, page }]);
@@ -36,7 +50,7 @@ const ParentPage: React.FC = () => {
 
   const handleBreadcrumbClick = (index: number) => {
     if (index === -1) {
-      setBreadcrumbs([{ label: "Planning", page: "dashboard" }]);
+      setBreadcrumbs([{ label: "Dashboard", page: "dashboard" }]);
       setActivePage("dashboard");
     } else {
       const selected = breadcrumbs[index];
@@ -129,10 +143,6 @@ const ParentPage: React.FC = () => {
       </div>
     </div>
   );
-};
-
-const capitalize = (word: string) => {
-  return word.charAt(0).toUpperCase() + word.slice(1);
 };
 
 export default ParentPage;
