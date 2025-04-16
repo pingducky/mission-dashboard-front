@@ -131,11 +131,11 @@ const ParentPage: React.FC = () => {
   return (
     <div className={styles.parentContainer}>
       <Sidebar
-      isLoading={isLoading}
-      activePage={activePage}
-      name={userData?.lastName}
-      firstname={userData?.firstName}
-      onMenuClick={(page) => handleNavigation(page, capitalize(page))}
+        isLoading={isLoading}
+        activePage={activePage}
+        name={userData?.lastName}
+        firstname={userData?.firstName}
+        onMenuClick={(page) => handleNavigation(page, capitalize(page))}
       />
 
       <div className={styles.content}>
