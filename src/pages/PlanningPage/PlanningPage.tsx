@@ -3,11 +3,12 @@ import DisplayProfilName from "../../components/sidebar/profilName/displayProfil
 
 const PlanningPage: React.FC = () => {
     return (
-        <div>
-            <h1>Planning page</h1>
-            <DisplayProfilName firstname="Hugo" name="Pigeon"/>
-        </div>
+        <>
+            <div>
+                <h1>Planning page</h1>
+            </div>
+        </>
     );
-  };
-  
+};
+
 export default PlanningPage;

@@ -1,0 +1,21 @@
+@use "./../../../app/styles/themes.scss" as *;
+
+.container {
+    display: flex;
+    align-items: center;
+    color: #2B2C89;
+    font-size: 20px;
+    margin: 20px
+  }
+  
+  .icon {
+    margin-right: 8px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .text {
+    line-height: 1;
+    font-weight: 600;
+  }
+  

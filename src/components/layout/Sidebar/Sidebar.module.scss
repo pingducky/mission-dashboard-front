@@ -1,0 +1,172 @@
+@use '../../../app/styles/global'as *;
+@use '../../../app/styles/colors'as *;
+@use '../../../app/styles/mixins'as *;
+
+$drawerWidth: 240px;
+$drawerClosedWidth: 60px;
+
+.drawer {
+  white-space: nowrap;
+  overflow-x: hidden;
+  transition: width 0.3s ease;
+  overflow: visible;
+  background-color: $white;
+
+  .drawerOpen,
+  .drawerClosed {
+    border: none;
+    position: relative;
+    height: 100vh;
+
+    @include mixinBreakpoints(xs) {
+      position: fixed;
+      z-index: 1200;
+    }
+  }
+
+  .drawerOpen {
+    width: 240px;
+    transition: width 0.3s ease-in-out;
+    overflow-x: hidden;
+  }
+
+  .drawerClosed {
+    width: 60px;
+    transition: width 0.3s ease-in-out;
+    overflow-x: hidden;
+  }
+
+  &[data-isvisible="false"] {
+
+    // Responsive pour mobile
+    @include mixinBreakpoints(xs) {
+      .toggleButton {
+        top: 10%;
+      }
+    }
+
+    .sidebarContainer {
+      align-items: initial;
+
+      .logoSidebar,
+      .profilSidebar {
+        visibility: hidden;
+      }
+
+      .iconButtonListParent .iconButtonList .specialButton {
+        justify-content: center;
+
+        :global(.iconTextGlobal) {
+          display: none;
+        }
+      }
+    }
+  }
+}
+
+.toggleButton {
+  position: absolute;
+  top: 60%;
+  right: 0;
+  transform: translateY(-50%);
+  background-color: $blueBackground;
+  border: none;
+  border-radius: 20px 0 0 20px;
+  width: 28px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+
+  svg {
+    color: $darkBlue;
+    font-size: 20px;
+  }
+}
+
+.sidebarContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 15px;
+  padding: 30px 0;
+  box-sizing: border-box;
+
+  @include mixinBreakpoints(xs) {
+    padding: 15px 0;
+  }
+
+  hr {
+    margin: 15px 0;
+    display: flex;
+    justify-content: center;
+    border: 1px solid $grayBackground;
+  }
+
+  .logoSidebar {
+    display: flex;
+    justify-content: center;
+    margin: 0 30px;
+
+    @include mixinBreakpoints(xs) {
+      img {
+        width: 100px;
+      }
+    }
+  }
+
+  .profilSidebar {
+    margin: 30px 30px 0 30px;
+
+    @include mixinBreakpoints(xs) {
+      margin: 15px 15px 0 25px;
+    }
+  }
+}
+
+.iconButtonListParent {
+  font-family: 'Poppins';
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  width: 100%;
+
+  .iconButtonList {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    align-items: flex-start;
+
+    hr {
+      width: 100%;
+    }
+
+    .specialButton {
+      border-radius: 0;
+      border-left: solid 2px transparent;
+      padding: 18px 25px;
+      width: 100%;
+      justify-content: flex-start;
+      transition: .15s ease-in-out;
+
+      &:hover,
+      &.active {
+        border-left: solid 2px $darkBlue;
+        background-color: $blueBackground;
+        color: $darkBlue;
+      }
+
+      :global(.iconText) {
+        display: none;
+      }
+    }
+  }
+}
+
+.MuiDrawer-paper {
+  position: relative;
+  height: 100vh;
+}
