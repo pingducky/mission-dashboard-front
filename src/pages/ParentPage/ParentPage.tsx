@@ -13,8 +13,8 @@ import { useUserData } from "../../hooks/useUserData";
 import "../../app/styles/global.scss";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import styles from "./ParentPage.module.scss";
 import { useLogout } from "../../hooks/useLogout";
+import styles from "./ParentPage.module.scss";
 
 type BreadcrumbItem = {
   label: string;
@@ -42,17 +42,20 @@ const ParentPage: React.FC = () => {
     { label: "Dashboard", page: "dashboard" },
   ]);
   
+  const handleLogout = () => {
+    const token = sessionStorage.getItem("token");
+  
+    if (token) {
+      logoutMutation.mutate(token);
+    }
+  
+    logout();
+    navigate("/login");
+  };
+  
   const handleNavigation = (page: string, label: string, id?: string) => {
     if (page === "logout") {
-      const token = sessionStorage.getItem("token");
-  
-      if (token) {
-        logoutMutation.mutate(token, {
-        });
-      } 
-      logout();
-      navigate("/login");
-  
+      handleLogout();
       return;
     }
   
@@ -64,7 +67,7 @@ const ParentPage: React.FC = () => {
   
     setActivePage(page);
   };
-  
+
   const handleBreadcrumbClick = (index: number) => {
     if (index === -1) {
       setBreadcrumbs([{ label: "Dashboard", page: "dashboard" }]);
