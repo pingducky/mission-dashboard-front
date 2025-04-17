@@ -2,11 +2,15 @@
 $font-family-poppins: 'Poppins', sans-serif;
 
 // Font Weights
+$font-weight-thin: 100;
+$font-weight-extralight: 200;
+$font-weight-light: 300;
 $font-weight-regular: 400;
 $font-weight-medium: 500;
-$font-weight-semibold: 700;
-$font-weight-bold: 900;
-
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+$font-weight-extrabold: 800;
+$font-weight-black: 900;
 // Font Sizes
 $font-size-h1: 45px;
 $font-size-h2: 20px;
@@ -18,10 +22,15 @@ $font-size-text: 12px;
 :root {
   --font-family-poppins: #{$font-family-poppins};
 
+  --font-weight-thin: #{$font-weight-thin};
+  --font-weight-extralight: #{$font-weight-extralight};
+  --font-weight-light: #{$font-weight-light};
   --font-weight-regular: #{$font-weight-regular};
   --font-weight-medium: #{$font-weight-medium};
   --font-weight-semibold: #{$font-weight-semibold};
   --font-weight-bold: #{$font-weight-bold};
+  --font-weight-extrabold: #{$font-weight-extrabold};
+  --font-weight-black: #{$font-weight-black};
 
   --font-size-h1: #{$font-size-h1};
   --font-size-h2: #{$font-size-h2};
