@@ -15,6 +15,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useLogout } from "../../hooks/useLogout";
 import styles from "./ParentPage.module.scss";
+import DashboardPage from "../DashboardPage/DashboardPage";
 
 type BreadcrumbItem = {
   label: string;
@@ -111,7 +112,7 @@ const ParentPage: React.FC = () => {
   const renderContent = () => {
     switch (activePage) {
       case "dashboard":
-        return <div>Tableau de bord</div>;
+        return <DashboardPage/>;
       case "planning":
         return <div>Planning Page</div>;
       case "salarie":

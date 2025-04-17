@@ -1,0 +1,118 @@
+@use '../../app/styles/global'as *;
+@use '../../app/styles/colors'as *;
+@use '../../app/styles/mixins'as *;
+
+.dashboardContainer {
+    // padding: 2rem;
+    color: #2f2f41;
+
+    .dashboardWelcome {
+        background-color: $pastelBlue;
+        border-radius: 8px;
+        height: 210px;
+        padding: 0 85px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+
+        @include mixinBreakpoints(md) {
+            padding: 0 65px 0 35px;
+        }
+
+        @include mixinBreakpoints(xc) {
+            overflow: hidden;
+        }
+
+        .dashboardText {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+
+            h1 {
+                font-size: clamp(25px, 3.5vw, 45px);
+                color: $darkBlue;
+                font-weight: var(--font-weight-semibold);
+            }
+
+            h2 {
+                font-size: clamp(16px, 1.5vw, 20px);
+                color: $purplePastelText;
+                font-weight: var(--font-weight-semibold);
+            }
+        }
+
+        .dashboardImage {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+
+            img {
+                width: 100%;
+                max-width: 250px;
+                height: auto;
+                scale: 1.3;
+
+                @include mixinBreakpoints(md) {
+                    max-width: 180px;
+                }
+
+                @include mixinBreakpoints(xc) {
+                    position: absolute;
+                    filter: opacity(0.05);
+                    right: 10px;
+                }
+
+            }
+        }
+    }
+
+    .dashboardInfoParent {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin-top: 40px;
+
+        h2 {
+            color: $darkGray;
+        }
+
+        .dashboardInfoGroup {
+            display: grid;
+            // grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+
+            .infoCard {
+                background-color: $white;
+                border-radius: 5px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+                flex: 1 1 200px;
+                padding: 1.5rem;
+                text-align: center;
+                transition: transform 0.2s ease;
+
+                &:hover {
+                    transform: translateY(-5px);
+                }
+
+                .infoCardIcon {
+                    font-size: 2rem;
+                    color: #ff1d79;
+                    margin-bottom: 0.5rem;
+                }
+
+                .infoCardText {
+                    font-size: 20px;
+                    color: $darkBlue;
+                    font-weight: var(--font-weight-semibold);
+
+                    .infoCardTextValue {
+                        font-weight: var(--font-weight-extrabold);
+                    }
+                }
+            }
+        }
+    }
+
+}
