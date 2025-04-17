@@ -1,8 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { User } from "./useUserData";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const getAllEmployees = async (token: string): Promise<User[]> => {
-    const API_URL = import.meta.env.VITE_API_URL;
+    if (!token) return [];
 
     return await fetch(`${API_URL}/employee`, {
         method: 'GET',
@@ -17,11 +19,10 @@ const getAllEmployees = async (token: string): Promise<User[]> => {
     });
 }
 
-export const useListEmployee = (page: string) => {
-    const token = sessionStorage.getItem("token") ?? "";
+export const useListEmployee = (page: string, token: string) => {
 
     return useQuery({
-        queryKey: ["employees"],
+        queryKey: ["employees", token],
         queryFn: () => getAllEmployees(token),
         refetchOnWindowFocus: false,
         retry: false,

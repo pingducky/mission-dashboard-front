@@ -8,6 +8,8 @@
     padding: 20px;
     border-radius: 20px;
     position: relative;
+    max-width: 350px;
+    margin: 0 auto;
 
     .employee_letters {
         border-radius: 50%;
@@ -51,35 +53,16 @@
     }
 
     .ellipsise {
-        background-color: $darkGray;
-        height: 7px;
-        width: 7px;
+        height: 30px;
+        width: 30px;
         position: absolute;
         border-radius: 50%;
         right: 30px;
         top: 40px;
 
-        &::before {
-            content: "";
-            background-color: inherit;
-            height: inherit;
-            width: inherit;
-            position: relative;
-            right: 10px;
-            display: block;
-            border-radius: inherit;
-        }
-
-        &::after {
-            content: "";
-            background-color: inherit;
-            height: inherit;
-            width: inherit;
-            position: relative;
-            left: 10px;
-            display: block;
-            border-radius: inherit;
-            bottom: 7px;
+        svg {
+            transform: scale(1.5);
+            fill: $darkGray;
         }
 
         &:hover {
@@ -141,4 +124,8 @@
             }
         }
     }
+}
+
+.popup {
+    background-color: $white;
 }

@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { useLogout } from "../../hooks/useLogout";
 import styles from "./ParentPage.module.scss";
 import ListEmployeePage from "../ListEmployeePage/ListEmployeePage";
-import { useListEmployee } from "../../hooks/getAllEmployees";
+import { useListEmployee } from "../../hooks/useGetAllEmployees";
 
 type BreadcrumbItem = {
   label: string;
@@ -110,7 +110,7 @@ const ParentPage: React.FC = () => {
     }
   };
 
-  const { data: employeeData } = useListEmployee(activePage);
+  const { data: employeeData } = useListEmployee(activePage, sessionStorage.getItem("token") ?? "");
   const employeeCount = employeeData?.length ?? 0;
 
   const renderContent = () => {

@@ -7,7 +7,11 @@ function ListEmployeePage(handleNavigation: (page: string, label: string, id: st
     console.log("employees", employees);
     const employeeBoxes = employees.map((employee) => {
         return(
-            <li key={employee.id} className={Styles.employe_container} onClick={() => handleNavigation("salarieDetail", employee.firstName, employee.id.toString())}>
+            <li 
+                key={employee.id}
+                className={Styles.employe_container}
+                onClick={() => handleNavigation("salarieDetail", employee.firstName, employee.id.toString())}
+            >
                 <EmployeeBox employee={employee} />
             </li>
         )

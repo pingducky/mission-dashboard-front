@@ -46,7 +46,7 @@ interface IconButtonProps {
   /**
    * Fonction appelée lors du clic sur le bouton
    */
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
 
