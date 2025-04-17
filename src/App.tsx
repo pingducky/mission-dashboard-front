@@ -1,15 +1,26 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import PlanningPage from './pages/PlanningPage/PlanningPage.tsx';
-import NotFoundPage from './pages/NotFoundPage/NotFoundPage.tsx';
+import ParentPage from './pages/ParentPage/ParentPage';
+import LoginPage from './pages/LoginPage/LoginPage';
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './context/ProtectedRoute';
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<PlanningPage />} />
-        <Route path="*" element={<NotFoundPage/>}/>
-      </Routes>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route 
+            path="*"
+            element={
+              <ProtectedRoute>
+                <ParentPage />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 

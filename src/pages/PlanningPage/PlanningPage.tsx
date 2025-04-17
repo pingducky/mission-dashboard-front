@@ -1,6 +1,5 @@
 import "../../app/styles/global.scss";
-// import Sidebar from "../../components/layout/Sidebar/Sidebar.tsx";
-import FilterEmployees from "../EmployeesPage/FilterEmployees/FilterEmployees.tsx";
+import DisplayProfilName from "../../components/sidebar/profilName/displayProfilName";
 
 const PlanningPage: React.FC = () => {
     return (
@@ -8,10 +7,6 @@ const PlanningPage: React.FC = () => {
             <div>
                 <h1>Planning page</h1>
             </div>
-
-            <FilterEmployees />
-
-            {/* <Sidebar/> */}
         </>
     );
 };
