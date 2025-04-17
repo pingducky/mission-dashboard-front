@@ -14,19 +14,32 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRightOutlined";
 import { Drawer } from "@mui/material";
 import IconButton from "../IconButton/IconButton";
 import styles from "./Sidebar.module.scss";
+import DisplayProfilName from "../../sidebar/profilName/displayProfilName";
 
 interface SidebarProps {
+  /**
+   * Nom
+   */
+  name?: string,
+  /**
+   * Prénom
+   */
+  firstname?: string,
   /**
    * Page active
    */
   activePage: string;
+  /**
+   * Information du profil en chargement
+   */
+  isLoading: boolean
   /**
    * Props pour gérer les clicks
    */
   onMenuClick: (page: string) => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ activePage, onMenuClick }) => {
+const Sidebar: React.FC<SidebarProps> = ({ activePage, name, firstname, isLoading, onMenuClick }) => {
   const [open, setOpen] = useState(true);
   const drawerRef = useRef<HTMLDivElement>(null);
 
@@ -82,10 +95,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, onMenuClick }) => {
             <img src={LogoCClean53} alt="Logo" />
           </div>
 
-          <div className={styles.profilSidebar}>
-            <h2>Thomas Tronville </h2>
-            <p>Ravie de te revoir !</p>
-          </div>
+          {!isLoading && name && firstname && <DisplayProfilName name={firstname} firstname={name}/>}
 
           <div className={styles.iconButtonListParent}>
             <div className={styles.iconButtonList}>
