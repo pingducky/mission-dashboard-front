@@ -1,9 +1,19 @@
 import React, { useState } from "react";
+import clsx from "clsx";
 import styles from "./FilterEmployees.module.scss";
 
 type Tab = {
+  /**
+   * Id du filtre
+   */
   id: string;
+  /**
+   * Nom du filtre
+   */
   label: string;
+  /**
+   * Nombre de résultat du filtre
+   */
   count: number;
 };
 
@@ -25,13 +35,13 @@ const FilterEmployees: React.FC = () => {
       {tabs.map((tab, index) => (
         <button
           key={tab.id}
-          className={`${styles.filterTab} ${
-            activeIndex === index ? styles.active : ""
-          }`}
-          onClick={() => setActiveIndex(index)}
+          className={clsx(styles.filterTab, {
+            [styles.active]: activeIndex === index,
+          })}
           role="tab"
           aria-selected={activeIndex === index}
           data-tab-id={tab.id}
+          onClick={() => setActiveIndex(index)}
         >
           <span className={styles.label}>{tab.label}</span>
           <span className={styles.badge}>{tab.count}</span>

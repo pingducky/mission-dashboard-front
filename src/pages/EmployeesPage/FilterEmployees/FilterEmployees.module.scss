@@ -9,7 +9,6 @@
   background-color: $lightGray;
   border-radius: 8px;
   align-items: center;
-  font-family: 'Inter', sans-serif;
   padding: 0 20px;
 
   .filterTab {
@@ -45,7 +44,7 @@
       }
 
       .badge {
-        background-color: #d5d1ff;
+        background-color: $purplePastelBackground;
       }
     }
 
@@ -61,7 +60,6 @@
     }
   }
 
-  // Responsive pour mobile
   @include mixinBreakpoints(sm) {
     flex-direction: column;
     flex-wrap: wrap;
