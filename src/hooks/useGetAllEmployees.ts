@@ -3,10 +3,10 @@ import { User } from "./useUserData";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-const getAllEmployees = async (token: string): Promise<User[]> => {
+const getAllEmployees = async (token: string, filter: 'all' | 'active' | 'inactive' | 'online'): Promise<User[]> => {
     if (!token) return [];
 
-    return await fetch(`${API_URL}/employee`, {
+    return await fetch(`${API_URL}/employee?status=`+filter, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -19,11 +19,11 @@ const getAllEmployees = async (token: string): Promise<User[]> => {
     });
 }
 
-export const useListEmployee = (page: string, token: string) => {
+export const useListEmployee = (page: string, filter: 'all' | 'active' | 'inactive' | 'online' = "all", token: string) => {
 
     return useQuery({
-        queryKey: ["employees", token],
-        queryFn: () => getAllEmployees(token),
+        queryKey: ["employees", token, filter],
+        queryFn: () => getAllEmployees(token, filter),
         refetchOnWindowFocus: false,
         retry: false,
         enabled: page === "salarie"

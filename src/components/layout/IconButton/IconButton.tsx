@@ -4,7 +4,7 @@ import clsx from "clsx";
 
 type fontWeight = "regular" | "medium" | "semibold" | "bold";
 type variant = "ghost" | "outlined" | "filled";
-type color = "white" | "darkblue" | "blue" | "pink" | "black" | "darkGray";
+type color = "white" | "darkblue" | "blue" | "pink" | "black" | "darkGray" | "red";
 
 interface IconButtonProps {
   /**

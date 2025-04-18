@@ -46,6 +46,9 @@ function EmployeeBox({ employee }: EmployeeBoxProps) {
                     open={open}
                     anchorEl={anchorEl}
                     className={Styles.popup}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                    }}
                 >
                     <ul>
                         <li>
@@ -56,28 +59,31 @@ function EmployeeBox({ employee }: EmployeeBoxProps) {
                                 isRounded={false}
                                 isDisabled={false}
                                 color="black"
+                                fontWeight="medium"
                             >
                             </IconButton>
                         </li>
                         <li>
                             <IconButton
                                 startIcon={<ArchiveOutlinedIcon/>}
-                                text="Modifier"
+                                text="Archiver"
                                 variant={"ghost"}
                                 isRounded={false}
                                 isDisabled={false}
-                                color="black"
+                                color="darkGray"
+                                fontWeight="medium"
                             >
                             </IconButton>
                         </li>
                         <li>
                             <IconButton
                                 startIcon={<DeleteForeverOutlinedIcon/>}
-                                text="Modifier"
+                                text="Supprimer"
                                 variant={"ghost"}
                                 isRounded={false}
                                 isDisabled={false}
-                                color="black"
+                                color="red"
+                                fontWeight="medium"
                             >
                             </IconButton>
                         </li>

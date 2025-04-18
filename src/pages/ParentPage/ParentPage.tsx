@@ -15,7 +15,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useLogout } from "../../hooks/useLogout";
 import styles from "./ParentPage.module.scss";
-import ListEmployeePage from "../ListEmployeePage/ListEmployeePage";
+import EmployeesPage from "../EmployeesPage/EmployeesPage";
 import { useListEmployee } from "../../hooks/useGetAllEmployees";
 
 type BreadcrumbItem = {
@@ -28,6 +28,7 @@ const ParentPage: React.FC = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
   const logoutMutation = useLogout();
+  const [employeesFilter, setEmployeesFilter] = useState<'all' | 'active' | 'inactive' | 'online'>("all");
 
   const tokenData = getUserDataFromToken();
 
@@ -110,7 +111,7 @@ const ParentPage: React.FC = () => {
     }
   };
 
-  const { data: employeeData } = useListEmployee(activePage, sessionStorage.getItem("token") ?? "");
+  const { data: employeeData } = useListEmployee(activePage, employeesFilter, sessionStorage.getItem("token") ?? "");
   const employeeCount = employeeData?.length ?? 0;
 
   const renderContent = () => {
@@ -120,7 +121,11 @@ const ParentPage: React.FC = () => {
       case "planning":
         return <div>Planning Page</div>;
       case "salarie":
-        return ListEmployeePage(handleNavigation, employeeData ?? []);
+        return <EmployeesPage
+          handleNavigation={handleNavigation}
+          employees={employeeData ?? []}
+          setEmployeesFilter={setEmployeesFilter}
+        />;
       case "salarieDetail":
         return <div>Détails du salarié #{breadcrumbs[breadcrumbs.length - 1].id}</div>;
       case "missions":
