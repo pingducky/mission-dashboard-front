@@ -3,10 +3,8 @@
 @use '../../app/styles/mixins'as *;
 
 .dashboardContainer {
-    // padding: 2rem;
-    color: #2f2f41;
-
     .dashboardWelcome {
+        position: relative;
         background-color: $pastelBlue;
         border-radius: 8px;
         height: 210px;
@@ -14,7 +12,6 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        position: relative;
 
         @include mixinBreakpoints(md) {
             padding: 0 65px 0 35px;
@@ -79,15 +76,16 @@
 
         .dashboardInfoGroup {
             display: grid;
-            // grid-template-columns: repeat(4, 1fr);
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
 
             .infoCard {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
                 background-color: $white;
                 border-radius: 5px;
                 box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-                flex: 1 1 200px;
                 padding: 1.5rem;
                 text-align: center;
                 transition: transform 0.2s ease;
@@ -97,9 +95,7 @@
                 }
 
                 .infoCardIcon {
-                    font-size: 2rem;
-                    color: #ff1d79;
-                    margin-bottom: 0.5rem;
+                    height: 55px;
                 }
 
                 .infoCardText {
