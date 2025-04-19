@@ -45,7 +45,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ firstname }) => {
     <div className={styles.dashboardContainer}>
       <div className={styles.dashboardWelcome}>
         <div className={styles.dashboardText}>
-          <h1>Bonjour, {firstname ?? "Utilisateur"}</h1>
+          <h1>Bonjour, {firstname ?? ""}</h1>
           <h2>Prêt(e) à faire briller la journée ? ✨</h2>
         </div>
         <div className={styles.dashboardImage}>
