@@ -16,6 +16,10 @@ interface IconButtonProps {
    */
   fontWeight?: fontWeight;
   /**
+   * Détermine si le bouton est actif (état visuel ou fonctionnel)
+   */
+  isActive?: boolean;
+  /**
    * Désactive le bouton s'il est défini sur true
    */
   isDisabled?: boolean;
@@ -49,6 +53,7 @@ interface IconButtonProps {
 const IconButton: React.FC<IconButtonProps> = ({
   text,
   fontWeight = "regular",
+  isActive = false,
   isDisabled = false,
   specialClass,
   startIcon,
@@ -64,6 +69,7 @@ const IconButton: React.FC<IconButtonProps> = ({
     styles[color],
     styles[fontWeight],
     {
+      [styles.active]: isActive,
       [styles.disabled]: isDisabled,
       [styles.rounded]: isRounded,
     }
