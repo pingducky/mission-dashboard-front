@@ -174,6 +174,21 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, name, firstname, isLoadin
               />
 
               <IconButton
+                startIcon={<NotificationsNoneIcon />}
+                text="Notifications"
+                fontWeight="regular"
+                onClick={() => onMenuClick("salarieCreation")}
+                specialClass={clsx(styles.specialButton, {
+                  [styles.active]: activePage == "notifications",
+                })}
+                isDisabled={false}
+                variant={"ghost"}
+                color={"darkGray"}
+                isRounded={false}
+              />
+
+
+              <IconButton
                 startIcon={<PersonOutlineIcon />}
                 text="Compte"
                 fontWeight="regular"

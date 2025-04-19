@@ -15,6 +15,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useLogout } from "../../hooks/useLogout";
 import styles from "./ParentPage.module.scss";
+import CreateEmployeePage from "../Employee/CreateEmployeePage/CreateEmployeePage";
 
 type BreadcrumbItem = {
   label: string;
@@ -125,6 +126,8 @@ const ParentPage: React.FC = () => {
         );
       case "salarieDetail":
         return <div>Détails du salarié #{breadcrumbs[breadcrumbs.length - 1].id}</div>;
+      case "salarieCreation": 
+        return <CreateEmployeePage/>
       case "missions":
         return (
           <div>

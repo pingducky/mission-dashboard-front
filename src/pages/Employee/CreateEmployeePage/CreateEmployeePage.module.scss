@@ -1,0 +1,73 @@
+@use '../../../app/styles/global'as *;
+@use '../../../app/styles/colors'as *;
+@use '../../../app/styles/mixins'as *;
+
+.container {
+    display: flex;
+  }
+  
+  .sidebar {
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  
+    button {
+      justify-content: flex-start;
+  
+      @include mixinBreakpoints(xs) {
+        :global(.iconTextGlobal) {
+          display: none;
+        }
+      }
+    }
+  }
+  
+  .separator {
+    width: 1px;
+    background-color: #ccc;
+    margin-right: 24px;
+    margin-left: 8px;
+  }
+  
+  .content {
+    flex: 1;
+    position: relative;
+    overflow-y: auto;
+    padding-right: 16px;
+    height: 100svh;
+
+    .sectionTitle {
+      font-size: 25px;
+    }
+
+    .subSectionTitle {
+      color: $darkGray;
+      font-size: 15px;
+      margin-bottom: 30px;
+    }
+  }
+  
+  .section {
+    margin-bottom: 48px;
+  }
+  
+  .formGrid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  
+  .input {
+    flex-basis: calc(50% - 8px);
+    min-width: 250px;
+  }
+  
+  .checkboxGroup {
+    display: flex;
+    gap: 32px;
+  }
+  
