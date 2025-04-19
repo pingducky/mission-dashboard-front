@@ -1,9 +1,9 @@
 import React from "react";
 import DashboardWelcomeImage from "../../assets/images/dahsboardImage.svg";
-import EmployeesIcon from "../../assets/images/icons/employeesDashboard.svg";
-import MissionsIcon from "../../assets/images/icons/missionsTotalDashboard.svg";
-import TimeIcon from "../../assets/images/icons/timeDashboard.svg";
-import TargetIcon from "../../assets/images/icons/targetDashboard.svg";
+import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
+import VerifiedOutlinedIcon from '@mui/icons-material/VerifiedOutlined';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import AdsClickOutlinedIcon from '@mui/icons-material/AdsClickOutlined';
 import styles from "./DashboardPage.module.scss";
 
 interface DashboardPageProps {
@@ -16,25 +16,25 @@ interface DashboardPageProps {
 const DashboardPage: React.FC<DashboardPageProps> = ({ firstname }) => {
   const cards = [
     {
-      icon: EmployeesIcon,
+      icon: GroupsOutlinedIcon,
       label: "employés",
       value: 25,
       alt: "Illustrations d'employés",
     },
     {
-      icon: MissionsIcon,
+      icon: VerifiedOutlinedIcon,
       label: "missions réalisées au total",
       value: 140,
       alt: "Illustration d'un certificat",
     },
     {
-      icon: TimeIcon,
+      icon: AccessTimeIcon,
       label: "de travail est prévu aujourd’hui",
       value: "8h30",
       alt: "Illustration d'une horloge",
     },
     {
-      icon: TargetIcon,
+      icon: AdsClickOutlinedIcon,
       label: "Missions prévu aujourd’hui",
       value: 3,
       alt: "Illustration d'une cible",
@@ -58,10 +58,9 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ firstname }) => {
         <div className={styles.dashboardInfoGroup}>
           {cards.map((card) => (
             <div className={styles.infoCard} key={`${card.label}-${card.alt}`}>
-              <img
-                src={card.icon}
-                alt={card.alt}
+              <card.icon
                 className={styles.infoCardIcon}
+                titleAccess={card.alt}
               />
               <div className={styles.infoCardText}>
                 <span className={styles.infoCardTextValue}>{card.value}</span>{" "}
