@@ -53,7 +53,7 @@ interface IconButtonProps {
 const IconButton: React.FC<IconButtonProps> = ({
   text,
   fontWeight = "regular",
-  isActive = false,
+  // isActive = false,
   isDisabled = false,
   specialClass,
   startIcon,
@@ -69,7 +69,7 @@ const IconButton: React.FC<IconButtonProps> = ({
     styles[color],
     styles[fontWeight],
     {
-      [styles.active]: isActive,
+      // [styles.active]: isActive,
       [styles.disabled]: isDisabled,
       [styles.rounded]: isRounded,
     }
