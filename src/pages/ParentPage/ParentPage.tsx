@@ -16,6 +16,8 @@ import { useNavigate } from "react-router-dom";
 import { useLogout } from "../../hooks/useLogout";
 import DashboardPage from "../DashboardPage/DashboardPage";
 import styles from "./ParentPage.module.scss";
+import EmployeesPage from "../EmployeesPage/EmployeesPage";
+import { useListEmployee } from "../../hooks/useGetAllEmployees";
 
 type BreadcrumbItem = {
   label: string;
@@ -27,6 +29,7 @@ const ParentPage: React.FC = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
   const logoutMutation = useLogout();
+  const [employeesFilter, setEmployeesFilter] = useState<'all' | 'active' | 'inactive' | 'online'>("all");
 
   const tokenData = getUserDataFromToken();
 
@@ -87,7 +90,7 @@ const ParentPage: React.FC = () => {
       case "planning":
         return { title: "Planning", icon: <CalendarMonthOutlinedIcon /> };
       case "salarie":
-        return { title: "Salarié", icon: <GroupIcon /> };
+        return { title: "Salariés ("+employeeCount+")", icon: <GroupIcon /> };
       case "salarieDetail":
         return {
           title: breadcrumbs[breadcrumbs.length - 1]?.label || "Détails salarié",
@@ -109,6 +112,9 @@ const ParentPage: React.FC = () => {
     }
   };
 
+  const { data: employeeData } = useListEmployee(activePage, employeesFilter, sessionStorage.getItem("token") ?? "");
+  const employeeCount = employeeData?.length ?? 0;
+
   const renderContent = () => {
     switch (activePage) {
       case "dashboard":
@@ -116,14 +122,11 @@ const ParentPage: React.FC = () => {
       case "planning":
         return <div>Planning Page</div>;
       case "salarie":
-        return (
-          <div>
-            <div>Liste des salariés</div>
-            <button onClick={() => handleNavigation("salarieDetail", "Jean Dupont", "1")}>
-              Voir Jean Dupont
-            </button>
-          </div>
-        );
+        return <EmployeesPage
+          handleNavigation={handleNavigation}
+          employees={employeeData ?? []}
+          setEmployeesFilter={setEmployeesFilter}
+        />;
       case "salarieDetail":
         return <div>Détails du salarié #{breadcrumbs[breadcrumbs.length - 1].id}</div>;
       case "missions":

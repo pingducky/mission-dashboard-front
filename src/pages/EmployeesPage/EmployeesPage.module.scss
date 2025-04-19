@@ -1,0 +1,24 @@
+@use '../../app/styles/global.scss' as *;
+@use "../../app/styles/colors" as *;
+@use '../../app/styles/mixins' as *;
+
+.list_employee_container {
+    display: grid;
+    grid-template-columns: repeat(1, 80%);
+    grid-column-gap: 5%;
+    grid-row-gap: 20px;
+
+    @include mixinStart(lg) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include mixinStart(xxl) {
+        grid-template-columns: repeat(3, 30%);
+    }
+
+    
+
+    .employe_container {
+        max-width: 100%;
+    }
+}
