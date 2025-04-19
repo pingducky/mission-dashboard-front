@@ -14,8 +14,8 @@ import "../../app/styles/global.scss";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useLogout } from "../../hooks/useLogout";
-import styles from "./ParentPage.module.scss";
 import DashboardPage from "../DashboardPage/DashboardPage";
+import styles from "./ParentPage.module.scss";
 
 type BreadcrumbItem = {
   label: string;
@@ -112,7 +112,7 @@ const ParentPage: React.FC = () => {
   const renderContent = () => {
     switch (activePage) {
       case "dashboard":
-        return <DashboardPage/>;
+        return <DashboardPage firstname={userData?.firstName} />;
       case "planning":
         return <div>Planning Page</div>;
       case "salarie":

@@ -6,27 +6,15 @@ import TimeIcon from "../../assets/images/icons/timeDashboard.svg";
 import TargetIcon from "../../assets/images/icons/targetDashboard.svg";
 import styles from "./DashboardPage.module.scss";
 
-const DashboardPage: React.FC = () => {
-  type DashboardCardData = {
-    /**
-     * Url du SVG Illustration/Icon
-     */
-    icon: string;
-    /**
-     * Texte
-     */
-    label: string;
-    /**
-     * Valeurs chiffrés
-     */
-    value: string | number;
-    /**
-     * Texte alternatif pour la balise img
-     */
-    alt: string;
-  };
+interface DashboardPageProps {
+  /**
+   * Prénom
+   */
+  firstname?: string;
+}
 
-  const cards: DashboardCardData[] = [
+const DashboardPage: React.FC<DashboardPageProps> = ({ firstname }) => {
+  const cards = [
     {
       icon: EmployeesIcon,
       label: "employés",
@@ -57,7 +45,7 @@ const DashboardPage: React.FC = () => {
     <div className={styles.dashboardContainer}>
       <div className={styles.dashboardWelcome}>
         <div className={styles.dashboardText}>
-          <h1>Bonjour, Thomas</h1>
+          <h1>Bonjour, {firstname ?? "Utilisateur"}</h1>
           <h2>Prêt(e) à faire briller la journée ? ✨</h2>
         </div>
         <div className={styles.dashboardImage}>
@@ -68,15 +56,16 @@ const DashboardPage: React.FC = () => {
       <div className={styles.dashboardInfoParent}>
         <h2>Les informations en plus</h2>
         <div className={styles.dashboardInfoGroup}>
-          {cards.map((card, index) => (
-            <div className={styles.infoCard} key={index}>
+          {cards.map((card) => (
+            <div className={styles.infoCard} key={`${card.label}-${card.alt}`}>
               <img
                 src={card.icon}
                 alt={card.alt}
                 className={styles.infoCardIcon}
               />
               <div className={styles.infoCardText}>
-                <span className={styles.infoCardTextValue}>{card.value}</span> {card.label}
+                <span className={styles.infoCardTextValue}>{card.value}</span>{" "}
+                {card.label}
               </div>
             </div>
           ))}
