@@ -5,6 +5,7 @@ import VerifiedOutlinedIcon from '@mui/icons-material/VerifiedOutlined';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import AdsClickOutlinedIcon from '@mui/icons-material/AdsClickOutlined';
 import styles from "./DashboardPage.module.scss";
+import MissionsWrapper from "../../components/missions/MissionsWrapper/MissionsWrapper";
 
 interface DashboardPageProps {
   /**
@@ -70,6 +71,8 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ firstname }) => {
           ))}
         </div>
       </div>
+
+      <MissionsWrapper/>
     </div>
   );
 };
