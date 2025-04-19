@@ -16,10 +16,6 @@ interface IconButtonProps {
    */
   fontWeight?: fontWeight;
   /**
-   * Détermine si le bouton est actif (état visuel ou fonctionnel)
-   */
-  isActive?: boolean;
-  /**
    * Désactive le bouton s'il est défini sur true
    */
   isDisabled?: boolean;
