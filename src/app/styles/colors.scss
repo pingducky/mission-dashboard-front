@@ -1,7 +1,6 @@
 $black:#2C2C2C;
 $darkBlue:#2B2C89;
 $blue:#1E90D9;
-$lightBlue: #1E90D9;
 $pastelBlue:#DCE2FF;
 $pastelGrayBlue:#EAEAF4;
 $lightGray:#FAFBFF;
@@ -9,7 +8,13 @@ $darkGray:#9FA4BE;
 $grayBackground:#F0F0F4;
 $white:#FFFFFF;
 $pink:#FF3881;
-$blueBackground: #F5F6FB;
+
+$darkBackground: mix(white, $black, 96%);
+$darkBlueBackground: mix(white, $darkBlue, 96%);
+$blueBackground: mix(white, $blue, 96%);
+$darkGrayBackground: mix(white, $darkGray, 96%);
+$whiteBackground: mix(white, $white, 96%);
+$pinkBackground: mix(white, $pink, 96%);
 
 $purplePastelBackground: #d5d1ff;
 

@@ -69,7 +69,7 @@ $drawerClosedWidth: 60px;
   top: 60%;
   right: 0;
   transform: translateY(-50%);
-  background-color: $blueBackground;
+  background-color: $darkBlueBackground;
   border: none;
   border-radius: 20px 0 0 20px;
   width: 28px;
@@ -155,8 +155,6 @@ $drawerClosedWidth: 60px;
       &:hover,
       &.active {
         border-left: solid 2px $darkBlue;
-        background-color: $blueBackground;
-        color: $darkBlue;
       }
 
       :global(.iconText) {
