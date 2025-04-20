@@ -41,7 +41,6 @@
     position: relative;
     overflow-y: auto;
     padding-right: 16px;
-    // height: 100svh;
 
     .sectionTitle {
       font-size: 25px;
@@ -51,6 +50,18 @@
       color: $darkGray;
       font-size: 15px;
       margin-bottom: 30px;
+    }
+
+    .selectRole {
+      margin-top: 25px;
+      width: 50%;
+    }
+
+    .validateButtons {
+      display: flex;
+      gap: 30px;
+      margin-top: 50px;
+      justify-content: center;
     }
   }
   
