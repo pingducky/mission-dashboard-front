@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { useLogout } from "../../hooks/useLogout";
 import EmployeesPage from "../EmployeesPage/EmployeesPage";
 import { EmployeeFilter, useListEmployee } from "../../hooks/useGetAllEmployees";
+import DashboardPage from "../DashboardPage/DashboardPage";
 import styles from "./ParentPage.module.scss";
 
 type BreadcrumbItem = {
@@ -116,7 +117,7 @@ const ParentPage: React.FC = () => {
   const renderContent = () => {
     switch (activePage) {
       case "dashboard":
-        return <div>Tableau de bord</div>;
+        return <DashboardPage firstname={userData?.firstName} />;
       case "planning":
         return <div>Planning Page</div>;
       case "salarie":
