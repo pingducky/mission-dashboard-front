@@ -14,9 +14,9 @@ import "../../app/styles/global.scss";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useLogout } from "../../hooks/useLogout";
-import styles from "./ParentPage.module.scss";
 import EmployeesPage from "../EmployeesPage/EmployeesPage";
-import { useListEmployee } from "../../hooks/useGetAllEmployees";
+import { EmployeeFilter, useListEmployee } from "../../hooks/useGetAllEmployees";
+import styles from "./ParentPage.module.scss";
 
 type BreadcrumbItem = {
   label: string;
@@ -28,8 +28,7 @@ const ParentPage: React.FC = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
   const logoutMutation = useLogout();
-  const [employeesFilter, setEmployeesFilter] = useState<'all' | 'active' | 'inactive' | 'online'>("all");
-
+  const [employeesFilter, setEmployeesFilter] = useState<EmployeeFilter>("all");
   const tokenData = getUserDataFromToken();
 
   useEffect(() => {
@@ -111,7 +110,7 @@ const ParentPage: React.FC = () => {
     }
   };
 
-  const { data: employeeData } = useListEmployee(activePage, employeesFilter, sessionStorage.getItem("token") ?? "");
+  const { data: employeeData } = useListEmployee(activePage, employeesFilter, sessionStorage.getItem("token"));
   const employeeCount = employeeData?.length ?? 0;
 
   const renderContent = () => {

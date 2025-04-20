@@ -1,7 +1,8 @@
 import EmployeeBox from "../../components/EmployeeBox/EmployeeBox";
 import { User } from "../../hooks/useUserData";
-import Styles from "./EmployeesPage.module.scss";
 import FilterEmployees from "./FilterEmployees/FilterEmployees";
+import { EmployeeFilter } from "../../hooks/useGetAllEmployees";
+import Styles from "./EmployeesPage.module.scss";
 
 interface EmployeesPageProps {
     /**
@@ -15,7 +16,7 @@ interface EmployeesPageProps {
     /**
      * Fonction pour mettre à jour le filtre des employés
      */
-    setEmployeesFilter: (filter: 'all' | 'active' | 'inactive' | 'online') => void;
+    setEmployeesFilter: (filter: EmployeeFilter) => void;
 }
 
 const EmployeesPage: React.FC<EmployeesPageProps> = ({

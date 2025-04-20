@@ -1,6 +1,9 @@
 import { useMutation } from "@tanstack/react-query";
 
 export type authResp = {
+    /**
+     * Token
+     */
     token: string;
 }
 

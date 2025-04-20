@@ -1,10 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import { User } from "./useUserData";
 
+export type EmployeeFilter = 'all' | 'active' | 'inactive' | 'online';
+
 const API_URL = import.meta.env.VITE_API_URL;
 
-const getAllEmployees = async (token: string, filter: 'all' | 'active' | 'inactive' | 'online'): Promise<User[]> => {
-    if (!token) return [];
+const getAllEmployees = async (token: string|null, filter: EmployeeFilter): Promise<User[]> => {
+    if (!token) {
+        window.location.href = "/login";
+        return [];
+    }
 
     return await fetch(`${API_URL}/employee?status=`+filter, {
         method: 'GET',
@@ -19,8 +24,7 @@ const getAllEmployees = async (token: string, filter: 'all' | 'active' | 'inacti
     });
 }
 
-export const useListEmployee = (page: string, filter: 'all' | 'active' | 'inactive' | 'online' = "all", token: string) => {
-
+export const useListEmployee = (page: string, filter: EmployeeFilter = "all", token: string|null) => {
     return useQuery({
         queryKey: ["employees", token, filter],
         queryFn: () => getAllEmployees(token, filter),

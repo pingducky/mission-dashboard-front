@@ -2,8 +2,7 @@
 @use "../../app/styles/colors" as *;
 @use "../../app/styles/mixins.scss" as *;
 
-
-.employee_box {
+.employeeBox {
     background-color: $white;
     padding: 20px;
     border-radius: 20px;
@@ -11,7 +10,7 @@
     max-width: 350px;
     margin: 0 auto;
 
-    .employee_letters {
+    .employeeLetters {
         border-radius: 50%;
         width: 50px;
         height: 50px;
@@ -73,25 +72,22 @@
     h3 {
         @include PoppinsMedium();
         color: $darkBlue;
-        font-size: 15px;
-        font-size: 13px;
+        font-size: var(--font-size-text)
     }
 
     p {
         @include PoppinsSemiBold();
         color: $darkGray;
-        font-size: 13px;
         margin: 10px 0;
         font-size: var(--font-size-text);
     }
 
-    .employee_infos {
+    .employeeInfos {
         background-color: $lightGrayBackground;
         padding: 10px;
         border-radius: 15px;
 
-
-        .flex_container {
+        .flexContainer {
             display: flex;
             flex-direction: row;
             justify-content: space-between;            
@@ -113,7 +109,7 @@
             }
         }
 
-        .icon_info {
+        .iconInfo {
             display: flex;
             justify-content: start;
             align-items: center;
