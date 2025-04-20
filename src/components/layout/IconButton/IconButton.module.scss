@@ -170,6 +170,16 @@
       border-color: $darkGray;
       color: $darkGray;
     }
+
+    &.red {
+      border-color: $red;
+      color: $red;
+
+      &:hover {
+        background-color: $red;
+        color: $white;
+      }
+    }
   }
 
   &.ghost {
@@ -200,6 +210,10 @@
 
     &.darkGray {
       color: $darkGray;
+    }
+
+    &.red {
+      color: $red;
     }
   }
 }
