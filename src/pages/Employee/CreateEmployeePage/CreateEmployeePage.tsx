@@ -1,4 +1,4 @@
-import {  useState } from 'react';
+import React, {  useState } from 'react';
 import {
   TextField,
   Checkbox,
@@ -6,6 +6,7 @@ import {
   Select,
   MenuItem,
   InputLabel,
+  AlertProps,
 } from '@mui/material';
 import IconButton from '../../../components/layout/IconButton/IconButton';
 import { SelectChangeEvent } from '@mui/material';
@@ -17,12 +18,13 @@ import DoneIcon from '@mui/icons-material/Done';
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import { useRoles } from '../../../hooks/useRoles';
 import CloseIcon from '@mui/icons-material/Close';
-import styles from './CreateEmployeePage.module.scss';
 import { useCreateEmployee } from '../../../hooks/useCreateEmployee';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert, { AlertColor } from '@mui/material/Alert';
+import styles from './CreateEmployeePage.module.scss';
 
 const CreateEmployeePage = () => {
   const { data: roles, isLoading } = useRoles();
-
   const { mutate: createEmployee } = useCreateEmployee();
 
   type buttonData = 'info' | 'notif' | 'doc' | 'param';
@@ -37,6 +39,7 @@ const CreateEmployeePage = () => {
     { code: 'IT', name: 'Italie' },
   ];
 
+  // Champs du formulaire en erreur
   const [errors, setErrors] = useState({
     firstName: false,
     lastName: false,
@@ -48,9 +51,11 @@ const CreateEmployeePage = () => {
     role: false,
   });
 
+  // Todo : rendre actif les boutons en fonction du scroll dans la page (non prioritaire)
   const [activeButton, setActiveButton] = useState<buttonData>('info');
   const [selectedRole, setSelectedRole] = useState('');
 
+  // Champs du formumaire
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -62,6 +67,12 @@ const CreateEmployeePage = () => {
   const [notificationMail, setNotificationMail] = useState(false);
   const [notificationSms, setNotificationSms] = useState(false);
   const [isGpsTrackingAllowed, setIsGpsTrackingAllowed] = useState(false);
+
+  // Snackbear pour connaire l'état de la création de l'employé
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState<AlertColor>('success');
+
 
   const resetFormFields = () => {
     setFirstName('');
@@ -81,7 +92,7 @@ const CreateEmployeePage = () => {
     setSelectedRole(event.target.value);
   };
 
-  const handleSubmit = () => {
+  const checkAndSetFormErrors = () => {
     const newErrors = {
       firstName: firstName.trim() === '',
       lastName: lastName.trim() === '',
@@ -94,10 +105,11 @@ const CreateEmployeePage = () => {
     };
   
     setErrors(newErrors);
-  
-    const hasError = Object.values(newErrors).some((e) => e);
-    if (hasError) return;
-  
+
+    return Object.values(newErrors).some((e) => e);
+  }
+
+  const submitEmployee = () => {
     const payload = {
       firstName,
       lastName,
@@ -113,22 +125,54 @@ const CreateEmployeePage = () => {
       isEnabled: true,
       roleIds: selectedRole ? [Number(selectedRole)] : [],
     };
-  
-    createEmployee(payload);
-    resetFormFields();
-    setErrors({
-      firstName: false,
-      lastName: false,
-      email: false,
-      phoneNumber: false,
-      address: false,
-      city: false,
-      postalCode: false,
-      role: false,
+
+    createEmployee(payload, {
+      onSuccess: () => {
+        resetFormFields();
+        setErrors({
+          firstName: false,
+          lastName: false,
+          email: false,
+          phoneNumber: false,
+          address: false,
+          city: false,
+          postalCode: false,
+          role: false,
+        });
+        setSnackbarMessage('Employé créé avec succès !');
+        setSnackbarSeverity('success');
+        setSnackbarOpen(true);
+      },
+      onError: () => {
+        setSnackbarMessage("Échec lors de la création de l'employé.");
+        setSnackbarSeverity('error');
+        setSnackbarOpen(true);
+      }
     });
   };
+
+  const handleSubmit = () => {
+    const hasError = checkAndSetFormErrors();
+    if (hasError) return;
+
+    submitEmployee();
+  };
   
+  const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
   
+  const handleCloseSnackbar = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbarOpen(false);
+  };
+  
+
   return (
     <div className={styles.container}>
       <div className={styles.sidebar}>
@@ -351,6 +395,12 @@ const CreateEmployeePage = () => {
           />
         </div>
       </div>
+      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+      <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
+        {snackbarMessage}
+      </Alert>
+    </Snackbar>
+
     </div>
   );
 };
