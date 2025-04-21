@@ -14,6 +14,8 @@ import "../../app/styles/global.scss";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useLogout } from "../../hooks/useLogout";
+import EmployeesPage from "../EmployeesPage/EmployeesPage";
+import { EmployeeFilter, useListEmployee } from "../../hooks/useGetAllEmployees";
 import DashboardPage from "../DashboardPage/DashboardPage";
 import styles from "./ParentPage.module.scss";
 import CreateEmployeePage from "../Employee/CreateEmployeePage/CreateEmployeePage";
@@ -28,7 +30,7 @@ const ParentPage: React.FC = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
   const logoutMutation = useLogout();
-
+  const [employeesFilter, setEmployeesFilter] = useState<EmployeeFilter>("all");
   const tokenData = getUserDataFromToken();
 
   useEffect(() => {
@@ -88,7 +90,7 @@ const ParentPage: React.FC = () => {
       case "planning":
         return { title: "Planning", icon: <CalendarMonthOutlinedIcon /> };
       case "salarie":
-        return { title: "Salarié", icon: <GroupIcon /> };
+        return { title: "Salariés ("+employeeCount+")", icon: <GroupIcon /> };
       case "salarieDetail":
         return {
           title: breadcrumbs[breadcrumbs.length - 1]?.label || "Détails salarié",
@@ -110,6 +112,9 @@ const ParentPage: React.FC = () => {
     }
   };
 
+  const { data: employeeData } = useListEmployee(activePage, employeesFilter, sessionStorage.getItem("token"));
+  const employeeCount = employeeData?.length ?? 0;
+
   const renderContent = () => {
     switch (activePage) {
       case "dashboard":
@@ -117,14 +122,11 @@ const ParentPage: React.FC = () => {
       case "planning":
         return <div>Planning Page</div>;
       case "salarie":
-        return (
-          <div>
-            <div>Liste des salariés</div>
-            <button onClick={() => handleNavigation("salarieDetail", "Jean Dupont", "1")}>
-              Voir Jean Dupont
-            </button>
-          </div>
-        );
+        return <EmployeesPage
+          handleNavigation={handleNavigation}
+          employees={employeeData ?? []}
+          setEmployeesFilter={setEmployeesFilter}
+        />;
       case "salarieDetail":
         return <div>Détails du salarié #{breadcrumbs[breadcrumbs.length - 1].id}</div>;
       case "salarieCreation": 
