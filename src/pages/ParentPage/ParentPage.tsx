@@ -8,6 +8,7 @@ import GroupIcon from "@mui/icons-material/Group";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+import SettingsIcon from '@mui/icons-material/Settings';
 import { getUserDataFromToken } from "../../utils/auth";
 import { useUserData } from "../../hooks/useUserData";
 import "../../app/styles/global.scss";
@@ -96,6 +97,11 @@ const ParentPage: React.FC = () => {
           title: breadcrumbs[breadcrumbs.length - 1]?.label || "Détails salarié",
           icon: <GroupIcon />,
         };
+      case "salarieCreation":
+        return {
+          title: "Nouveau salarié",
+          icon: <SettingsIcon />,
+        };
       case "missions":
         return { title: "Liste missions", icon: <ListAltIcon /> };
       case "missionDetail":
@@ -130,7 +136,7 @@ const ParentPage: React.FC = () => {
       case "salarieDetail":
         return <div>Détails du salarié #{breadcrumbs[breadcrumbs.length - 1].id}</div>;
       case "salarieCreation": 
-        return <CreateEmployeePage/>
+        return <CreateEmployeePage handleNavigation={handleNavigation}/>
       case "missions":
         return (
           <div>
