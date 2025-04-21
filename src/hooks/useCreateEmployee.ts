@@ -57,7 +57,6 @@ type CreateEmployeePayload = {
     roleIds: number[];
   };
   
-
 const createEmployee = async (data: CreateEmployeePayload) => {
   const res = await fetch(`${API_URL}/employee`, {
     method: "POST",

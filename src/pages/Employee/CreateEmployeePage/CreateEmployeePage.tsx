@@ -1,33 +1,32 @@
-import React, {  useState } from 'react';
+import React, { useState } from 'react';
 import {
-  TextField,
   Checkbox,
   FormControlLabel,
-  Select,
-  MenuItem,
   InputLabel,
-  AlertProps,
+  MenuItem,
+  Select,
+  TextField,
 } from '@mui/material';
-import IconButton from '../../../components/layout/IconButton/IconButton';
-import { SelectChangeEvent } from '@mui/material';
-
-import InfoOutlineIcon from '@mui/icons-material/InfoOutline';
-import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert, { AlertColor, AlertProps } from '@mui/material/Alert';
+import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
+import CloseIcon from '@mui/icons-material/Close';
 import DescriptionIcon from '@mui/icons-material/Description';
 import DoneIcon from '@mui/icons-material/Done';
-import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
-import { useRoles } from '../../../hooks/useRoles';
-import CloseIcon from '@mui/icons-material/Close';
+import InfoOutlineIcon from '@mui/icons-material/InfoOutline';
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+import { SelectChangeEvent } from '@mui/material';
+import IconButton from '../../../components/layout/IconButton/IconButton';
 import { useCreateEmployee } from '../../../hooks/useCreateEmployee';
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert, { AlertColor } from '@mui/material/Alert';
+import { useRoles } from '../../../hooks/useRoles';
 import styles from './CreateEmployeePage.module.scss';
+
+
+type sideMenuButton = 'info' | 'notif' | 'doc' | 'param';
 
 const CreateEmployeePage = () => {
   const { data: roles, isLoading } = useRoles();
   const { mutate: createEmployee } = useCreateEmployee();
-
-  type buttonData = 'info' | 'notif' | 'doc' | 'param';
 
   const countryList = [
     { code: 'FR', name: 'France' },
@@ -40,7 +39,7 @@ const CreateEmployeePage = () => {
   ];
 
   // Champs du formulaire en erreur
-  const [errors, setErrors] = useState({
+  const [errorFields, setErrorFields] = useState({
     firstName: false,
     lastName: false,
     email: false,
@@ -52,7 +51,7 @@ const CreateEmployeePage = () => {
   });
 
   // Todo : rendre actif les boutons en fonction du scroll dans la page (non prioritaire)
-  const [activeButton, setActiveButton] = useState<buttonData>('info');
+  const [activeButton, setActiveButton] = useState<sideMenuButton>('info');
   const [selectedRole, setSelectedRole] = useState('');
 
   // Champs du formumaire
@@ -104,7 +103,7 @@ const CreateEmployeePage = () => {
       role: selectedRole === '',
     };
   
-    setErrors(newErrors);
+    setErrorFields(newErrors);
 
     return Object.values(newErrors).some((e) => e);
   }
@@ -129,7 +128,7 @@ const CreateEmployeePage = () => {
     createEmployee(payload, {
       onSuccess: () => {
         resetFormFields();
-        setErrors({
+        setErrorFields({
           firstName: false,
           lastName: false,
           email: false,
@@ -176,47 +175,46 @@ const CreateEmployeePage = () => {
   return (
     <div className={styles.container}>
       <div className={styles.sidebar}>
-      <IconButton
-        specialClass={styles.menuBtn}
-        startIcon={<InfoOutlineIcon />}
-        text="Informations générales"
-        variant="ghost"
-        isRounded
-        color={"darkGray"}
-        isActive={activeButton === 'info'}
-        onClick={() => {setActiveButton('info')}}
-      />
-      <IconButton
-        startIcon={<NotificationsNoneIcon />}
-        text="Notifications"
-        variant="ghost"
-        isRounded
-        color={"darkGray"}
-        isActive={activeButton === 'notif'}
-        onClick={() => {setActiveButton('notif')}}
-      />
-      <IconButton
-        startIcon={<DescriptionIcon />}
-        text="Documents"
-        variant="ghost"
-        isRounded
-        color={"darkGray"}
-        isActive={activeButton === 'doc'}
-        onClick={() => {setActiveButton('doc')}}
-      />
-      <IconButton
-        startIcon={<BusinessCenterIcon />}
-        text="Paramètres entreprise"
-        variant="ghost"
-        isRounded
-        color={"darkGray"}
-        isActive={activeButton === 'param'}
-        onClick={() => {setActiveButton('param')}}
-      />
-    </div>
+        <IconButton
+          specialClass={styles.menuBtn}
+          startIcon={<InfoOutlineIcon />}
+          text="Informations générales"
+          variant="ghost"
+          isRounded
+          color={"darkGray"}
+          isActive={activeButton === 'info'}
+          onClick={() => {setActiveButton('info')}}
+        />
+        <IconButton
+          startIcon={<NotificationsNoneIcon />}
+          text="Notifications"
+          variant="ghost"
+          isRounded
+          color={"darkGray"}
+          isActive={activeButton === 'notif'}
+          onClick={() => {setActiveButton('notif')}}
+        />
+        <IconButton
+          startIcon={<DescriptionIcon />}
+          text="Documents"
+          variant="ghost"
+          isRounded
+          color={"darkGray"}
+          isActive={activeButton === 'doc'}
+          onClick={() => {setActiveButton('doc')}}
+        />
+        <IconButton
+          startIcon={<BusinessCenterIcon />}
+          text="Paramètres entreprise"
+          variant="ghost"
+          isRounded
+          color={"darkGray"}
+          isActive={activeButton === 'param'}
+          onClick={() => {setActiveButton('param')}}
+        />
+      </div>
 
       <div className={styles.separator} />
-
       <div className={styles.content}>
         <div className={styles.section}>
           <p className={styles.sectionTitle}>Informations générales</p>
@@ -229,7 +227,7 @@ const CreateEmployeePage = () => {
               label="Nom"
               variant="outlined"
               value={lastName}
-              error={errors.lastName}
+              error={errorFields.lastName}
               onChange={(e) => setLastName(e.target.value)}
             />
             </div>
@@ -239,7 +237,7 @@ const CreateEmployeePage = () => {
               label="Prénom"
               variant="outlined"
               value={firstName}
-              error={errors.firstName}
+              error={errorFields.firstName}
               onChange={(e) => setFirstName(e.target.value)}
             />
             </div>
@@ -249,7 +247,7 @@ const CreateEmployeePage = () => {
                 label="Email"
                 variant="outlined"
                 value={email}
-                error={errors.email}
+                error={errorFields.email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
@@ -259,7 +257,7 @@ const CreateEmployeePage = () => {
               label="Numéro de téléphone"
               variant="outlined"
               value={phoneNumber}
-              error={errors.phoneNumber}
+              error={errorFields.phoneNumber}
               onChange={(e) => setPhoneNumber(e.target.value)}
             />
             </div>
@@ -269,7 +267,7 @@ const CreateEmployeePage = () => {
               label="Adresse"
               variant="outlined"
               value={address}
-              error={errors.address}
+              error={errorFields.address}
               onChange={(e) => setAddress(e.target.value)}
             />
             </div>
@@ -279,7 +277,7 @@ const CreateEmployeePage = () => {
               label="Ville"
               variant="outlined"
               value={city}
-              error={errors.city}
+              error={errorFields.city}
               onChange={(e) => setCity(e.target.value)}
             />
             </div>
@@ -289,7 +287,7 @@ const CreateEmployeePage = () => {
               label="Code postal"
               variant="outlined"
               value={postalCode}
-              error={errors.postalCode}
+              error={errorFields.postalCode}
               onChange={(e) => setPostalCode(e.target.value)}
             />
             </div>
@@ -308,7 +306,6 @@ const CreateEmployeePage = () => {
                 ))}
               </Select>
             </div>
-
           </div>
         </div>
 
@@ -366,7 +363,7 @@ const CreateEmployeePage = () => {
                   value={selectedRole}
                   onChange={handleRoleChange}
                   fullWidth
-                  error={errors.role}
+                  error={errorFields.role}
                 >
                   {roles?.map((role) => (
                     <MenuItem key={role.id} value={role.id}>
@@ -396,11 +393,10 @@ const CreateEmployeePage = () => {
         </div>
       </div>
       <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
-      <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
+      <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity}>
         {snackbarMessage}
       </Alert>
     </Snackbar>
-
     </div>
   );
 };
