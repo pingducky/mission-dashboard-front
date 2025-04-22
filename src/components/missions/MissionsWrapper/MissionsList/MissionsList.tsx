@@ -1,20 +1,38 @@
-import MissionCard from './MissionCard/MissionCard'
+// MissionsList.tsx
+import MissionCard from "./MissionCard/MissionCard";
+import styles from "./MissionsList.module.scss";
 
-import styles from './MissionsList.module.scss'
+type Mission = {
+  id: number;
+  date: string;
+  time: string;
+  type: string;
+  place: string;
+  duration: string;
+  endTime: string;
+  team: string;
+  teamMembers?: string[];
+};
 
-const dummyMissions = [
-  { date: 'Lundi 24 Mars', time: '09:00', type: 'Nettoyage vitres' },
-  { date: 'Mardi 25 Mars', time: '14:00', type: 'Ménage réguliers' }
-]
+type MissionsListProps = {
+  missions: Mission[];
+};
 
-const MissionsList = () => {
+const MissionsList = ({ missions }: MissionsListProps) => {
   return (
-    <div className={styles.missionsList}>
-      {dummyMissions.map((mission, index) => (
-        <MissionCard key={index} {...mission} />
-      ))}
+    <div className={styles.missionsListContainer}>
+      <div className={styles.timeline}>
+        <div className={`${styles.dot} ${styles.active}`} />
+        <div className={styles.line} />
+        <div className={`${styles.dot}`} />
+      </div>
+      <div className={styles.missionsList}>
+        {missions.map((mission) => (
+          <MissionCard key={mission.id} {...mission} />
+        ))}
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default MissionsList
+export default MissionsList;

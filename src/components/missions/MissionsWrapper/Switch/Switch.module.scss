@@ -1,0 +1,73 @@
+@use '../../../../app/styles/global.scss'as *;
+@use '../../../../app/styles/colors.scss'as *;
+@use '../../../../app/styles/mixins.scss'as *;
+
+// .switchContainer {
+//     display: inline-flex;
+//     // gap: 45px;
+//     background-color: $grayBackground;
+//     padding: 5px;
+//     border-radius: 15px;
+
+//     .buttonSwitch {
+//         padding: 15px 35px;
+//         border-radius: 10px;
+//         transition: .2s ease-in-out;
+
+//         &:hover,
+//         &.active {
+//             background-color: $white;
+//         }
+//     }
+// }
+
+@use '../../../../app/styles/global.scss'as *;
+@use '../../../../app/styles/colors.scss'as *;
+@use '../../../../app/styles/mixins.scss'as *;
+
+.switchContainer {
+    position: relative;
+    display: inline-flex;
+    background-color: $grayBackground;
+    padding: 5px;
+    border-radius: 15px;
+
+    @include mixinBreakpoints(xs) {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .switchBackground {
+        position: absolute;
+        width: calc(50% - 5px);
+        height: calc(100% - 10px);
+        background-color: $white;
+        border-radius: 10px;
+        transition: transform 0.3s ease;
+        z-index: 0;
+
+        @include mixinBreakpoints(xs) {
+            width: calc(100% - 10px);
+            height: calc(50% - 5px);
+        }
+    }
+
+    .translateRight {
+        transform: translateX(100%);
+
+        @include mixinBreakpoints(xs) {
+            transform: translateY(100%);
+        }
+    }
+
+    .buttonSwitch {
+        position: relative;
+        z-index: 1;
+        padding: 15px 35px;
+        border-radius: 10px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        transition: color 0.2s ease;
+    }
+}

@@ -1,26 +1,44 @@
-import { useState } from 'react'
+import styles from "./Switch.module.scss";
+import IconButton from "../../../layout/IconButton/IconButton";
+import clsx from "clsx";
 
-import styles from './Switch.module.scss'
+type MissionTab = "upcoming" | "past";
 
-const Switch = () => {
-  const [activeTab, setActiveTab] = useState<'upcoming' | 'past'>('upcoming')
+type SwitchProps = {
+  activeTab: MissionTab;
+  onTabChange: (tab: MissionTab) => void;
+};
 
+const Switch = ({ activeTab, onTabChange }: SwitchProps) => {
   return (
     <div className={styles.switchContainer}>
-      <button 
-        className={activeTab === 'upcoming' ? styles.active : ''}
-        onClick={() => setActiveTab('upcoming')}
-      >
-        Prochaines missions
-      </button>
-      <button 
-        className={activeTab === 'past' ? styles.active : ''}
-        onClick={() => setActiveTab('past')}
-      >
-        Missions passées
-      </button>
+      <div
+        className={clsx(styles.switchBackground, {
+          [styles.translateRight]: activeTab === "past",
+        })}
+      />
+      <IconButton
+        text="Prochaines missions"
+        onClick={() => onTabChange("upcoming")}
+        specialClass={clsx(styles.buttonSwitch, {
+          [styles.active]: activeTab == "upcoming",
+        })}
+        variant={"ghost"}
+        color={"black"}
+        isRounded={false}
+      />
+      <IconButton
+        text="Missions passées"
+        onClick={() => onTabChange("past")}
+        specialClass={clsx(styles.buttonSwitch, {
+          [styles.active]: activeTab == "past",
+        })}
+        variant={"ghost"}
+        color={"black"}
+        isRounded={false}
+      />
     </div>
-  )
-}
+  );
+};
 
-export default Switch
+export default Switch;
