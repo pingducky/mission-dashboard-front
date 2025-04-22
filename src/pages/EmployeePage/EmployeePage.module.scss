@@ -1,0 +1,83 @@
+@use "../../app/styles/colors" as *;
+@use "../../app/styles/global.scss" as *;
+
+.gridContainer {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 20px;
+    height: 100%;
+    width: 100%;
+
+    .employeeInfo {
+        background-color: $white;
+        padding: 35px;
+        border-radius: 5px;
+        grid-column: 1 / span 2;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+
+        .employeeLetters {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            line-height: 50px;
+            padding: 5px;
+            background-color: $pastelGrayBlue;
+            color: $darkBlue;
+            display: block;
+            text-align: center;
+            font-size: 23px;
+            position: relative;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: calc(var(--font-size-text) + 2px);
+            &:not(.grayText) {
+                color: $black;
+            }
+        }
+
+        .grayText {
+            color: $darkGray;
+            font-size: var(--font-size-text);
+            display: block;
+        }
+
+        .employeeBlock {
+            span, p, h3 {
+                text-align: center;
+                margin: 0 auto;
+            }
+
+            border-right: 1px solid $grayBackground;
+            margin-right: 35px;
+        }
+
+        .employeeInfoBlock {
+            grid-column: 2 / span 3;
+
+            ul {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 20%;
+            }
+        }
+    }
+
+    .filesContainer {
+        grid-column: 3;
+        background-color: $white;
+        border-radius: 5px;
+        padding: 20px;
+    }
+
+    .component {
+        background-color: red;
+        height: 100px;
+        &:last-child {
+            grid-column: 1 / span 3;
+        }
+    }
+}

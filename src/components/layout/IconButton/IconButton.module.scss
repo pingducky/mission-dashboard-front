@@ -108,6 +108,16 @@
         color: $darkGray;
       }
     }
+
+    &.lightGray {
+      background-color: $grayBackground;
+      color: $black;
+
+      &:hover {
+        background-color: $darkGray;
+        color: $white;
+      }
+    }
   }
 
   &.outlined {

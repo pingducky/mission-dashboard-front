@@ -17,19 +17,27 @@ interface EmployeesPageProps {
      * Fonction pour mettre à jour le filtre des employés
      */
     setEmployeesFilter: (filter: EmployeeFilter) => void;
+    /**
+     * Fonction pour mettre à jour l'id de l'employé
+     */
+    setEmployeeId: (id: number) => void,
 }
 
 const EmployeesPage: React.FC<EmployeesPageProps> = ({
         handleNavigation,
         employees,
-        setEmployeesFilter
+        setEmployeesFilter,
+        setEmployeeId,
     }) => {
     const employeeBoxes = employees?.map((employee) => {
         return(
-            <li 
+            <li
                 key={employee.id}
                 className={Styles.employe_container}
-                onClick={() => handleNavigation("salarieDetail", employee.firstName, employee.id.toString())}
+                onClick={() => {
+                    setEmployeeId(employee.id);
+                    handleNavigation("salarieDetail", employee.firstName, employee.id.toString());
+                }}
             >
                 <EmployeeBox employee={employee} />
             </li>
