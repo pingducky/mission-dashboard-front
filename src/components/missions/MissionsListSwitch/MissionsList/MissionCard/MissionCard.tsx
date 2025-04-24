@@ -4,13 +4,13 @@ import styles from "./MissionCard.module.scss";
 
 type MissionCardProps = {
   /**
-   * Estimation de la fin de mission
+   * Date et heure début de mission
    */
   startDate: Date;
   /**
-   * Nom
+   * Estimation de la date et heure de fin de mission
    */
-  estimatedEndDate: Date;
+  estimatedEndDate?: Date;
   /**
    * Type ménages réguliers ou ménages unique
    */
@@ -38,13 +38,25 @@ const MissionCard = ({
   teamMembers = [],
 }: MissionCardProps) => {
 
+  const capitalizeFirstLetter = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
+
+  const isValidDate = (date: unknown): date is Date =>
+    date instanceof Date && !isNaN(date.getTime());
+
+  const estimatedDateLabel = isValidDate(estimatedEndDate)
+    ? capitalizeFirstLetter(format(estimatedEndDate, "EEEE d MMMM", { locale: fr }))
+    : "Date de fin non estimée";
+
+  const estimatedEndTime = isValidDate(estimatedEndDate)
+    ? format(estimatedEndDate, "H:mm")
+    : null;
 
   return (
     <div className={styles.missionCard}>
       <div className={styles.content}>
         <div className={styles.date}>
-          <h4>{startDate.toString()}</h4>
-          <p className={styles.time}>{startDate.toString()}</p>
+        <h4>{capitalizeFirstLetter(format(startDate, "EEEE d MMMM", { locale: fr }))}</h4>
+          <p className={styles.time}>{format(startDate, "H:mm")}</p>
         </div>
         <div>
           <p className={styles.label}>Type</p>
@@ -56,8 +68,8 @@ const MissionCard = ({
         </div>
         <div>
           <p className={styles.label}>Date de fin estimé</p>
-          <span>{format(estimatedEndDate, "EEEE d MMMM", { locale: fr })}</span>
-          <p className={styles.endTime}>Fin : {format(estimatedEndDate, "H:mm")}</p>
+          <span>{estimatedDateLabel}</span>
+          {estimatedEndTime && <p className={styles.endTime}>Fin : {estimatedEndTime}</p>}
         </div>
         <div>
           <p className={styles.label}>Intervention</p>

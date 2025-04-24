@@ -5,7 +5,13 @@ import clsx from "clsx";
 type MissionTab = "upcoming" | "past";
 
 type SwitchProps = {
+  /**
+   * Filtre actif : "Prochaines missions" ou "Missions passées"
+   */
   activeTab: MissionTab;
+  /**
+   * Filtre changeant
+   */
   onTabChange: (tab: MissionTab) => void;
 };
 
