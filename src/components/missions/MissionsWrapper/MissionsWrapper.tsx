@@ -42,10 +42,10 @@ const MissionsWrapper = () => {
     },
   ];
 
-  // 👉 ici on filtre selon le tab, voir avec chatgpt je comprend pas
+  // 👉 ici on filtre selon le tab, en fonction des id donc pas bon réellement
   const filteredMissions =
     activeTab === "upcoming"
-      ? allMissions.filter((m) => m.id <= 2) // ou toute logique métier réelle
+      ? allMissions.filter((m) => m.id <= 2)
       : allMissions.filter((m) => m.id >= 3);
 
   return (
