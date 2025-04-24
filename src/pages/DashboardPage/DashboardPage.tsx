@@ -5,7 +5,7 @@ import VerifiedOutlinedIcon from '@mui/icons-material/VerifiedOutlined';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import AdsClickOutlinedIcon from '@mui/icons-material/AdsClickOutlined';
 import styles from "./DashboardPage.module.scss";
-import MissionsWrapper from "../../components/missions/MissionsWrapper/MissionsWrapper";
+import MissionsWrapper from "../../components/missions/MissionsListSwitch/MissionsListSwitch";
 
 interface DashboardPageProps {
   /**
