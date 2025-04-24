@@ -1,7 +1,7 @@
 import { jwtDecode } from 'jwt-decode';
 
 type TokenPayload = {
-    id: string;
+    id: number;
     mail: string;
     token: string,
 };

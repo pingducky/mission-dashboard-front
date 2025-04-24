@@ -1,14 +1,16 @@
+import { format } from 'date-fns';
+import { fr } from 'date-fns/locale';
 import styles from "./MissionCard.module.scss";
 
 type MissionCardProps = {
   /**
-   * Information date de la mission
+   * Estimation de la fin de mission
    */
-  date: string;
+  startDate: Date;
   /**
    * Nom
    */
-  time: string;
+  estimatedEndDate: Date;
   /**
    * Type ménages réguliers ou ménages unique
    */
@@ -17,14 +19,6 @@ type MissionCardProps = {
    * Lieu de la mission
    */
   place: string;
-  /**
-   * Durée de la mission
-   */
-  duration: string;
-  /**
-   * Estimation de la fin de mission
-   */
-  endTime: string;
   /**
    * Type de team : seul ou en équipe
    */
@@ -36,21 +30,21 @@ type MissionCardProps = {
 };
 
 const MissionCard = ({
-  date,
-  time,
+  startDate,
+  estimatedEndDate,
   type,
   place,
-  duration,
-  endTime,
   team,
   teamMembers = [],
 }: MissionCardProps) => {
+
+
   return (
     <div className={styles.missionCard}>
       <div className={styles.content}>
         <div className={styles.date}>
-          <h4>{date}</h4>
-          <p className={styles.time}>{time}</p>
+          <h4>{startDate.toString()}</h4>
+          <p className={styles.time}>{startDate.toString()}</p>
         </div>
         <div>
           <p className={styles.label}>Type</p>
@@ -61,9 +55,9 @@ const MissionCard = ({
           <span>{place}</span>
         </div>
         <div>
-          <p className={styles.label}>Durée estimée</p>
-          <span>{duration}</span>
-          <p className={styles.endTime}>Fin : {endTime}</p>
+          <p className={styles.label}>Date de fin estimé</p>
+          <span>{format(estimatedEndDate, "EEEE d MMMM", { locale: fr })}</span>
+          <p className={styles.endTime}>Fin : {format(estimatedEndDate, "H:mm")}</p>
         </div>
         <div>
           <p className={styles.label}>Intervention</p>
@@ -82,3 +76,4 @@ const MissionCard = ({
 };
 
 export default MissionCard;
+

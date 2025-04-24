@@ -1,21 +1,17 @@
-// MissionsList.tsx
 import MissionCard from "./MissionCard/MissionCard";
 import styles from "./MissionsList.module.scss";
 
-type Mission = {
+export type MissionCard = {
   id: number;
-  date: string;
-  time: string;
+  startDate: Date;
+  estimatedEndDate: Date;
   type: string;
   place: string;
-  duration: string;
-  endTime: string;
   team: string;
-  teamMembers?: string[];
 };
 
 type MissionsListProps = {
-  missions: Mission[];
+  missions: MissionCard[];
 };
 
 const MissionsList = ({ missions }: MissionsListProps) => {

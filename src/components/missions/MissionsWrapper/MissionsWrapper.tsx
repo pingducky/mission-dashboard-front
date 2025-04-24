@@ -1,58 +1,58 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Switch from "./Switch/Switch";
-import MissionsList from "./MissionsList/MissionsList";
+import MissionsList, { MissionCard } from "./MissionsList/MissionsList";
 import styles from "./MissionsWrapper.module.scss";
+import { getUserDataFromToken } from "../../../utils/auth";
+import { MissionModel, useGetMissionsByAccount } from "../../../hooks/useGetMissionsByAccount";
 
-type MissionTab = "upcoming" | "past";
+type MissionTab = "upcoming" | "past"
 
 const MissionsWrapper = () => {
   const [activeTab, setActiveTab] = useState<MissionTab>("upcoming");
 
-  const allMissions = [
-    {
-      id: 1,
-      date: "Lundi 24 Mars",
-      time: "09:00",
-      type: "Nettoyage vitres",
-      place: "IUT Laval Bâtiment MMI",
-      duration: "2h30",
-      endTime: "10:30",
-      team: "En équipe",
-      teamMembers: ["John Smith", "Patricia Loev"],
-    },
-    {
-      id: 2,
-      date: "Mardi 25 Mars",
-      time: "14:00",
-      type: "Ménage réguliers",
-      place: "Numidev",
-      duration: "3h30",
-      endTime: "17:30",
-      team: "Seul",
-    },
-    {
-      id: 3,
-      date: "Lundi 10 Mars",
-      time: "10:00",
-      type: "Aspirateur bureau",
-      place: "CCI Laval",
-      duration: "1h00",
-      endTime: "11:00",
-      team: "Seul",
-    },
-  ];
+  const tokenData = getUserDataFromToken();
 
-  // 👉 ici on filtre selon le tab, en fonction des id donc pas bon réellement
-  const filteredMissions =
-    activeTab === "upcoming"
-      ? allMissions.filter((m) => m.id <= 2)
-      : allMissions.filter((m) => m.id >= 3);
+  const { data: missions, isLoading } = useGetMissionsByAccount({
+    accountId: tokenData!.id,
+    filters: ["past", "current", "future"],
+    limit: 2,
+  });
+
+  console.debug("missions :", missions);
+  const formatMission = (mission: MissionModel) => {
+
+    return {
+      id: mission.id,
+      startDate: new Date(mission.timeBegin),
+      estimatedEndDate: new Date(mission.estimatedEnd!),
+      type: mission.missionType?.longLibel || "Type inconnu",
+      place: mission.address,
+      team: "Seul",
+    };
+  };
+
+  let selectedMissions: MissionCard[] = [];
+
+  if (!isLoading && missions) {
+    if (activeTab === "past") {
+      selectedMissions = missions.past
+        ?.slice(-2)
+        .reverse()
+        .map(formatMission);
+    } else {
+      selectedMissions = [...(missions.current || []), ...(missions.future || [])]
+        .slice(0, 2)
+        .map(formatMission);
+    }
+  }
 
   return (
-    <div className={styles.missionWwrapper}>
-      <Switch activeTab={activeTab} onTabChange={setActiveTab} />
-      <MissionsList missions={filteredMissions} />
-    </div>
+    !isLoading && (
+      <div className={styles.missionWwrapper}>
+        <Switch activeTab={activeTab} onTabChange={setActiveTab} />
+        <MissionsList missions={selectedMissions} />
+      </div>
+    )
   );
 };
 
