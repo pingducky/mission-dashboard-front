@@ -1,13 +1,13 @@
 import { useState } from "react";
 import Switch from "./Switch/Switch";
 import MissionsList, { MissionCard } from "./MissionsList/MissionsList";
-import styles from "./MissionsWrapper.module.scss";
+import styles from "./MissionsListSwitch.module.scss";
 import { getUserDataFromToken } from "../../../utils/auth";
 import { MissionModel, useGetMissionsByAccount } from "../../../hooks/useGetMissionsByAccount";
 
 type MissionTab = "upcoming" | "past"
 
-const MissionsWrapper = () => {
+const MissionsListSwitch = () => {
   const [activeTab, setActiveTab] = useState<MissionTab>("upcoming");
 
   const tokenData = getUserDataFromToken();
@@ -56,4 +56,4 @@ const MissionsWrapper = () => {
   );
 };
 
-export default MissionsWrapper;
+export default MissionsListSwitch;
