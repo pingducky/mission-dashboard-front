@@ -48,7 +48,7 @@ export const EmployeePage: React.FC<EmployeePageProps> = ({
                     </span>
                     <h3>{employee.firstName + " " + employee.lastName}</h3>
                     <span className={Styles.grayText}>Agent pol</span>
-                    <div>
+                    <div className={Styles.statsContainer}>
                         <p>
                             1 <br/>
                             <span className={Styles.grayText}>retard</span>
@@ -58,7 +58,7 @@ export const EmployeePage: React.FC<EmployeePageProps> = ({
                             <span className={Styles.grayText}>absences</span>
                         </p>
                     </div>
-                    <div>
+                    <div className={Styles.actionsContainer}>
                         <IconButton
                             text={'Appeler'}
                             variant={'filled'}
@@ -85,25 +85,25 @@ export const EmployeePage: React.FC<EmployeePageProps> = ({
                 <div className={Styles.employeeInfoBlock}>
                     <ul>
                         <li>
-                            <p><span className={Styles.grayText}>Mail</span><br /> {employee.email}</p>
+                            <p><span className={Styles.grayText}>Mail</span> {employee.email}</p>
                         </li>
                         <li>
-                            <p><span className={Styles.grayText}>Numéro de téléphone</span><br /> {employee.phoneNumber}</p>
+                            <p><span className={Styles.grayText}>Numéro de téléphone</span> {employee.phoneNumber}</p>
                         </li>
                         <li>
-                            <p><span className={Styles.grayText}>Adresse postal</span><br /></p>
+                            <p><span className={Styles.grayText}>Adresse postal</span></p>
                         </li>
                         <li>
-                            <p><span className={Styles.grayText}>Ville</span><br /></p>
+                            <p><span className={Styles.grayText}>Ville</span></p>
                         </li>
                         <li>
-                            <p><span className={Styles.grayText}>Code postal</span><br /></p>
+                            <p><span className={Styles.grayText}>Code postal</span></p>
                         </li>
                         <li>
-                            <p><span className={Styles.grayText}>Status salarié</span><br /></p>
+                            <p><span className={Styles.grayText}>Status salarié</span></p>
                         </li>
                         <li>
-                            <p><span className={Styles.grayText}>Date d'embauche</span><br /></p>
+                            <p><span className={Styles.grayText}>Date d'embauche</span></p>
                         </li>
                     </ul>
                 </div>

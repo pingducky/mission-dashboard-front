@@ -45,13 +45,45 @@
         }
 
         .employeeBlock {
+            border-right: 1px solid $grayBackground;
+            margin-right: 35px;
+            padding-right: 20px;
+
             span, p, h3 {
                 text-align: center;
                 margin: 0 auto;
             }
 
-            border-right: 1px solid $grayBackground;
-            margin-right: 35px;
+            .statsContainer {
+                display: flex;
+                margin: 10px 0;
+
+                p {
+                    width: 100%;
+                    font-size: var(--font-size-h3);
+                    font-weight: var(--font-weight-semi-bold);
+
+                    &:first-child {
+                        border-right: 1px solid $darkGray;
+                    }
+
+                    span {
+                        font-size: 11px;
+                    }
+                }
+            }
+
+            .actionsContainer {
+                display: flex;
+                gap: 20px;
+                justify-content: space-around;
+
+                button {
+                    font-size: 9px;
+                    width: 100%;
+                    white-space: nowrap;
+                }
+            }
         }
 
         .employeeInfoBlock {
@@ -62,6 +94,15 @@
                 flex-direction: row;
                 flex-wrap: wrap;
                 gap: 20%;
+
+                li {
+                    p{
+                        margin-bottom: 20px;
+                        span {
+                            margin-bottom: 5px;
+                        }
+                    }
+                }
             }
         }
     }
