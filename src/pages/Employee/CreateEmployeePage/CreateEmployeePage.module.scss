@@ -2,12 +2,18 @@
 @use '../../../app/styles/colors'as *;
 @use '../../../app/styles/mixins'as *;
 
+
+:has(.container) {
+  overflow-y: hidden;
+}
 .container {
-    display: flex;
-    background-color: $white;
-    padding: 20px 30px;
-    border-radius: 8px;
-  }
+  display: flex;
+  background-color: $white;
+  padding: 20px 30px;
+  border-radius: 8px;
+  overflow-y: auto;
+  max-height: calc(100% - 40px);
+
   
   .sidebar {
     position: sticky;
@@ -84,4 +90,5 @@
     display: flex;
     gap: 32px;
   }
+}
   
