@@ -8,6 +8,10 @@ type Tab = {
    */
   id: string;
   /**
+   * Filtre des employés
+   */
+  filter: 'all' | 'active' | 'inactive' | 'online';
+  /**
    * Nom du filtre
    */
   label: string;
@@ -18,13 +22,20 @@ type Tab = {
 };
 
 const tabs: Tab[] = [
-  { id: "allEmployees", label: "Tous les employés", count: 22 },
-  { id: "activeEmployees", label: "Employés actifs", count: 18 },
-  { id: "inactiveEmployees", label: "Employés inactifs", count: 4 },
-  { id: "onlineEmployees", label: "Employés en ligne", count: 3 },
+  { id: "allEmployees", filter: "all", label: "Tous les employés", count: 22 },
+  { id: "activeEmployees", filter: "active", label: "Employés actifs", count: 18 },
+  { id: "inactiveEmployees", filter: "inactive", label: "Employés inactifs", count: 4 },
+  { id: "onlineEmployees", filter: "online", label: "Employés en ligne", count: 3 },
 ];
 
-const FilterEmployees: React.FC = () => {
+interface FilterEmployeesProps {
+  /**
+   * Fonction pour mettre à jour le filtre des employés
+   */
+  setFilter: (filter: 'all' | 'active' | 'inactive' | 'online') => void;
+}
+
+const FilterEmployees: React.FC<FilterEmployeesProps> = ({setFilter}) => {
   const [activeIndex, setActiveIndex] = useState<number>(0);
 
   return (
@@ -41,7 +52,10 @@ const FilterEmployees: React.FC = () => {
           role="tab"
           aria-selected={activeIndex === index}
           data-tab-id={tab.id}
-          onClick={() => setActiveIndex(index)}
+          onClick={() => {
+            setActiveIndex(index);
+            setFilter(tab.filter);
+          }}
         >
           <span className={styles.label}>{tab.label}</span>
           <span className={styles.badge}>{tab.count}</span>
