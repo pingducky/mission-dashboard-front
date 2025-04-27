@@ -20,6 +20,7 @@ import { EmployeeFilter, useListEmployee } from "../../hooks/useGetAllEmployees"
 import DashboardPage from "../DashboardPage/DashboardPage";
 import styles from "./ParentPage.module.scss";
 import CreateEmployeePage from "../Employee/CreateEmployeePage/CreateEmployeePage";
+import PlanningPage from "../PlanningPage/PlanningPage";
 
 type BreadcrumbItem = {
   label: string;
@@ -126,7 +127,7 @@ const ParentPage: React.FC = () => {
       case "dashboard":
         return <DashboardPage firstname={userData?.firstName} />;
       case "planning":
-        return <div>Planning Page</div>;
+        return <PlanningPage/>
       case "salarie":
         return <EmployeesPage
           handleNavigation={handleNavigation}
