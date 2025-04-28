@@ -12,6 +12,10 @@ type MissionCardProps = {
    */
   estimatedEndDate?: Date;
   /**
+   * Date et heure fin de mission
+   */
+  endDate?: Date;
+  /**
    * Type ménages réguliers ou ménages unique
    */
   type: string;
@@ -32,6 +36,7 @@ type MissionCardProps = {
 const MissionCard = ({
   startDate,
   estimatedEndDate,
+  endDate,
   type,
   place,
   team,
@@ -43,13 +48,16 @@ const MissionCard = ({
   const isValidDate = (date: unknown): date is Date =>
     date instanceof Date && !isNaN(date.getTime());
 
-  const estimatedDateLabel = isValidDate(estimatedEndDate)
-    ? capitalizeFirstLetter(format(estimatedEndDate, "EEEE d MMMM", { locale: fr }))
-    : "Date de fin non estimée";
+  // Si date de fin alors on prends sinon on prends date estimée
+  const dateToDisplay = endDate ?? estimatedEndDate;
 
-  const estimatedEndTime = isValidDate(estimatedEndDate)
-    ? format(estimatedEndDate, "H:mm")
-    : null;
+  const endDateDay = isValidDate(dateToDisplay)
+  ? capitalizeFirstLetter(format(dateToDisplay!, "EEEE d MMMM", { locale: fr }))
+  : "Date de fin non estimée";
+
+  const endTimeH = isValidDate(dateToDisplay)
+  ? format(dateToDisplay, "H:mm")
+  : null;
 
   return (
     <div className={styles.missionCard}>
@@ -67,9 +75,9 @@ const MissionCard = ({
           <span>{place}</span>
         </div>
         <div>
-          <p className={styles.label}>Date de fin estimé</p>
-          <span>{estimatedDateLabel}</span>
-          {estimatedEndTime && <p className={styles.endTime}>Fin : {estimatedEndTime}</p>}
+          <p className={styles.label}>{endDate ? "Date de fin réelle" : "Date de fin estimée"}</p>
+          <span>{endDateDay}</span>
+          {endTimeH && <p className={styles.endTime}>Fin : {endTimeH}</p>}
         </div>
         <div>
           <p className={styles.label}>Intervention</p>

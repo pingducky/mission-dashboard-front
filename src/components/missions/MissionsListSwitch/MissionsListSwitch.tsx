@@ -1,9 +1,9 @@
 import { useState } from "react";
 import Switch from "./Switch/Switch";
 import MissionsList, { MissionCard } from "./MissionsList/MissionsList";
-import styles from "./MissionsListSwitch.module.scss";
 import { getUserDataFromToken } from "../../../utils/auth";
 import { MissionModel, useGetMissionsByAccount } from "../../../hooks/useGetMissionsByAccount";
+import styles from "./MissionsListSwitch.module.scss";
 
 type MissionTab = "upcoming" | "past"
 
@@ -25,6 +25,7 @@ const MissionsListSwitch = () => {
       id: mission.id,
       startDate: new Date(mission.timeBegin),
       estimatedEndDate: new Date(mission.estimatedEnd!),
+      endDate: mission.timeEnd ? new Date(mission.timeEnd) : undefined,
       type: mission.missionType?.longLibel || "Type inconnu",
       place: mission.address,
       team: "Seul",
