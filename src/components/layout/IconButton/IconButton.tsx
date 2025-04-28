@@ -1,6 +1,6 @@
 import React from "react";
-import styles from "./IconButton.module.scss";
 import clsx from "clsx";
+import styles from "./IconButton.module.scss";
 
 type fontWeight = "regular" | "medium" | "semibold" | "bold";
 type variant = "ghost" | "outlined" | "filled";

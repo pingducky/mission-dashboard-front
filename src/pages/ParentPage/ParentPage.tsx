@@ -19,6 +19,7 @@ import { EmployeeFilter, useListEmployee } from "../../hooks/useGetAllEmployees"
 import DashboardPage from "../DashboardPage/DashboardPage";
 import { EmployeePage } from "../EmployeePage/EmployeePage";
 import { useGetEmployee } from "../../hooks/useGetEmployee";
+import { useGetUserFiles } from "../../hooks/useGetUserFiles";
 import styles from "./ParentPage.module.scss";
 
 type BreadcrumbItem = {
@@ -117,6 +118,7 @@ const ParentPage: React.FC = () => {
   const { data: employeeData } = useListEmployee(activePage, employeesFilter, sessionStorage.getItem("token"));
   const employeeCount = employeeData?.length ?? 0;
   const { data: employee, isLoading: isEmployeeLoading } = useGetEmployee(activePage, employeeId, sessionStorage.getItem('token'));
+  const { data: employeeFiles, isLoading: areFilesLoading} = useGetUserFiles(employeeId, activePage, sessionStorage.getItem('token'));
 
   const renderContent = () => {
     switch (activePage) {
@@ -134,8 +136,9 @@ const ParentPage: React.FC = () => {
       case "salarieDetail":
         return <EmployeePage 
           employee={employee}
-          files={[]}
+          files={employeeFiles || []}
           isEmployeeLoading={isEmployeeLoading}
+          areFilesLoading={areFilesLoading}
         />;
       case "missions":
         return (

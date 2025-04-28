@@ -30,6 +30,18 @@ export type User = {
      * Adresse physique de l'utilisateur. 
      */ 
     address: string | null;
+    /**
+     * Ville de l'utilisateur.
+     */
+    city: string | null;
+    /**
+     * Code postal de l'utilisateur.
+     */
+    postalCode: string | null;
+    /**
+     * Code du pays de l'utilisateur
+     */
+    countryCode: string | null;
     /** 
      * Indique si l'utilisateur souhaite recevoir des notifications par email. 
      */ 
@@ -43,9 +55,17 @@ export type User = {
      */ 
     isEnabled: boolean;
     /**
-     * Indique le l'utilisateur est en ligne
+     * Indique si l'utilisateur est en ligne.
      */
     isOnline: boolean;
+    /**
+     * Indique si l'utilisateur autorise le suivi gps.
+     */
+    isGpsTrackingAllowed: boolean;
+    /**
+     * Indique si l'utilisateur est administrateur.
+     */
+    isAdmin: boolean;
 };
 
 const fetchUserById = async (id: string, token: string): Promise<User> => {

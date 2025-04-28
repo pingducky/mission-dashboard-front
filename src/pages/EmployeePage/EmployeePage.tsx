@@ -4,6 +4,10 @@ import { User } from '../../hooks/useUserData';
 import { capitalize } from '../../utils/string';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
+import { File } from '../../hooks/useGetUserFiles';
+import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined';
+import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
+import { Loading } from '../../components/loading/Loading';
 import Styles from './EmployeePage.module.scss'
 
 interface EmployeePageProps {
@@ -19,24 +23,64 @@ interface EmployeePageProps {
      * Indique si la requête de récupération de l'employé est en cours
      */
     isEmployeeLoading: boolean;
+    /**
+     * Indique si la requête de récupération des fichiers est en cours
+     */
+    areFilesLoading: boolean;
 }
 
 export const EmployeePage: React.FC<EmployeePageProps> = ({
-        employee,
-        files,
-        isEmployeeLoading,
-    }) => {
+    employee,
+    files,
+    isEmployeeLoading,
+    areFilesLoading,
+}) => {
+    function handleFiles(files: File[], areFilesLoading: boolean) {
+        while(areFilesLoading) {
+            return (
+                <Loading/>
+            )
+        }
 
-    const filesList = files.map((file) => {
-        return <li>{file.name}</li>;
-    })
+        if(files.length <= 0) {
+            return (
+                <li>
+                    <h4>Aucun fichier</h4>
+                </li>
+            )
+        }
+
+        const filesList = files.map((file) => {
+            return (
+                <li key={file.id}>
+                    <div>
+                        <InsertDriveFileOutlinedIcon/>
+                        <p>{file.name}</p>
+                    </div>
+                    <IconButton
+                        startIcon={<DeleteForeverOutlinedIcon/>}
+                        text={file.size}
+                        isRounded={false}
+                        variant={'ghost'}
+                        color={'lightGray'}
+                        specialClass={Styles.deleteFileButton}
+                        onClick={() => {
+                            console.log("delete file "+file.id)
+                        }}
+                    />
+                </li>
+            );
+        })
+
+        return filesList;
+    }
+
     while(isEmployeeLoading) {
         return (
-            <>
-                <h1>Loading ...</h1>
-            </>
+            <Loading/>
         )
     }
+
     return (
         <div className={Styles.gridContainer}>
             <div className={Styles.employeeInfo}>
@@ -65,6 +109,7 @@ export const EmployeePage: React.FC<EmployeePageProps> = ({
                             isRounded={false}
                             startIcon={<LocalPhoneOutlinedIcon/>}
                             color={'lightGray'}
+                            fontWeight={'medium'}
                             onClick={() => {
                                 window.location.href='tel:'+employee.phoneNumber.toString()
                             }}
@@ -75,8 +120,9 @@ export const EmployeePage: React.FC<EmployeePageProps> = ({
                             isRounded={false}
                             startIcon={<EmailOutlinedIcon/>}
                             color={'lightGray'}
+                            fontWeight={'medium'}
                             onClick={() => {
-                                window.location.href='mail:'+employee.email.toString()
+                                window.location.href='mailto:'+employee.email.toString()
                             }}
                         />
                     </div>
@@ -91,13 +137,13 @@ export const EmployeePage: React.FC<EmployeePageProps> = ({
                             <p><span className={Styles.grayText}>Numéro de téléphone</span> {employee.phoneNumber}</p>
                         </li>
                         <li>
-                            <p><span className={Styles.grayText}>Adresse postal</span></p>
+                            <p><span className={Styles.grayText}>Adresse postal</span> {employee.address}</p>
                         </li>
                         <li>
-                            <p><span className={Styles.grayText}>Ville</span></p>
+                            <p><span className={Styles.grayText}>Ville</span> {employee.city}</p>
                         </li>
                         <li>
-                            <p><span className={Styles.grayText}>Code postal</span></p>
+                            <p><span className={Styles.grayText}>Code postal</span> {employee.postalCode}</p>
                         </li>
                         <li>
                             <p><span className={Styles.grayText}>Status salarié</span></p>
@@ -109,9 +155,9 @@ export const EmployeePage: React.FC<EmployeePageProps> = ({
                 </div>
             </div>
             <div className={Styles.filesContainer}>
-            <h3>Fichiers / Documents</h3>
-                <ul>
-                    {filesList}
+                <h3>Fichiers / Documents</h3>
+                <ul className={Styles.filesList}>
+                    {handleFiles(files, areFilesLoading)}
                 </ul>
             </div>
             <div className={Styles.component}>

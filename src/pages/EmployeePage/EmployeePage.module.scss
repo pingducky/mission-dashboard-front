@@ -1,5 +1,6 @@
 @use "../../app/styles/colors" as *;
 @use "../../app/styles/global.scss" as *;
+@use '../../app/styles/mixins'as *;
 
 .gridContainer {
     display: grid;
@@ -7,6 +8,16 @@
     grid-gap: 20px;
     height: 100%;
     width: 100%;
+
+    @include mixinBreakpoints(xl) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include mixinBreakpoints(lg) {
+        grid-template-columns: repeat(1, 1fr);
+        grid-column-gap: 0;
+    }
+
 
     .employeeInfo {
         background-color: $white;
@@ -16,11 +27,15 @@
         display: grid;
         grid-template-columns: repeat(3, 1fr);
 
+        @include mixinBreakpoints(lg) {
+            grid-template-columns: repeat(1, 1fr);
+        }
+
         .employeeLetters {
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            line-height: 50px;
+            width: 80px;
+            height: 80px;
+            line-height: 80px;
             padding: 5px;
             background-color: $pastelGrayBlue;
             color: $darkBlue;
@@ -32,13 +47,16 @@
         }
 
         p {
-            font-size: calc(var(--font-size-text) + 2px);
+            @include PoppinsSemiBold();
+            font-size: var(--font-size-medium-text);
+
             &:not(.grayText) {
                 color: $black;
             }
         }
 
         .grayText {
+            @include PoppinsMedium();
             color: $darkGray;
             font-size: var(--font-size-text);
             display: block;
@@ -49,6 +67,15 @@
             margin-right: 35px;
             padding-right: 20px;
 
+            @include mixinBreakpoints(lg) {
+                margin-right: 0;
+                padding-right: 0;
+                border-right: unset;
+                margin-bottom: 35px;
+                padding-bottom: 20px;
+                border-bottom: 1px solid $grayBackground;
+            }
+
             span, p, h3 {
                 text-align: center;
                 margin: 0 auto;
@@ -56,7 +83,7 @@
 
             .statsContainer {
                 display: flex;
-                margin: 10px 0;
+                margin: 10px 0 20px 0;
 
                 p {
                     width: 100%;
@@ -78,8 +105,12 @@
                 gap: 20px;
                 justify-content: space-around;
 
+                @include mixinBreakpoints(sm) {
+                    flex-wrap: wrap;
+                }
+
                 button {
-                    font-size: 9px;
+                    font-size: var(--font-size-small-text);
                     width: 100%;
                     white-space: nowrap;
                 }
@@ -88,6 +119,10 @@
 
         .employeeInfoBlock {
             grid-column: 2 / span 3;
+
+            @include mixinBreakpoints(lg) {
+                grid-column: 1;
+            }
 
             ul {
                 display: flex;
@@ -108,17 +143,74 @@
     }
 
     .filesContainer {
-        grid-column: 3;
         background-color: $white;
         border-radius: 5px;
         padding: 20px;
+        grid-column: 1 / span 2;
+        max-height: 300px;
+        position: relative;
+
+        @include mixinStart(xl) {
+            grid-column: 3;
+        }
+
+        h3 {
+            @include PoppinsMedium();
+            font-size: var(--font-size-medium-text);
+            padding-bottom: 20px;
+        }
+
+        .filesList {
+            overflow-y: auto;
+            padding-left: 5px;
+            max-height: 260px;
+            scrollbar-width: thin;
+            min-height: 150px;
+
+            li:not(:has(h4)) {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                color: $darkGray;
+                padding: 10px 0;
+                border-bottom: 1px solid $grayBackground;
+
+                div {
+                    display: flex;
+                    align-items: center;
+
+                    &:first-child {
+                        svg {
+                            margin-right: 10px;
+                        }
+                    }
+                }
+
+                .deleteFileButton {
+                    margin-right: 5px;
+
+                    svg {
+                        color: $pink;
+                    }
+                }
+
+                p {
+                    line-height: 20px;
+                    display: inline-block;
+                }
+            }
+        }
     }
 
     .component {
-        background-color: red;
-        height: 100px;
-        &:last-child {
-            grid-column: 1 / span 3;
+        grid-column: 1 / span 3;
+
+        @include mixinBreakpoints(xl) {
+            grid-column: 1 / span 2;
+        }
+    
+        @include mixinBreakpoints(lg) {
+            grid-column: 1;
         }
     }
 }

@@ -1,9 +1,17 @@
 import { useQuery } from '@tanstack/react-query';
 
-const getUserFiles = async (token: string, id: number) => {
+export type File = {
+    id: number;
+    name: string;
+    path: string;
+    size: string;
+    idAccount: number;
+}
+
+const getUserFiles = async (id: number, token: string|null): Promise<File[]> => {
     if (!token) {
         window.location.href = "/login";
-        return null;
+        return [];
     }
 
     const API_URL = import.meta.env.VITE_API_URL;
@@ -21,10 +29,10 @@ const getUserFiles = async (token: string, id: number) => {
     return response.json();
 };
   
-export const useGetUserFiles = (token: string, id: number) => {
+export const useGetUserFiles = (id: number, page: string, token: string|null) => {
     return useQuery({
-        queryKey: ['account', token],
-        queryFn: () => getUserFiles(token, id),
-        enabled: !!token,
+        queryKey: ['account', token, id],
+        queryFn: () => getUserFiles(id, token),
+        enabled: page === "salarieDetail",
     });
 };
