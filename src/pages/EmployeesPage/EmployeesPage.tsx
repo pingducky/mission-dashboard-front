@@ -8,7 +8,7 @@ interface EmployeesPageProps {
     /**
      * Fonction de navigation
      */
-    handleNavigation: (page: string, label: string, id: string) => void;
+    handleNavigation: (page: string, label: string, id?: string) => void;
     /**
      * Liste des employés
      */
@@ -30,7 +30,7 @@ const EmployeesPage: React.FC<EmployeesPageProps> = ({
         setEmployeeId,
     }) => {
     const employeeBoxes = employees?.map((employee) => {
-        return(
+        return (
             <li
                 key={employee.id}
                 className={Styles.employe_container}
@@ -41,16 +41,18 @@ const EmployeesPage: React.FC<EmployeesPageProps> = ({
             >
                 <EmployeeBox employee={employee} />
             </li>
-        )
+        );
     });
+
     return (
         <>
-            <FilterEmployees setFilter={setEmployeesFilter}/>
-            <ul className={Styles.list_employee_container}>
+            <FilterEmployees setFilter={setEmployeesFilter} />
+            <ul className={Styles.listEmployeeContainer}>
                 {employeeBoxes}
             </ul>
+            <button className={Styles.addButton} onClick={() => handleNavigation('salarieCreation', 'salarieCreation')}>+</button>
         </>
     );
-}
+};
 
 export default EmployeesPage;

@@ -8,6 +8,7 @@ import GroupIcon from "@mui/icons-material/Group";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+import SettingsIcon from '@mui/icons-material/Settings';
 import { getUserDataFromToken } from "../../utils/auth";
 import { useUserData } from "../../hooks/useUserData";
 import "../../app/styles/global.scss";
@@ -21,6 +22,7 @@ import { EmployeePage } from "../EmployeePage/EmployeePage";
 import { useGetEmployee } from "../../hooks/useGetEmployee";
 import { useGetUserFiles } from "../../hooks/useGetUserFiles";
 import styles from "./ParentPage.module.scss";
+import CreateEmployeePage from "../Employee/CreateEmployeePage/CreateEmployeePage";
 
 type BreadcrumbItem = {
   label: string;
@@ -99,6 +101,11 @@ const ParentPage: React.FC = () => {
           title: breadcrumbs[breadcrumbs.length - 1]?.label || "Détails salarié",
           icon: <GroupIcon />,
         };
+      case "salarieCreation":
+        return {
+          title: "Nouveau salarié",
+          icon: <SettingsIcon />,
+        };
       case "missions":
         return { title: "Liste missions", icon: <ListAltIcon /> };
       case "missionDetail":
@@ -140,6 +147,8 @@ const ParentPage: React.FC = () => {
           isEmployeeLoading={isEmployeeLoading}
           areFilesLoading={areFilesLoading}
         />;
+      case "salarieCreation": 
+        return <CreateEmployeePage handleNavigation={handleNavigation}/>
       case "missions":
         return (
           <div>
