@@ -94,11 +94,11 @@ export const EmployeePage: React.FC<EmployeePageProps> = ({
                     <span className={Styles.grayText}>Agent pol</span>
                     <div className={Styles.statsContainer}>
                         <p>
-                            1 <br/>
+                            {employee.delay} <br/>
                             <span className={Styles.grayText}>retard</span>
                         </p>
                         <p>
-                            2 <br/>
+                            {employee.absence} <br/>
                             <span className={Styles.grayText}>absences</span>
                         </p>
                     </div>
@@ -149,7 +149,10 @@ export const EmployeePage: React.FC<EmployeePageProps> = ({
                             <p><span className={Styles.grayText}>Status salarié</span></p>
                         </li>
                         <li>
-                            <p><span className={Styles.grayText}>Date d'embauche</span></p>
+                            <p>
+                                <span className={Styles.grayText}>Date d'embauche</span>
+                                {employee.hiringDate ? new Date(employee.hiringDate.toString()).toLocaleDateString() : ""}
+                            </p>
                         </li>
                     </ul>
                 </div>

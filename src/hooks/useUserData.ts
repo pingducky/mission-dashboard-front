@@ -66,6 +66,18 @@ export type User = {
      * Indique si l'utilisateur est administrateur.
      */
     isAdmin: boolean;
+    /**
+     * Date d'emploi de l'utilisateur.
+     */
+    hiringDate: Date;
+    /**
+     * nombre de retards
+     */
+    delay: number
+    /**
+     * nombre d'absences
+     */
+    absence: number
 };
 
 const fetchUserById = async (id: string, token: string): Promise<User> => {
