@@ -49,14 +49,14 @@ const MissionCard = ({
     date instanceof Date && !isNaN(date.getTime());
 
   // Si date de fin alors on prends sinon on prends date estimée
-  const dateToDisplay = endDate ?? estimatedEndDate;
+  const dateEndChoice = endDate ?? estimatedEndDate;
 
-  const endDateDay = isValidDate(dateToDisplay)
-  ? capitalizeFirstLetter(format(dateToDisplay!, "EEEE d MMMM", { locale: fr }))
+  const endDateDay = isValidDate(dateEndChoice)
+  ? capitalizeFirstLetter(format(dateEndChoice!, "EEEE d MMMM", { locale: fr }))
   : "Date de fin non estimée";
 
-  const endTimeH = isValidDate(dateToDisplay)
-  ? format(dateToDisplay, "H:mm")
+  const endTimeH = isValidDate(dateEndChoice)
+  ? format(dateEndChoice, "H:mm")
   : null;
 
   return (

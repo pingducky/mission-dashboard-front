@@ -4,6 +4,7 @@ import MissionsList, { MissionCard } from "./MissionsList/MissionsList";
 import { getUserDataFromToken } from "../../../utils/auth";
 import { MissionModel, useGetMissionsByAccount } from "../../../hooks/useGetMissionsByAccount";
 import styles from "./MissionsListSwitch.module.scss";
+import { safeDate } from "../../../utils/dates";
 
 type MissionTab = "upcoming" | "past"
 
@@ -23,9 +24,9 @@ const MissionsListSwitch = () => {
 
     return {
       id: mission.id,
-      startDate: new Date(mission.timeBegin),
-      estimatedEndDate: new Date(mission.estimatedEnd!),
-      endDate: mission.timeEnd ? new Date(mission.timeEnd) : undefined,
+      startDate: safeDate(mission.timeBegin)!,
+      estimatedEndDate: safeDate(mission.estimatedEnd),
+      endDate: safeDate(mission.timeEnd),
       type: mission.missionType?.longLibel || "Type inconnu",
       place: mission.address,
       team: "Seul",

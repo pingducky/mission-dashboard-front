@@ -13,7 +13,11 @@ export type MissionCard = {
   /**
    * Estimation de la date et heure de fin de mission
    */
-  estimatedEndDate: Date;
+  estimatedEndDate?: Date;
+  /**
+   * Date et heure fin de mission
+   */
+  endDate?: Date;
   /**
    * Type ménages réguliers ou ménages unique
    */
