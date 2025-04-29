@@ -3,10 +3,10 @@ import Switch from "./Switch/Switch";
 import MissionsList, { MissionCard } from "./MissionsList/MissionsList";
 import { getUserDataFromToken } from "../../../utils/auth";
 import { MissionModel, useGetMissionsByAccount } from "../../../hooks/useGetMissionsByAccount";
-import styles from "./MissionsListSwitch.module.scss";
 import { safeDate } from "../../../utils/dates";
+import styles from "./MissionsListSwitch.module.scss";
 
-type MissionTab = "upcoming" | "past"
+type MissionTab = "upcoming" | "past";
 
 const MissionsListSwitch = () => {
   const [activeTab, setActiveTab] = useState<MissionTab>("upcoming");
@@ -19,9 +19,7 @@ const MissionsListSwitch = () => {
     limit: 2,
   });
 
-  console.debug("missions :", missions);
   const formatMission = (mission: MissionModel) => {
-
     return {
       id: mission.id,
       startDate: safeDate(mission.timeBegin)!,
@@ -37,12 +35,12 @@ const MissionsListSwitch = () => {
 
   if (!isLoading && missions) {
     if (activeTab === "past") {
-      selectedMissions = missions.past
-        ?.slice(-2)
-        .reverse()
-        .map(formatMission);
+      selectedMissions = missions.past?.slice(-2).reverse().map(formatMission);
     } else {
-      selectedMissions = [...(missions.current || []), ...(missions.future || [])]
+      selectedMissions = [
+        ...(missions.current || []),
+        ...(missions.future || []),
+      ]
         .slice(0, 2)
         .map(formatMission);
     }

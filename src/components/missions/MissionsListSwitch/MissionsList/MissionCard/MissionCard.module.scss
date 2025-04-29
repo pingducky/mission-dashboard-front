@@ -2,7 +2,6 @@
 @use '../../../../../app/styles/colors.scss'as *;
 @use '../../../../../app/styles/mixins.scss'as *;
 
-
 .missionCard {
     position: relative;
     display: flex;
@@ -11,7 +10,6 @@
     padding: 18px 25px;
     gap: 2rem;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
-    transition: box-shadow 0.2s;
 
     @include mixinBreakpoints(xs) {
         padding: 8px 15px;
@@ -78,18 +76,18 @@
         }
 
         .label {
-            color: #8c8fa6;
+            color: $darkGray;
             font-weight: var(--font-weight-medium);
         }
 
         .endTime {
-            color: #bbb;
+            color: $darkGray;
         }
 
         .teamMembers {
             margin: 0;
             padding-left: 1rem;
-            color: #8c8fa6;
+            color: $darkGray;
 
             li {
                 list-style: disc;

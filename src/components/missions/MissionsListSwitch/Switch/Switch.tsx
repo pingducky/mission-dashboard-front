@@ -1,6 +1,6 @@
-import styles from "./Switch.module.scss";
 import IconButton from "../../../layout/IconButton/IconButton";
 import clsx from "clsx";
+import styles from "./Switch.module.scss";
 
 type MissionTab = "upcoming" | "past";
 
