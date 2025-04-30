@@ -1,10 +1,7 @@
 import React from "react";
-import Styles from "./Loading.module.scss"
+import styles from "./Loading.module.scss"
 
-
-export const Loading: React.FC = () => {
-    return (
-        <span className={Styles.loader}>
-        </span>
-    )
-}
+export const Loading: React.FC = () => (
+    <span className={styles.loader}>
+    </span>
+)

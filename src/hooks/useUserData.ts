@@ -1,6 +1,21 @@
 import { useQuery } from '@tanstack/react-query';
 import { getUserDataFromToken } from '../utils/auth';
 
+export type Role = {
+    /**
+     * Id du role.
+     */
+    id: number;
+    /**
+     * Libelle court du rôle
+     */
+    shortLibel: string;
+    /**
+     * Libelle long du rôle.
+     */
+    longLibel: string;
+};
+
 export type User = {
     /** 
      * Id de l'utilisateur, utilisé pour l'identifier de manière unique.
@@ -78,6 +93,10 @@ export type User = {
      * nombre d'absences
      */
     absence: number
+    /**
+     * roles de l'agent
+     */
+    roles: Role[]
 };
 
 const fetchUserById = async (id: string, token: string): Promise<User> => {

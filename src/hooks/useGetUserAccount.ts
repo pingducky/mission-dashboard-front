@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
-const getUserAccount = async (token: string) => {
+const getUserAccount = async () => {
+    const token = sessionStorage.getItem('token');
     const API_URL = import.meta.env.VITE_API_URL;
     const response = await fetch(`${API_URL}/account/token/${token}`, {
         method: 'GET',
@@ -19,7 +20,7 @@ const getUserAccount = async (token: string) => {
 export const useGetUserAccount = (token: string) => {
     return useQuery({
         queryKey: ['account', token],
-        queryFn: () => getUserAccount(token),
+        queryFn: () => getUserAccount(),
         enabled: !!token,
     });
 };

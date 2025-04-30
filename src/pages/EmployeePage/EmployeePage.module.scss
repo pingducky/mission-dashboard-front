@@ -14,10 +14,9 @@
     }
 
     @include mixinBreakpoints(lg) {
-        grid-template-columns: repeat(1, 1fr);
+        grid-template-columns: 1fr;
         grid-column-gap: 0;
     }
-
 
     .employeeInfo {
         background-color: $white;
@@ -26,9 +25,10 @@
         grid-column: 1 / span 2;
         display: grid;
         grid-template-columns: repeat(3, 1fr);
+        column-gap: 35px;
 
         @include mixinBreakpoints(lg) {
-            grid-template-columns: repeat(1, 1fr);
+            grid-template-columns: 1fr;
         }
 
         .employeeLetters {
@@ -64,7 +64,6 @@
 
         .employeeBlock {
             border-right: 1px solid $grayBackground;
-            margin-right: 35px;
             padding-right: 20px;
 
             @include mixinBreakpoints(lg) {
@@ -110,7 +109,6 @@
                 }
 
                 button {
-                    font-size: var(--font-size-small-text);
                     width: 100%;
                     white-space: nowrap;
                 }
@@ -147,7 +145,7 @@
         border-radius: 5px;
         padding: 20px;
         grid-column: 1 / span 2;
-        max-height: 300px;
+        max-height: 350px;
         position: relative;
 
         @include mixinStart(xl) {
@@ -175,9 +173,10 @@
                 padding: 10px 0;
                 border-bottom: 1px solid $grayBackground;
 
-                div {
+                a {
                     display: flex;
                     align-items: center;
+                    color: $darkGray;
 
                     &:first-child {
                         svg {
@@ -198,6 +197,11 @@
                     line-height: 20px;
                     display: inline-block;
                 }
+            }
+
+            h4.noFile {
+                color: $darkGray;
+                font-style: italic;
             }
         }
     }

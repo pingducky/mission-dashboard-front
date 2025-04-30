@@ -21,8 +21,8 @@ import DashboardPage from "../DashboardPage/DashboardPage";
 import { EmployeePage } from "../EmployeePage/EmployeePage";
 import { useGetEmployee } from "../../hooks/useGetEmployee";
 import { useGetUserFiles } from "../../hooks/useGetUserFiles";
-import styles from "./ParentPage.module.scss";
 import CreateEmployeePage from "../Employee/CreateEmployeePage/CreateEmployeePage";
+import styles from "./ParentPage.module.scss";
 
 type BreadcrumbItem = {
   label: string;
@@ -124,8 +124,8 @@ const ParentPage: React.FC = () => {
 
   const { data: employeeData } = useListEmployee(activePage, employeesFilter, sessionStorage.getItem("token"));
   const employeeCount = employeeData?.length ?? 0;
-  const { data: employee, isLoading: isEmployeeLoading } = useGetEmployee(activePage, employeeId, sessionStorage.getItem('token'));
-  const { data: employeeFiles, isLoading: areFilesLoading} = useGetUserFiles(employeeId, activePage, sessionStorage.getItem('token'));
+  const { data: employee, isLoading: isEmployeeLoading } = useGetEmployee(activePage, employeeId);
+  const { data: employeeFiles, isLoading: areFilesLoading} = useGetUserFiles(employeeId, activePage);
 
   const renderContent = () => {
     switch (activePage) {

@@ -190,6 +190,16 @@
         color: $white;
       }
     }
+
+    &.lightGray {
+      border-color: $grayBackground;
+      color: $grayBackground;
+
+      &:hover {
+        background-color: $grayBackground;
+        color: $darkGray;
+      }
+    }
   }
 
   &.ghost {
@@ -224,6 +234,10 @@
 
     &.red {
       color: $red;
+    }
+
+    &.lightGray {
+      color: $grayBackground;
     }
   }
 }
