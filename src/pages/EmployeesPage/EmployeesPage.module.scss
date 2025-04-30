@@ -1,0 +1,37 @@
+@use '../../app/styles/global.scss' as *;
+@use "../../app/styles/colors" as *;
+@use '../../app/styles/mixins' as *;
+
+.listEmployeeContainer {
+    display: grid;
+    grid-template-columns: repeat(1, 80%);
+    grid-column-gap: 5%;
+    grid-row-gap: 20px;
+
+    @include mixinStart(lg) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include mixinStart(xxl) {
+        grid-template-columns: repeat(3, 30%);
+    }
+
+    .employe_container {
+        max-width: 100%;
+    }
+}
+
+.addButton {
+    position: fixed;
+    bottom: 35px;
+    right: 35px;
+    border: none;
+    border-radius: 50%;
+    width: 70px;
+    height: 70px;
+    font-size: 35px;
+    background-color: $blue;
+    color: $white;
+    cursor: pointer;
+    box-shadow: 5px 5px 25px 16px rgba($blue, 0.3);
+}

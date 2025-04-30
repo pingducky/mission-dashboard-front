@@ -1,0 +1,94 @@
+@use '../../../app/styles/global'as *;
+@use '../../../app/styles/colors'as *;
+@use '../../../app/styles/mixins'as *;
+
+
+:has(.container) {
+  overflow-y: hidden;
+}
+.container {
+  display: flex;
+  background-color: $white;
+  padding: 20px 30px;
+  border-radius: 8px;
+  overflow-y: auto;
+  max-height: calc(100% - 40px);
+
+  
+  .sidebar {
+    position: sticky;
+    top: 20px;
+    align-self: flex-start;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  
+    button {
+      justify-content: flex-start;
+  
+      @include mixinBreakpoints(xs) {
+        :global(.iconTextGlobal) {
+          display: none;
+        }
+      }
+    }
+  }
+  
+  .separator {
+    width: 1px;
+    background-color: $mediumGray;
+    margin-right: 24px;
+    margin-left: 8px;
+  }
+  
+  .content {
+    flex: 1;
+    position: relative;
+    overflow-y: auto;
+    padding-right: 16px;
+
+    .sectionTitle {
+      font-size: 25px;
+    }
+
+    .subSectionTitle {
+      color: $darkGray;
+      font-size: 15px;
+      margin-bottom: 30px;
+    }
+
+    .selectRole {
+      margin-top: 25px;
+      width: 50%;
+    }
+
+    .validateButtons {
+      display: flex;
+      gap: 30px;
+      margin-top: 50px;
+      justify-content: center;
+    }
+  }
+  
+  .section {
+    margin-bottom: 48px;
+  }
+  
+  .formGrid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  
+  .input {
+    flex-basis: calc(50% - 8px);
+    min-width: 250px;
+  }
+  
+  .checkboxGroup {
+    display: flex;
+    gap: 32px;
+  }
+}
+  

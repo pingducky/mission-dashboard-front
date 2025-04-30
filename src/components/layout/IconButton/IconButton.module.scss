@@ -187,6 +187,16 @@
         color: $white;
       }
     }
+
+    &.red {
+      border-color: $red;
+      color: $red;
+
+      &:hover {
+        background-color: $red;
+        color: $white;
+      }
+    }
   }
 
   &.ghost {
@@ -247,6 +257,10 @@
         background-color: $darkBlueBackground;
         color: $darkBlue;
       }
+    }
+
+    &.red {
+      color: $red;
     }
   }
 }

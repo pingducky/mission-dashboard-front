@@ -40,11 +40,11 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ activePage, name, firstname, isLoading, onMenuClick }) => {
-  const [open, setOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(true);
   const drawerRef = useRef<HTMLDivElement>(null);
 
   const toggleDrawer = () => {
-    setOpen(!open);
+    setIsOpen(!isOpen);
   };
 
   // Ajout de la détection de clic extérieur (pour mobile)
@@ -52,12 +52,12 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, name, firstname, isLoadin
     const handleClickOutside = (event: MouseEvent) => {
       const isMobile = window.innerWidth <= 768;
       if (
-        open &&
+        isOpen &&
         isMobile &&
         drawerRef.current &&
         !drawerRef.current.contains(event.target as Node)
       ) {
-        setOpen(false);
+        setIsOpen(false);
       }
     };
 
@@ -65,29 +65,29 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, name, firstname, isLoadin
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [open]);
+  }, [isOpen]);
 
   return (
     <>
       <Drawer
         anchor="left"
-        open={open}
+        open={isOpen}
         onClose={toggleDrawer}
         variant="permanent"
         className={clsx(
           styles.drawer,
-          open ? styles.drawerOpen : styles.drawerClosed
+          isOpen ? styles.drawerOpen : styles.drawerClosed
         )}
-        data-isvisible={open}
+        data-isvisible={isOpen}
         classes={{
           paper: clsx(
             styles.drawer,
-            open ? styles.drawerOpen : styles.drawerClosed
+            isOpen ? styles.drawerOpen : styles.drawerClosed
           ),
         }}
       >
         <button onClick={toggleDrawer} className={styles.toggleButton}>
-          {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+          {isOpen ? <ChevronLeftIcon /> : <ChevronRightIcon />}
         </button>
 
         <div role="presentation" className={styles.sidebarContainer} ref={drawerRef}>
@@ -95,7 +95,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, name, firstname, isLoadin
             <img src={LogoCClean53} alt="Logo" />
           </div>
 
-          {!isLoading && name && firstname && <DisplayProfilName name={firstname} firstname={name}/>}
+          {isOpen && !isLoading && name && firstname && <DisplayProfilName name={firstname} firstname={name}/>}
 
           <div className={styles.iconButtonListParent}>
             <div className={styles.iconButtonList}>

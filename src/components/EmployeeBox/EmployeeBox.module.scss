@@ -1,0 +1,142 @@
+@use '../../app/styles/global.scss' as *;
+@use "../../app/styles/colors" as *;
+@use "../../app/styles/mixins.scss" as *;
+
+.employeeBox {
+    background-color: $white;
+    padding: 20px;
+    border-radius: 20px;
+    position: relative;
+    max-width: 350px;
+    margin: 0 auto;
+
+    .employeeLetters {
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        line-height: 50px;
+        padding: 5px;
+        background-color: $pastelGrayBlue;
+        color: $darkBlue;
+        display: block;
+        text-align: center;
+        font-size: 23px;
+        position: relative;
+        margin-bottom: 10px;
+
+        &:not(.online) {
+            &::after {
+                content: "";
+                background-color: $red;
+                width: 10px;
+                height: 10px;
+                display: block;
+                position: absolute;
+                border-radius: 50%;
+                right: 5px;
+                bottom: 5px;
+            }
+        }
+
+        &::after {
+            content: "";
+            background-color: $connected;
+            width: 10px;
+            height: 10px;
+            display: block;
+            position: absolute;
+            border-radius: 50%;
+            right: 5px;
+            bottom: 5px;
+        }
+    }
+
+    .ellipsise {
+        height: 30px;
+        width: 30px;
+        position: absolute;
+        border-radius: 50%;
+        right: 30px;
+        top: 40px;
+
+        svg {
+            transform: scale(1.5);
+            fill: $darkGray;
+        }
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    h3 {
+        @include PoppinsMedium();
+        color: $darkBlue;
+        font-size: var(--font-size-text)
+    }
+
+    p {
+        @include PoppinsSemiBold();
+        color: $darkGray;
+        margin: 10px 0;
+        font-size: var(--font-size-text);
+    }
+
+    .employeeInfos {
+        background-color: $lightGrayBackground;
+        padding: 10px;
+        border-radius: 15px;
+
+        .flexContainer {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;            
+
+            div {
+                &:last-child {
+                    text-align: right;
+                }
+
+                h4 {
+                    @include PoppinsSemiBold();
+                    color: $darkGray;
+                }
+
+                p {
+                    @include PoppinsSemiBold();
+                    color: $black;
+                }
+            }
+        }
+
+        .iconInfo {
+            display: flex;
+            justify-content: start;
+            align-items: center;
+            gap: 15px;
+
+            * {
+                color: $black;
+            }
+        }
+    }
+}
+
+.popup {
+    background-color: $white;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    padding: 0 10px;
+    border-radius: 15px;
+
+    li {
+        border-bottom: $grayBackground 1px solid;
+
+        &:last-child {
+            border: none;
+        }
+    }
+
+    button {
+        font-size: 10px;
+    }
+}

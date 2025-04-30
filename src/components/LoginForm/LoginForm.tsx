@@ -2,32 +2,31 @@ import * as React from "react";
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
-import { userAuthentication } from "../../hooks/userAuthentication";
+import { useAuthentication } from "../../hooks/useAuthentication";
 import { useNavigate } from "react-router-dom";
 import Button from '@mui/material/Button';
 import { useAuth } from "../../context/AuthContext";
 import styles from "./LoginForm.module.scss";
 
-function LoginForm()  {
+const LoginForm: React.FC = () =>  {
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
     const navigate = useNavigate();
     const { login } = useAuth();
-
-    const handleLogin = async () => {
-        try {
-            const data = await userAuthentication(email, password);
+    const { mutate } = useAuthentication(email, password, {
+        onSuccess: (data) => {
             if (data?.token) {
                 login(data.token);
                 navigate("/");
-            } else {
+            } else{
                 alert("Identifiants incorrects");
-            }
-        } catch (err) {
+                }
+        },
+        OnError: (err) => {
             console.error("Erreur lors de la connexion", err);
             alert("Erreur de connexion");
         }
-    };
+    });
 
     return (
         <Box className={styles.login_form_container}>
@@ -38,7 +37,7 @@ function LoginForm()  {
                 method="post"
                 onSubmit={(e) => {
                     e.preventDefault();
-                    handleLogin();
+                    mutate();
                 }}
             >
                 <TextField
@@ -68,7 +67,6 @@ function LoginForm()  {
                     variant="contained"
                     color="primary"
                     type="submit"
-                    onClick={handleLogin}
                 >
                     Connexion
                 </Button>
