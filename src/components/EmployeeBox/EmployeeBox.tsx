@@ -9,7 +9,9 @@ import Popper from '@mui/material/Popper';
 import { useState } from "react";
 import ModeEditOutlinedIcon from '@mui/icons-material/ModeEditOutlined';
 import ArchiveOutlinedIcon from '@mui/icons-material/ArchiveOutlined';
-import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
+// import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
+import { useArchiveEmployee } from "../../hooks/useArchiveEmployee";
+
 import Styles from "./EmployeeBox.module.scss";
 
 interface EmployeeBoxProps {
@@ -19,6 +21,28 @@ interface EmployeeBoxProps {
 function EmployeeBox({ employee }: EmployeeBoxProps) {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
+
+    // Récupérer le token depuis le sessionStorage (ou autre mécanisme de stockage)
+    const token = sessionStorage.getItem('token');
+    const archiveEmployeeMutation = useArchiveEmployee(token);
+
+    const handleArchive = () => {
+        if (!token) {
+            console.error("Token manquant !");
+            return;
+        }
+
+        // Appel de la mutation d'archivage
+        archiveEmployeeMutation.mutate(employee.id, {
+            onSuccess: () => {
+                console.log("Employé archivé !");
+                // Gérer le succès ici (par exemple, un message ou une mise à jour de l'interface)
+            },
+            onError: (err) => {
+                console.error("Erreur lors de l'archivage de l'employé:", err);
+            }
+        });
+    };
 
     return (
         <div className={Styles.employeeBox}>
@@ -73,12 +97,13 @@ function EmployeeBox({ employee }: EmployeeBoxProps) {
                                 variant={"ghost"}
                                 isRounded={false}
                                 isDisabled={false}
-                                color="darkGray"
+                                color="red"
                                 fontWeight="medium"
+                                onClick={handleArchive}
                             >
                             </IconButton>
                         </li>
-                        <li>
+                        {/* <li>
                             <IconButton
                                 startIcon={<DeleteForeverOutlinedIcon/>}
                                 text="Supprimer"
@@ -89,7 +114,7 @@ function EmployeeBox({ employee }: EmployeeBoxProps) {
                                 fontWeight="medium"
                             >
                             </IconButton>
-                        </li>
+                        </li> */}
                     </ul>
                 </Popper>
             </div>
