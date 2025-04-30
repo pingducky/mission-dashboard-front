@@ -1,3 +1,6 @@
+@use "./../../app/styles/themes.scss" as *;
+@use "./../../app/styles/colors.scss" as *;
+
 .calendarContainer {
   background-color: white;
 
@@ -6,12 +9,65 @@
   }
 }
 
+.missionsType {
+  background-color: white;
+  padding: 15px;
+  border-radius: 15px;
+
+  .missionsTypeList {
+    display: flex;
+    gap: 15px;
+    margin-top: 15px;
+  }
+}
+
 .detachedHeader {
   display: flex;
   width: 100%;
   background-color: white;
-  padding: 10px;
   border-radius: 15px;
   margin: 20px 0;
   justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  width: 100%;
+  box-sizing: border-box;
+
+  .rightSection {
+    display:  flex;
+    
+  }
+  .dateRange {
+    font-size: var(--font-size-h4);
+    color: $darkGray;
+    font-weight: var(--font-weight-medium);
+  }
+}
+
+.toggleGroup {
+  background: none;
+  border: none;
+
+  :global(.MuiToggleButton-root) {
+    text-transform: none;
+    border: none;
+    background: none;
+    color: $darkGray;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 6px;
+
+    &:hover {
+      background-color: rgba(0, 0, 255, 0.04);
+    }
+
+    &[aria-pressed="true"] {
+      background-color: $blue;
+      color: white;
+
+      &:hover {
+        background-color: $lightBlue;
+      }
+    }
+  }
 }
