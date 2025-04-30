@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { EventInput } from '@fullcalendar/core';
 import FullCalendar from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import frLocale from '@fullcalendar/core/locales/fr';
-import AddIcon from '@mui/icons-material/Add';
+import styles from './PlanningPage.module.scss'
 
 interface MissionEvent extends EventInput {
   title: string;
@@ -16,11 +16,13 @@ interface MissionEvent extends EventInput {
 const PlanningPage: React.FC = () => {
   const [events, setEvents] = useState<MissionEvent[]>([]);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
+
   const [newEvent, setNewEvent] = useState<MissionEvent>({
     title: '',
     start: '',
     end: '',
   });
+  const [dateRange, setDateRange] = useState<string>('');
 
   const handleDateChange = (field: keyof MissionEvent, value: string) => {
     setNewEvent(prev => ({
@@ -29,6 +31,17 @@ const PlanningPage: React.FC = () => {
     }));
   };
 
+  const formatDateRange = (startStr: Date, endStr: Date) => {
+    const locale = 'fr-FR';
+    const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short' };
+    const start = new Date(startStr);
+  
+    const end = new Date(endStr);
+    end.setDate(end.getDate() - 1);
+  
+    return `${start.toLocaleDateString(locale, options)} – ${end.toLocaleDateString(locale, options)} ${end.getFullYear()}`;
+  };
+  
   const handleAddEvent = () => {
     setEvents([...events, { ...newEvent }]);
     setNewEvent({ title: '', start: '', end: '' });
@@ -36,29 +49,37 @@ const PlanningPage: React.FC = () => {
   };
 
   return (
-    <Box sx={{ p: 2 }}>
-      <Box sx={{ mb: 2, display: 'flex', justifyContent: 'flex-end' }}>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={() => setOpenDialog(true)}
-        >
-          Ajouter une mission
-        </Button>
-      </Box>
+    <div>
+      <div className={styles.detachedHeader}>
+          <div>
 
-      <FullCalendar
-        plugins={[timeGridPlugin, interactionPlugin]}
-        initialView="timeGridWeek"
-        events={events}
-        editable={true}
-        selectable={true}
-        nowIndicator={true}
-        slotMinTime="08:00:00"
-        slotMaxTime="20:00:00"
-        height="auto"
-        locale={frLocale}
-      />
+          </div>
+        <p>{dateRange}</p>
+          <div>
+          
+          </div>
+      </div>
+
+      <Box className={styles.calendarContainer}>
+        <FullCalendar
+          headerToolbar={{
+            left: '',
+          }}
+          plugins={[timeGridPlugin, interactionPlugin]}
+          initialView="timeGridWeek"
+          events={events}
+          editable={true}
+          selectable={true}
+          nowIndicator={true}
+          slotMinTime="08:00:00"
+          slotMaxTime="20:00:00"
+          height="auto"
+          locale={frLocale}
+          datesSet={(arg) => {
+            setDateRange(formatDateRange(arg.start, arg.end));
+          }}
+        />
+      </Box>
 
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
         <DialogTitle>Ajouter une mission</DialogTitle>
@@ -88,13 +109,36 @@ const PlanningPage: React.FC = () => {
             value={newEvent.end}
             onChange={e => handleDateChange('end', e.target.value)}
           />
+          <TextField
+            margin="dense"
+            label="Adresse"
+            fullWidth
+            value={newEvent.adresse}
+            onChange={e => handleDateChange('adresse', e.target.value)}
+          />
+          <TextField
+            margin="dense"
+            label="Catégorie"
+            fullWidth
+            value={newEvent.categorie}
+            onChange={e => handleDateChange('categorie', e.target.value)}
+          />
+          <TextField
+            margin="dense"
+            label="Description"
+            fullWidth
+            multiline
+            rows={3}
+            value={newEvent.description}
+            onChange={e => handleDateChange('description', e.target.value)}
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenDialog(false)}>Annuler</Button>
           <Button onClick={handleAddEvent} variant="contained">Ajouter</Button>
         </DialogActions>
       </Dialog>
-    </Box>
+    </div>
   );
 };
 

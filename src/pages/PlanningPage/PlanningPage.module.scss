@@ -1,5 +1,17 @@
-:global { // pour eviter le important / priorité
-  .iconButtonContainer {
-    background-color: red;
+.calendarContainer {
+  background-color: white;
+
+  .fc {
+    background-color: white;
   }
+}
+
+.detachedHeader {
+  display: flex;
+  width: 100%;
+  background-color: white;
+  padding: 10px;
+  border-radius: 15px;
+  margin: 20px 0;
+  justify-content: space-between;
 }
