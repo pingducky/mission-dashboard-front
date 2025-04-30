@@ -103,7 +103,7 @@ function EmployeeBox({ employee }: EmployeeBoxProps) {
                     </div>
                     <div>
                         <h4>Date d'embauche</h4>
-                        <p>XXXXX</p>
+                        <p>{employee.hiringDate && new Date(employee.hiringDate.toString()).toLocaleDateString()}</p>
                     </div>
                 </div>
                 <div className={Styles.iconInfo}>

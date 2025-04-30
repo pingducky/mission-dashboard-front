@@ -108,6 +108,16 @@
         color: $darkGray;
       }
     }
+
+    &.lightGray {
+      background-color: $grayBackground;
+      color: $black;
+
+      &:hover {
+        background-color: $darkGray;
+        color: $white;
+      }
+    }
   }
 
   &.outlined {
@@ -180,6 +190,16 @@
         color: $white;
       }
     }
+
+    &.lightGray {
+      border-color: $grayBackground;
+      color: $grayBackground;
+
+      &:hover {
+        background-color: $grayBackground;
+        color: $darkGray;
+      }
+    }
   }
 
   &.ghost {
@@ -214,6 +234,10 @@
 
     &.red {
       color: $red;
+    }
+
+    &.lightGray {
+      color: $grayBackground;
     }
   }
 }
