@@ -1,10 +1,10 @@
 import React from "react";
-import styles from "./IconButton.module.scss";
 import clsx from "clsx";
+import styles from "./IconButton.module.scss";
 
 type fontWeight = "regular" | "medium" | "semibold" | "bold";
 type variant = "ghost" | "outlined" | "filled";
-type color = "white" | "darkblue" | "blue" | "pink" | "black" | "darkGray" | "red";
+type color = "white" | "darkblue" | "blue" | "pink" | "black" | "darkGray" | "red" | "lightGray";
 
 interface IconButtonProps {
   /**
