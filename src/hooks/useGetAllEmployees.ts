@@ -5,7 +5,8 @@ export type EmployeeFilter = 'all' | 'active' | 'inactive' | 'online';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-const getAllEmployees = async (token: string|null, filter: EmployeeFilter): Promise<User[]> => {
+const getAllEmployees = async (filter: EmployeeFilter): Promise<User[]> => {
+    const token = sessionStorage.getItem("token");
     if (!token) {
         window.location.href = "/login";
         return [];
@@ -24,10 +25,10 @@ const getAllEmployees = async (token: string|null, filter: EmployeeFilter): Prom
     });
 }
 
-export const useListEmployee = (filter: EmployeeFilter = "all", token: string|null) => {
+export const useListEmployee = (filter: EmployeeFilter = "all") => {
     return useQuery({
-        queryKey: ["employees", token, filter],
-        queryFn: () => getAllEmployees(token, filter),
+        queryKey: ["employees", filter],
+        queryFn: () => getAllEmployees(filter),
         refetchOnWindowFocus: false,
         retry: false,
     });

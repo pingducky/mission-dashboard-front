@@ -1,8 +1,8 @@
+import { useState } from "react";
 import EmployeeBox from "../../components/EmployeeBox/EmployeeBox";
 import FilterEmployees from "./FilterEmployees/FilterEmployees";
 import { EmployeeFilter, useListEmployee } from "../../hooks/useGetAllEmployees";
 import styles from "./EmployeesPage.module.scss";
-import { useState } from "react";
 
 interface EmployeesPageProps {
     /**
@@ -20,7 +20,7 @@ const EmployeesPage: React.FC<EmployeesPageProps> = ({
         setEmployeeId,
     }) => {
     const [employeesFilter, setEmployeesFilter] = useState<EmployeeFilter>("all");
-    const { data: employeeData, refetch: refetchEmployees } = useListEmployee(employeesFilter, sessionStorage.getItem("token"));
+    const { data: employeeData, refetch: refetchEmployees } = useListEmployee(employeesFilter);
     const employeeBoxes = employeeData?.map((employee) => {
         return (
             <li

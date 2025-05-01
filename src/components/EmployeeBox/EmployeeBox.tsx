@@ -11,7 +11,6 @@ import ModeEditOutlinedIcon from '@mui/icons-material/ModeEditOutlined';
 import ArchiveOutlinedIcon from '@mui/icons-material/ArchiveOutlined';
 import { useArchiveEmployee } from "../../hooks/useArchiveEmployee";
 import { useReactivateEmployee  } from "../../hooks/useReactivateEmployee";
-
 import styles from "./EmployeeBox.module.scss";
 
 interface EmployeeBoxProps {
