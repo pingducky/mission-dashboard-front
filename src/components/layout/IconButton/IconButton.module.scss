@@ -208,7 +208,8 @@
     &.blue {
       color: $blue;
 
-      &.active {
+      &.active,
+      &:hover {
         background-color: $blueBackground;
         color: $blue;
       }
@@ -217,7 +218,8 @@
     &.darkblue {
       color: $darkBlue;
 
-      &.active {
+      &.active,
+      &:hover {
         background-color: $darkBlueBackground;
         color: $darkBlue;
       }
@@ -226,7 +228,8 @@
     &.pink {
       color: $pink;
 
-      &.active {
+      &.active,
+      &:hover {
         background-color: $pinkBackground;
         color: $pink;
       }
@@ -235,7 +238,8 @@
     &.black {
       color: $black;
 
-      &.active {
+      &.active,
+      &:hover {
         background-color: $darkBackground;
         color: $black;
       }
@@ -244,7 +248,8 @@
     &.white {
       color: $white;
 
-      &.active {
+      &.active,
+      &:hover {
         background-color: $whiteBackground;
         color: $black;
       }
@@ -253,7 +258,8 @@
     &.darkGray {
       color: $darkGray;
 
-      &.active {
+      &.active,
+      &:hover {
         background-color: $darkBlueBackground;
         color: $darkBlue;
       }
@@ -261,6 +267,12 @@
 
     &.red {
       color: $red;
+
+      &.active,
+      &:hover {
+        background-color: $redkBackground;
+        color: $red;
+      }
     }
   }
 }
