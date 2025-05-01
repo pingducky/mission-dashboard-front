@@ -12,8 +12,6 @@ import ArchiveOutlinedIcon from '@mui/icons-material/ArchiveOutlined';
 // import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
 import { useArchiveEmployee } from "../../hooks/useArchiveEmployee";
 import { useReactivateEmployee  } from "../../hooks/useReactivateEmployee";
-import { toast } from "react-toastify";
-// import { useQueryClient } from '@tanstack/react-query';
 
 import styles from "./EmployeeBox.module.scss";
 
@@ -31,32 +29,30 @@ function EmployeeBox({ employee, refetchEmployees }: EmployeeBoxProps) {
     const handleArchive = () => {
         archiveEmployee(employee.id, {
             onSuccess: () => {
-                toast.success("Employé archivé avec succès");
                 refetchEmployees();
             },
             onError: (error: unknown) => {
                 if (error instanceof Error) {
-                  toast.error(error.message);
+                    alert("Erreur : " + error.message);
                 } else {
-                  toast.error("Erreur inconnue lors de l'archivage");
+                    alert("Erreur inconnue lors de l'archivage");
                 }
-              }
+            }
         });
     };
     
     const handleReactivate = () => {
         reactivateEmployee(employee.id, {
             onSuccess: () => {
-                toast.success("Employé activé avec succès");
                 refetchEmployees();
             },
             onError: (error: unknown) => {
                 if (error instanceof Error) {
-                  toast.error(error.message);
+                    alert("Erreur : " + error.message);
                 } else {
-                  toast.error("Erreur inconnue lors de l'archivage");
+                    alert("Erreur inconnue lors du réactivage");
                 }
-              }
+            }
         });
     };
 
