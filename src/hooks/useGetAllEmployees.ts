@@ -24,7 +24,7 @@ const getAllEmployees = async (token: string|null, filter: EmployeeFilter): Prom
     });
 }
 
-export const useListEmployee = ( filter: EmployeeFilter = "all", token: string|null) => {
+export const useListEmployee = (filter: EmployeeFilter = "all", token: string|null) => {
     return useQuery({
         queryKey: ["employees", token, filter],
         queryFn: () => getAllEmployees(token, filter),

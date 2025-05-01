@@ -9,7 +9,6 @@ import Popper from '@mui/material/Popper';
 import { useState } from "react";
 import ModeEditOutlinedIcon from '@mui/icons-material/ModeEditOutlined';
 import ArchiveOutlinedIcon from '@mui/icons-material/ArchiveOutlined';
-// import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
 import { useArchiveEmployee } from "../../hooks/useArchiveEmployee";
 import { useReactivateEmployee  } from "../../hooks/useReactivateEmployee";
 
@@ -115,18 +114,6 @@ function EmployeeBox({ employee, refetchEmployees }: EmployeeBoxProps) {
                             >
                             </IconButton>
                         </li>
-                        {/* <li>
-                            <IconButton
-                                startIcon={<DeleteForeverOutlinedIcon/>}
-                                text="Supprimer"
-                                variant={"ghost"}
-                                isRounded={false}
-                                isDisabled={false}
-                                color="red"
-                                fontWeight="medium"
-                            >
-                            </IconButton>
-                        </li> */}
                     </ul>
                 </Popper>
             </div>
