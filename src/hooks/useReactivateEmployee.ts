@@ -15,8 +15,6 @@ const reactivateEmployee = async (id: number) => {
     const errorBody = await res.json();
     throw new Error(errorBody?.error || "Erreur lors de la réactivation du salarié");
   }
-
-  return res.json();
 };
 
 export const useReactivateEmployee = () => {

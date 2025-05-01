@@ -15,8 +15,6 @@ const archiveEmployee = async (id: number) => {
     const errorBody = await res.json();
     throw new Error(errorBody?.error || "Erreur lors de l'archivage du salarié");
   }
-
-  return res.json();
 };
 
 export const useArchiveEmployee = () => {

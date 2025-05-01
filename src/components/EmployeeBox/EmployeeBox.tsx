@@ -31,7 +31,6 @@ function EmployeeBox({ employee, refetchEmployees }: EmployeeBoxProps) {
     const handleArchive = () => {
         archiveEmployee(employee.id, {
             onSuccess: () => {
-                console.log('ok');
                 toast.success("Employé archivé avec succès");
                 refetchEmployees();
             },
@@ -48,7 +47,6 @@ function EmployeeBox({ employee, refetchEmployees }: EmployeeBoxProps) {
     const handleReactivate = () => {
         reactivateEmployee(employee.id, {
             onSuccess: () => {
-                console.log('ok');
                 toast.success("Employé activé avec succès");
                 refetchEmployees();
             },

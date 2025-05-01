@@ -24,12 +24,11 @@ const getAllEmployees = async (token: string|null, filter: EmployeeFilter): Prom
     });
 }
 
-export const useListEmployee = (page: string, filter: EmployeeFilter = "all", token: string|null) => {
+export const useListEmployee = ( filter: EmployeeFilter = "all", token: string|null) => {
     return useQuery({
         queryKey: ["employees", token, filter],
         queryFn: () => getAllEmployees(token, filter),
         refetchOnWindowFocus: false,
         retry: false,
-        enabled: page === "salarie"
     });
 }
