@@ -1,0 +1,46 @@
+@use '../../../../app/styles/global.scss'as *;
+@use '../../../../app/styles/colors.scss'as *;
+@use '../../../../app/styles/mixins.scss'as *;
+
+.missionsListContainer {
+    display: flex;
+    position: relative;
+    background-color: $grayBackground;
+    border-radius: 16px;
+    padding-left: 30px;
+    margin-top: 20px;
+
+    @include mixinBreakpoints(xs) {
+        padding-left: 10px;
+    }
+
+    .timeline {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 20px;
+        padding-top: 0.5rem;
+
+        .line {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 4px;
+            transform: translateX(-50%);
+            background: $darkBlue;
+            background: linear-gradient(180deg, $pink 0%, $pink 20%, $darkBlue 30%, $darkBlue 100%);
+            z-index: 1;
+        }
+    }
+
+    .missionsList {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+        border-radius: 16px;
+        width: 100%;
+    }
+}
