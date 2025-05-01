@@ -68,7 +68,7 @@ export type User = {
     /** 
      * Indique si le compte de l'utilisateur est activé. 
      */ 
-    isEnabled: boolean;
+    archivedAt: Date;
     /**
      * Indique si l'utilisateur est en ligne.
      */

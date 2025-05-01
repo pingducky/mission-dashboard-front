@@ -11,52 +11,70 @@ import ModeEditOutlinedIcon from '@mui/icons-material/ModeEditOutlined';
 import ArchiveOutlinedIcon from '@mui/icons-material/ArchiveOutlined';
 // import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
 import { useArchiveEmployee } from "../../hooks/useArchiveEmployee";
+import { useReactivateEmployee  } from "../../hooks/useReactivateEmployee";
+import { toast } from "react-toastify";
+// import { useQueryClient } from '@tanstack/react-query';
 
-import Styles from "./EmployeeBox.module.scss";
+import styles from "./EmployeeBox.module.scss";
 
 interface EmployeeBoxProps {
     employee: User;
+    refetchEmployees: () => void;
 }
 
-function EmployeeBox({ employee }: EmployeeBoxProps) {
+function EmployeeBox({ employee, refetchEmployees }: EmployeeBoxProps) {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
-
-    // Récupérer le token depuis le sessionStorage (ou autre mécanisme de stockage)
-    const token = sessionStorage.getItem('token');
-    const archiveEmployeeMutation = useArchiveEmployee(token);
-
+    const { mutate: archiveEmployee } = useArchiveEmployee();
+    const { mutate: reactivateEmployee } = useReactivateEmployee();
+    
     const handleArchive = () => {
-        if (!token) {
-            console.error("Token manquant !");
-            return;
-        }
-
-        // Appel de la mutation d'archivage
-        archiveEmployeeMutation.mutate(employee.id, {
+        archiveEmployee(employee.id, {
             onSuccess: () => {
-                console.log("Employé archivé !");
-                // Gérer le succès ici (par exemple, un message ou une mise à jour de l'interface)
+                console.log('ok');
+                toast.success("Employé archivé avec succès");
+                refetchEmployees();
             },
-            onError: (err) => {
-                console.error("Erreur lors de l'archivage de l'employé:", err);
-            }
+            onError: (error: unknown) => {
+                if (error instanceof Error) {
+                  toast.error(error.message);
+                } else {
+                  toast.error("Erreur inconnue lors de l'archivage");
+                }
+              }
+        });
+    };
+    
+    const handleReactivate = () => {
+        reactivateEmployee(employee.id, {
+            onSuccess: () => {
+                console.log('ok');
+                toast.success("Employé activé avec succès");
+                refetchEmployees();
+            },
+            onError: (error: unknown) => {
+                if (error instanceof Error) {
+                  toast.error(error.message);
+                } else {
+                  toast.error("Erreur inconnue lors de l'archivage");
+                }
+              }
         });
     };
 
     return (
-        <div className={Styles.employeeBox}>
+        <div className={styles.employeeBox}>
             <span 
                 className={clsx(
-                    Styles.employeeLetters,
+                    styles.employeeLetters,
                     {
-                        [Styles.online]: employee.isOnline
+                        [styles.online]: employee.isOnline
                     }
                 ) }
             >
                 {capitalize(employee.firstName[0] + employee.lastName[0])}
             </span>
-            <div className={Styles.ellipsise}>
+            <div className={styles.ellipsise}>
                 <IconButton
                     startIcon={<MoreHorizOutlinedIcon/>}
                     text=""
@@ -72,7 +90,7 @@ function EmployeeBox({ employee }: EmployeeBoxProps) {
                 <Popper
                     open={open}
                     anchorEl={anchorEl}
-                    className={Styles.popup}
+                    className={styles.popup}
                     onClick={(e) => {
                         e.stopPropagation();
                     }}
@@ -93,13 +111,13 @@ function EmployeeBox({ employee }: EmployeeBoxProps) {
                         <li>
                             <IconButton
                                 startIcon={<ArchiveOutlinedIcon/>}
-                                text="Archiver"
+                                text={employee.archivedAt ? "Réactiver" : "Archiver"}
                                 variant={"ghost"}
                                 isRounded={false}
                                 isDisabled={false}
-                                color="red"
+                                color={employee.archivedAt ? "blue" : "red"}
                                 fontWeight="medium"
-                                onClick={handleArchive}
+                                onClick={employee.archivedAt ? handleReactivate : handleArchive}
                             >
                             </IconButton>
                         </li>
@@ -120,8 +138,8 @@ function EmployeeBox({ employee }: EmployeeBoxProps) {
             </div>
             <h3>{employee.firstName} {employee.lastName}</h3>
             <p>Agent Polyvalent</p>
-            <div className={Styles.employeeInfos}>
-                <div className={Styles.flexContainer}>
+            <div className={styles.employeeInfos}>
+                <div className={styles.flexContainer}>
                     <div>
                         <h4>Infos</h4>
                         <p>XXXXX</p>
@@ -131,11 +149,11 @@ function EmployeeBox({ employee }: EmployeeBoxProps) {
                         <p>{employee.hiringDate && new Date(employee.hiringDate.toString()).toLocaleDateString()}</p>
                     </div>
                 </div>
-                <div className={Styles.iconInfo}>
+                <div className={styles.iconInfo}>
                     <EmailOutlinedIcon/> 
                     <p>{employee.email}</p>
                 </div>
-                <div className={Styles.iconInfo}>
+                <div className={styles.iconInfo}>
                     <LocalPhoneOutlinedIcon/>
                     <p>{employee.phoneNumber}</p>
                 </div>

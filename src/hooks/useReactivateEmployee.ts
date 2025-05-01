@@ -2,8 +2,8 @@ import { useMutation } from "@tanstack/react-query";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-const archiveEmployee = async (id: number) => {
-  const res = await fetch(`${API_URL}/employee/${id}/disable`, {
+const reactivateEmployee = async (id: number) => {
+  const res = await fetch(`${API_URL}/employee/${id}/activate`, {
     method: "PUT",
     headers: {
       'Content-Type': 'application/json',
@@ -13,14 +13,14 @@ const archiveEmployee = async (id: number) => {
 
   if (!res.ok) {
     const errorBody = await res.json();
-    throw new Error(errorBody?.error || "Erreur lors de l'archivage du salarié");
+    throw new Error(errorBody?.error || "Erreur lors de la réactivation du salarié");
   }
 
   return res.json();
 };
 
-export const useArchiveEmployee = () => {
+export const useReactivateEmployee = () => {
   return useMutation({
-    mutationFn: (id: number) => archiveEmployee(id),
+    mutationFn: (id: number) => reactivateEmployee(id),
   });
 };

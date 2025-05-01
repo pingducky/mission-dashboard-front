@@ -39,7 +39,7 @@ const EmployeesPage: React.FC<EmployeesPageProps> = ({
                     handleNavigation("salarieDetail", employee.firstName, employee.id.toString());
                 }}
             >
-                <EmployeeBox employee={employee} />
+                <EmployeeBox employee={employee} refetchEmployees={refetch} />
             </li>
         );
     });
@@ -56,3 +56,7 @@ const EmployeesPage: React.FC<EmployeesPageProps> = ({
 };
 
 export default EmployeesPage;
+function useGetAllEmployees(): { refetch: any; } {
+    throw new Error("Function not implemented.");
+}
+
