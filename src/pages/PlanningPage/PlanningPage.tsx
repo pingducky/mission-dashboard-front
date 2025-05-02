@@ -11,8 +11,11 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import MuiIconButton from '@mui/material/IconButton';
 import styles from './PlanningPage.module.scss';
-import AddMissionPlanningModal from './AddMissionPlanningModal/AddMissionPlanningModal';
 import MissionType from './MissionType/MissionType';
+import { getUserDataFromToken } from '../../utils/auth';
+import { useGetMissionTypes } from '../../hooks/useGetMissionTypes';
+import { useGetMissionsByAccount } from '../../hooks/useGetMissionsByAccount';
+import AddMissionDrawer from '../../components/AddMissionDrawer/AddMissionDrawer';
 
 interface MissionEvent extends EventInput {
     /**
@@ -49,6 +52,18 @@ const PlanningPage: React.FC = () => {
   const [dateRange, setDateRange] = useState<string>('');
   const [selectedEmployee, setSelectedEmployee] = useState<string>('');
 
+  const tokenData = getUserDataFromToken();
+
+  const { data: missionTypes, isLoading: areMissionTypesLoading } = useGetMissionTypes();
+
+//   const { data: missions, isLoading, error } = useGetMissionsByAccount({
+//     accountId: tokenData!.id,
+//     from: "2020-05-01",
+//     to: "2030-05-10",
+//   });
+
+//   console.debug("missions : ", missions);
+
   const calendarRef = useRef<FullCalendar | null>(null);
 
   const [newEvent, setNewEvent] = useState<MissionEvent>({
@@ -61,13 +76,6 @@ const PlanningPage: React.FC = () => {
     setSelectedEmployee(event.target.value);
   };
 
-  const handleDateChange = (field: keyof MissionEvent, value: string) => {
-    setNewEvent(prev => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
-
   const formatDateRange = (startStr: Date, endStr: Date) => {
     const locale = 'fr-FR';
     const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short' };
@@ -75,12 +83,6 @@ const PlanningPage: React.FC = () => {
     const end = new Date(endStr);
     end.setDate(end.getDate() - 1);
     return `${start.toLocaleDateString(locale, options)} – ${end.toLocaleDateString(locale, options)} ${end.getFullYear()}`;
-  };
-
-  const handleAddEvent = () => {
-    setEvents([...events, { ...newEvent }]);
-    setNewEvent({ title: '', start: '', end: '' });
-    setOpenDialog(false);
   };
 
   const handleViewChange = (
@@ -111,18 +113,36 @@ const PlanningPage: React.FC = () => {
     }
   };
 
+  const formatDateForInput = (dateStr: string) => {
+    const date = new Date(dateStr);
+    const offset = date.getTimezoneOffset();
+    const localDate = new Date(date.getTime() - offset * 60 * 1000);
+    return localDate.toISOString().slice(0, 16); // YYYY-MM-DDTHH:mm
+  };
+
+  const handleDateSelect = (selectInfo: { startStr: string; endStr: string }) => {
+    setNewEvent({
+      title: '',
+      start: formatDateForInput(selectInfo.startStr),
+      end: formatDateForInput(selectInfo.endStr),
+    });
+    setOpenDialog(true);
+  };
+  
   return (
     <div>
-        <div className={styles.missionsType}>
+        { !areMissionTypesLoading && (<div className={styles.missionsType}>
             <p>Types de misssions :</p>
 
             <div className={styles.missionsTypeList}>
-                <MissionType nom="Nettoyage vitres" code="A" />
-                <MissionType nom="Ménage" code="B" />
-                <MissionType nom="Salage" code="C" />
-                <MissionType nom="Autre type de mission" code="X" />
+                {
+                    missionTypes?.map((type) => (
+                        <MissionType nom={type.longLibel} code={type.shortLibel} color={type.color}/>
+                    ))
+                }
             </div>
-        </div>
+        </div>)
+        }
       <div className={styles.detachedHeader}>
         <div>
           <MuiIconButton size="small" onClick={handlePrev}>
@@ -182,36 +202,39 @@ const PlanningPage: React.FC = () => {
         </div>
 
       <div className={styles.calendarContainer}>
-        <FullCalendar
-          ref={calendarRef}
-          headerToolbar={{
+      <FullCalendar
+        ref={calendarRef}
+        headerToolbar={{
             left: '',
             center: '',
             right: ''
-          }}
-          plugins={[timeGridPlugin, interactionPlugin]}
-          initialView="timeGridWeek"
-          events={events}
-          editable={true}
-          selectable={true}
-          nowIndicator={true}
-          slotMinTime="08:00:00"
-          slotMaxTime="20:00:00"
-          height="auto"
-          locale={frLocale}
-          datesSet={(arg) => {
+        }}
+        plugins={[timeGridPlugin, interactionPlugin]}
+        initialView="timeGridWeek"
+        events={events}
+        editable={true}
+        selectable={true}
+        select={handleDateSelect}
+        nowIndicator={true}
+        slotMinTime="08:00:00"
+        slotMaxTime="20:00:00"
+        height="auto"
+        locale={frLocale}
+        datesSet={(arg) => {
             setDateRange(formatDateRange(arg.start, arg.end));
-          }}
+        }}
         />
       </div>
 
-      <AddMissionPlanningModal
-        open={openDialog}
-        onClose={() => setOpenDialog(false)}
-        event={newEvent}
-        onChange={handleDateChange}
-        onSubmit={handleAddEvent}
-    />
+        <AddMissionDrawer
+            employees={[]} 
+            isOpen={openDialog}
+            startDate={newEvent.start}
+            endDate={newEvent.end}
+            missionTypes={missionTypes}
+            onClose={() => setOpenDialog(false)}
+
+        />
     </div>
   );
 };

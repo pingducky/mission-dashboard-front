@@ -22,6 +22,7 @@ import { EmployeePage } from "../EmployeePage/EmployeePage";
 import { useGetEmployee } from "../../hooks/useGetEmployee";
 import { useGetUserFiles } from "../../hooks/useGetUserFiles";
 import PlanningPage from "../PlanningPage/PlanningPage";
+import CreateEmployeePage from "../Employee/CreateEmployeePage/CreateEmployeePage";
 import styles from "./ParentPage.module.scss";
 
 type BreadcrumbItem = {
