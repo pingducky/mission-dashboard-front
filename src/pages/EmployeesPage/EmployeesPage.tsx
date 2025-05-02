@@ -1,22 +1,14 @@
+import { useState } from "react";
 import EmployeeBox from "../../components/EmployeeBox/EmployeeBox";
-import { User } from "../../hooks/useUserData";
 import FilterEmployees from "./FilterEmployees/FilterEmployees";
-import { EmployeeFilter } from "../../hooks/useGetAllEmployees";
-import Styles from "./EmployeesPage.module.scss";
+import { EmployeeFilter, useListEmployee } from "../../hooks/useGetAllEmployees";
+import styles from "./EmployeesPage.module.scss";
 
 interface EmployeesPageProps {
     /**
      * Fonction de navigation
      */
     handleNavigation: (page: string, label: string, id?: string) => void;
-    /**
-     * Liste des employés
-     */
-    employees: User[];
-    /**
-     * Fonction pour mettre à jour le filtre des employés
-     */
-    setEmployeesFilter: (filter: EmployeeFilter) => void;
     /**
      * Fonction pour mettre à jour l'id de l'employé
      */
@@ -25,21 +17,21 @@ interface EmployeesPageProps {
 
 const EmployeesPage: React.FC<EmployeesPageProps> = ({
         handleNavigation,
-        employees,
-        setEmployeesFilter,
         setEmployeeId,
     }) => {
-    const employeeBoxes = employees?.map((employee) => {
+    const [employeesFilter, setEmployeesFilter] = useState<EmployeeFilter>("all");
+    const { data: employeeData, refetch: refetchEmployees } = useListEmployee(employeesFilter);
+    const employeeBoxes = employeeData?.map((employee) => {
         return (
             <li
                 key={employee.id}
-                className={Styles.employe_container}
+                className={styles.employe_container}
                 onClick={() => {
                     setEmployeeId(employee.id);
                     handleNavigation("salarieDetail", employee.firstName, employee.id.toString());
                 }}
             >
-                <EmployeeBox employee={employee} />
+                <EmployeeBox employee={employee} refetchEmployees={refetchEmployees} />
             </li>
         );
     });
@@ -47,12 +39,14 @@ const EmployeesPage: React.FC<EmployeesPageProps> = ({
     return (
         <>
             <FilterEmployees setFilter={setEmployeesFilter} />
-            <ul className={Styles.listEmployeeContainer}>
+            <ul className={styles.listEmployeeContainer}>
                 {employeeBoxes}
             </ul>
-            <button className={Styles.addButton} onClick={() => handleNavigation('salarieCreation', 'salarieCreation')}>+</button>
+            <button className={styles.addButton} onClick={() => handleNavigation('salarieCreation', 'salarieCreation')}>+</button>
         </>
     );
 };
 
 export default EmployeesPage;
+
+
