@@ -3,19 +3,20 @@
 @use '../../../app/styles/mixins'as *;
 
 
-:has(.container) {
+:has(.createEmployeeContainer) {
   overflow-y: hidden;
 }
-.container {
+
+.createEmployeeContainer {
   display: flex;
   background-color: $white;
   padding: 20px 30px;
   border-radius: 8px;
   overflow-y: auto;
   max-height: calc(100% - 40px);
+  gap: 30px;
 
-  
-  .sidebar {
+  .menu {
     position: sticky;
     top: 20px;
     align-self: flex-start;
@@ -23,10 +24,10 @@
     display: flex;
     flex-direction: column;
     gap: 24px;
-  
+
     button {
       justify-content: flex-start;
-  
+
       @include mixinBreakpoints(xs) {
         :global(.iconTextGlobal) {
           display: none;
@@ -34,14 +35,12 @@
       }
     }
   }
-  
+
   .separator {
     width: 1px;
-    background-color: $mediumGray;
-    margin-right: 24px;
-    margin-left: 8px;
+    background-color: $grayBackground;
   }
-  
+
   .content {
     flex: 1;
     position: relative;
@@ -70,25 +69,24 @@
       justify-content: center;
     }
   }
-  
+
   .section {
     margin-bottom: 48px;
   }
-  
+
   .formGrid {
     display: flex;
     flex-wrap: wrap;
     gap: 16px;
   }
-  
+
   .input {
     flex-basis: calc(50% - 8px);
     min-width: 250px;
   }
-  
+
   .checkboxGroup {
     display: flex;
     gap: 32px;
   }
 }
-  
