@@ -4,16 +4,16 @@
 
 .listEmployeeContainer {
     display: grid;
-    grid-template-columns: repeat(1, 80%);
-    grid-column-gap: 5%;
-    grid-row-gap: 20px;
+    grid-template-columns: 1fr;
+    grid-column-gap: 40px;
+    grid-row-gap: 40px;
 
     @include mixinStart(lg) {
         grid-template-columns: repeat(2, 1fr);
     }
 
     @include mixinStart(xxl) {
-        grid-template-columns: repeat(3, 30%);
+        grid-template-columns: repeat(3, 1fr);
     }
 
     .employe_container {
