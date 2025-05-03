@@ -21,17 +21,44 @@
     }
 }
 
-.addButton {
+.addButtonContainer {
     position: fixed;
+    display: flex;
+    align-items: center;
+    gap: 20px;
     bottom: 35px;
     right: 35px;
-    border: none;
-    border-radius: 50%;
-    width: 70px;
-    height: 70px;
-    font-size: 35px;
-    background-color: $blue;
-    color: $white;
-    cursor: pointer;
-    box-shadow: 5px 5px 25px 16px rgba($blue, 0.3);
+
+    .blurEffect {
+        position: absolute;
+        width: 300px;
+        height: 150px;
+        right: 0;
+        bottom: 0;
+        transform: translate(35%, 35%);
+        border-radius: 50%;
+        background: radial-gradient(circle, $blue 0%, rgba(217, 217, 217, 0) 70%);
+        filter: blur(50px);
+        z-index: 0;
+    }
+
+    .addButtonTexte {
+        z-index: 1;
+        padding: 10px 15px;
+        background-color: $white;
+        border-radius: 8px;
+        font-weight: var(--font-weight-medium);
+    }
+
+    .addButton {
+        z-index: 1;
+        border: none;
+        border-radius: 50%;
+        width: 70px;
+        height: 70px;
+        font-size: 35px;
+        background-color: $blue;
+        color: $white;
+        cursor: pointer;
+    }
 }
