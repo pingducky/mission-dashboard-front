@@ -16,6 +16,11 @@
   max-height: calc(100% - 40px);
   gap: 30px;
 
+  @include mixinBreakpoints(xs) {
+    padding: 15px 20px;
+    gap: 20px;
+  }
+
   .menu {
     position: sticky;
     top: 20px;
@@ -28,7 +33,7 @@
     button {
       justify-content: flex-start;
 
-      @include mixinBreakpoints(xs) {
+      @include mixinBreakpoints(lg) {
         :global(.iconTextGlobal) {
           display: none;
         }
@@ -49,24 +54,33 @@
 
     .sectionTitle {
       font-size: 25px;
+      font-weight: var(--font-weight-medium);
     }
 
     .subSectionTitle {
       color: $darkGray;
       font-size: 15px;
       margin-bottom: 30px;
+      padding-bottom: 15px;
+      border-bottom: solid 1px $grayBackground;
     }
 
     .selectRole {
       margin-top: 25px;
       width: 50%;
+
+      @include mixinBreakpoints(xl) {
+        width: 100%;
+      }
     }
 
     .validateButtons {
       display: flex;
-      gap: 30px;
+      flex-wrap: wrap;
+      column-gap: 30px;
+      row-gap: 10px;
       margin-top: 50px;
-      justify-content: center;
+      justify-content: flex-end;
     }
   }
 
@@ -75,18 +89,18 @@
   }
 
   .formGrid {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 16px;
-  }
 
-  .input {
-    flex-basis: calc(50% - 8px);
-    min-width: 250px;
+    @include mixinBreakpoints(xl) {
+      grid-template-columns: 1fr;
+    }
   }
 
   .checkboxGroup {
     display: flex;
-    gap: 32px;
+    flex-wrap: wrap;
+    column-gap: 32px;
   }
 }

@@ -383,10 +383,13 @@ const CreateEmployeePage: React.FC<createEmployeePageProps> = ({
 
         <div className={styles.validateButtons}>
           <IconButton
-            text='annuler'
+            text='Annuler'
             variant='outlined'
             isRounded
             startIcon={<CloseIcon/>}
+            color='red'
+            fontWeight='medium'
+            onClick={() => handleNavigation("salarie", "Salariés")}
           />
 
           <IconButton
@@ -394,6 +397,7 @@ const CreateEmployeePage: React.FC<createEmployeePageProps> = ({
             variant='filled'
             isRounded
             startIcon={<DoneIcon />}
+            fontWeight='medium'
             onClick={handleSubmit}
           />
         </div>
