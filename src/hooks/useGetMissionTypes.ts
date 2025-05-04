@@ -1,9 +1,21 @@
 import { useQuery } from "@tanstack/react-query";
 
 export type MissionType = {
+    /**
+     * Id
+     */
     id: number;
+    /**
+     * Libellé court
+     */
     shortLibel: string;
+    /**
+     * Libellé long
+     */
     longLibel: string;
+    /**
+     * Code couleure
+     */
     color: string;
 }
 

@@ -1,42 +1,94 @@
 import { useQuery } from "@tanstack/react-query";
+import { MissionType } from "./useGetMissionTypes";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-// Renommer
-export type AccountModel = {
+type limitedAccountModel = {
+    /**
+     * Id
+     */
     id: number;
+    /**
+     * Prénom
+     */
     firstName: string;
+    /**
+     * Nom
+     */
     lastName: string;
 };
 
-export type MissionType = {
-    id: number;
-    shortLibel: string;
-    longLibel: string;
-    color: string;
-};
-
 export type Mission = {
+    /**
+     * Id
+     */
     id: number;
+    /**
+     * Description
+     */
     description: string;
+    /**
+     * Date de début
+     */
     timeBegin: string;
+    /**
+     * Date de fin
+     */
     estimatedEnd?: string | null;
+    /**
+     * Date de fin
+     */
     timeEnd?: string | null;
+    /**
+     * Adresse
+     */
     address: string;
+    /**
+     * Ville
+     */
     city?: string | null;
+    /**
+     * Code postale
+     */
     postalCode?: string | null;
+    /**
+     * Code pays
+     */
     countryCode?: string | null;
+    /**
+     * Id du type de mission
+     */
     idMissionType: number;
-    AccountModels: AccountModel[];
+    /**
+     * Comptes lié à la mission
+     */
+    AccountModels: limitedAccountModel[];
+    /**
+     * Type de mission
+     */
     missionType: MissionType;
 };
 
-
 type Params = {
+    /**
+     * Id du compte
+     */
     accountId: string;
+    /**
+     * Date de début
+     */
     from?: string;
+    /**
+     * Date de fin
+     */
     to?: string;
+    /**
+     * Filtre type
+     */
     filterByType?: number;
+    /**
+     * Limit
+     */
     limit?: number;
 };
 

@@ -48,6 +48,12 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
 
   const [errors, setErrors] = React.useState<{ [key: string]: boolean }>({});
 
+  React.useEffect(() => {
+    if (isOpen) {
+      setErrors({});
+    }
+  }, [isOpen]);
+
   const handleSelectChange = (event: SelectChangeEvent<string[]>) => {
     const {
       target: { value },
@@ -79,7 +85,6 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
 
   const handleCreate = () => {
     if (validateFields()) {
-      // Soumission ici
       console.log('Formulaire valide, mission créée.');
     } else {
       console.log('Champs manquants.');
