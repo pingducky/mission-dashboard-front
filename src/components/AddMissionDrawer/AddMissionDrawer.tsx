@@ -15,6 +15,8 @@ import { SelectChangeEvent } from '@mui/material';
 import { MissionType } from '../../hooks/useGetMissionTypes';
 import styles from './AddMissionDrawer.module.scss';
 import MissionTypeColor from '../../pages/PlanningPage/MissionType/MissionType';
+import { CreateMissionPayload } from '../../hooks/useCreateMission';
+import { enqueueSnackbar } from '../../utils/snackbarUtils';
 
 interface AddMissionDrawerProps {
   isOpen: boolean;
@@ -22,6 +24,7 @@ interface AddMissionDrawerProps {
   startDate?: string;
   endDate?: string;
   missionTypes?: MissionType[];
+  onCreate: (payload: CreateMissionPayload) => void;
   onClose: () => void;
 }
 
@@ -30,6 +33,7 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
   startDate,
   endDate,
   missionTypes,
+  onCreate,
   onClose
 }) => {
   const [selectedEmployees, setSelectedEmployees] = React.useState<string[]>([]);
@@ -43,10 +47,20 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
   const [address, setAddress] = React.useState('');
   const [city, setCity] = React.useState('');
   const [postalCode, setPostalCode] = React.useState('');
-  const [country, setCountry] = React.useState('');
+  const [countryCode, setCountryCode] = React.useState('FR');
   const [details, setDetails] = React.useState('');
 
   const [errors, setErrors] = React.useState<{ [key: string]: boolean }>({});
+
+  const countryList = [
+    { code: 'FR', name: 'France' },
+    { code: 'BE', name: 'Belgique' },
+    { code: 'CH', name: 'Suisse' },
+    { code: 'LU', name: 'Luxembourg' },
+    { code: 'DE', name: 'Allemagne' },
+    { code: 'ES', name: 'Espagne' },
+    { code: 'IT', name: 'Italie' },
+  ];
 
   React.useEffect(() => {
     if (isOpen) {
@@ -76,20 +90,71 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
       address: !address,
       city: !city,
       postalCode: !postalCode,
-      country: !country,
+      country: !countryCode,
       employees: selectedEmployees.length === 0,
     };
     setErrors(newErrors);
     return Object.values(newErrors).every((error) => !error);
   };
 
-  const handleCreate = () => {
-    if (validateFields()) {
-      console.log('Formulaire valide, mission créée.');
-    } else {
-      console.log('Champs manquants.');
-    }
+  const pad = n => String(Math.floor(Math.abs(n))).padStart(2, '0');
+
+const getTimezoneOffset = date => {
+  const tzOffset = -date.getTimezoneOffset();
+  const sign = tzOffset >= 0 ? '+' : '-';
+  return sign + pad(tzOffset / 60) + ':' + pad(tzOffset % 60);
+};
+
+const toISOStringWithTimezone = date => {
+  return date.getFullYear() +
+    '-' + pad(date.getMonth() + 1) +
+    '-' + pad(date.getDate()) +
+    'T' + pad(date.getHours()) +
+    ':' + pad(date.getMinutes()) +
+    ':' + pad(date.getSeconds()) +
+    getTimezoneOffset(date);
+};
+
+
+const handleCreate = () => {
+  if (!validateFields()) {
+    enqueueSnackbar('Veuillez remplir tous les champs obligatoires.', 'error');
+    return;
+  }
+  
+  const isoStartDate = toISOStringWithTimezone(new Date(start));
+  const isoEndDate = toISOStringWithTimezone(new Date(end));
+
+  const payload: CreateMissionPayload = {
+    description: details,
+    timeBegin: isoStartDate,
+    timeEnd: isoEndDate,
+    estimatedEnd: undefined,
+    address,
+    city,
+    postalCode,
+    countryCode,
+    missionTypeId: selectedMissionType as number,
+    accountAssignIds: selectedEmployees.map(() => 1),
+    pictures: [],
   };
+
+  onCreate(payload);
+
+  setStart(startDate || '');
+  setEnd(endDate || '');
+  setCompanyName('');
+  setEmail('');
+  setPhone('');
+  setAddress('');
+  setCity('');
+  setPostalCode('');
+  setCountryCode('FR');
+  setDetails('');
+  setSelectedEmployees([]);
+  setSelectedMissionType('');
+  setErrors({});
+};
 
   React.useEffect(() => {
     setStart(startDate || '');
@@ -198,13 +263,19 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
               onChange={(e) => setPostalCode(e.target.value)}
               error={errors.postalCode}
             />
-            <TextField
-              label="Pays"
-              fullWidth
-              value={country}
-              onChange={(e) => setCountry(e.target.value)}
-              error={errors.country}
-            />
+              <Select
+                labelId="country-select-label"
+                id="country-select"
+                value={countryCode}
+                onChange={(e) => setCountryCode(e.target.value)}
+                fullWidth
+              >
+                {countryList.map((country) => (
+                  <MenuItem key={country.code} value={country.code}>
+                    {country.name}
+                  </MenuItem>
+                ))}
+              </Select>
           </div>
         </section>
 

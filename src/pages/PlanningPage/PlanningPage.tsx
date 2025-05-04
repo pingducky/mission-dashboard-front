@@ -17,6 +17,8 @@ import { useGetMissionsByAccount } from '../../hooks/useGetMissionsByAccount';
 import AddMissionDrawer from '../../components/AddMissionDrawer/AddMissionDrawer';
 import { enqueueSnackbar } from '../../utils/snackbarUtils';
 import styles from './PlanningPage.module.scss';
+import { CreateMissionPayload, useCreateMission } from '../../hooks/useCreateMission';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface MissionEvent extends EventInput {
     /**
@@ -90,19 +92,42 @@ const PlanningPage: React.FC = () => {
 
   const { data: missionTypes, isLoading: areMissionTypesLoading } = useGetMissionTypes();
 
-  const { data: missions} = useGetMissionsByAccount({
+  const missionQueryParams = {
     accountId: tokenData!.id,
     from: calendarStartDate ?? defaultFrom,
     to: calendarEndDate ?? defaultTo,
-  });
+  };
+  const { data: missions } = useGetMissionsByAccount(missionQueryParams);
+
+  const createMissionMutation = useCreateMission();
+  const queryClient = useQueryClient();
+
+  const handleCreateMission = async (payload: CreateMissionPayload) => {
+    try {
+      await createMissionMutation.mutateAsync(payload);
+      enqueueSnackbar('Mission créée avec succès', 'success');
+      queryClient.invalidateQueries({
+        queryKey: ['missions', missionQueryParams],
+      });
+      setOpenDialog(false);
+    } catch (error: any) {
+      enqueueSnackbar(error.message || 'Erreur lors de la création de la mission', 'error');
+    }
+  };
+
+  const toParisISOString = (utcDateString) => {
+    if (!utcDateString) return '';
+    const date = new Date(utcDateString);
+    return date.toLocaleString('sv-SE', { timeZone: 'Europe/Paris' }).replace(' ', 'T');
+  };
 
   useEffect(() => {
     if (missions) {
       const transformedEvents: MissionEvent[] = missions.map((mission) => ({
         id: mission.id.toString(),
         title: mission.missionType?.longLibel || 'Mission',
-        start: mission.timeBegin,
-        end: mission.timeEnd || mission.estimatedEnd || '',
+        start: toParisISOString(mission.timeBegin),
+        end: toParisISOString(mission.timeEnd || mission.estimatedEnd || ''),
         adresse: mission.address,
         categorie: mission.missionType?.shortLibel,
         description: mission.description,
@@ -112,8 +137,6 @@ const PlanningPage: React.FC = () => {
       setEvents(transformedEvents);
     }
   }, [missions]);
-
-
 
   const handleEmployeeChange = (event: SelectChangeEvent) => {
     setSelectedEmployee(event.target.value);
@@ -296,12 +319,8 @@ const PlanningPage: React.FC = () => {
             endDate={newEvent.end}
             missionTypes={missionTypes}
             onClose={() => setOpenDialog(false)}
-
+            onCreate={handleCreateMission}
         />
-
-        <>
-        <Button onClick={() => enqueueSnackbar('Erreur!', 'error')}>Error success</Button>
-        </>
     </div>
   );
 };
