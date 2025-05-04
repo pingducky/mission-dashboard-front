@@ -36,6 +36,10 @@
   .rightSection {
     display:  flex;
     
+    .employeeForm {
+      min-width: 180px;
+      margin-right: 15px;
+    }
   }
   .dateRange {
     font-size: var(--font-size-h4);

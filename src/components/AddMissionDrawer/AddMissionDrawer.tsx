@@ -27,7 +27,6 @@ interface AddMissionDrawerProps {
 
 const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
   isOpen,
-  employees = ["Hugo", "Théo"],
   startDate,
   endDate,
   missionTypes,
@@ -35,8 +34,6 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
 }) => {
   const [selectedEmployees, setSelectedEmployees] = React.useState<string[]>([]);
   const [selectedMissionType, setSelectedMissionType] = React.useState<number | "">("");
-  console.debug("startDate : ", startDate);
-  console.debug("endDate : ", endDate);
 
   const [start, setStart] = React.useState(startDate || '');
   const [end, setEnd] = React.useState(endDate || '');
@@ -51,7 +48,7 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
 
   const [errors, setErrors] = React.useState<{ [key: string]: boolean }>({});
 
-  const handleSelectChange = (event: any) => {
+  const handleSelectChange = (event: SelectChangeEvent<string[]>) => {
     const {
       target: { value },
     } = event;

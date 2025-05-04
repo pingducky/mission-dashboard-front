@@ -1,21 +1,22 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { EventInput } from '@fullcalendar/core';
 import FullCalendar from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { Button, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import frLocale from '@fullcalendar/core/locales/fr';
 import AddIcon from '@mui/icons-material/Add';
 import IconButton from '../../components/layout/IconButton/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import MuiIconButton from '@mui/material/IconButton';
-import styles from './PlanningPage.module.scss';
 import MissionType from './MissionType/MissionType';
 import { getUserDataFromToken } from '../../utils/auth';
 import { useGetMissionTypes } from '../../hooks/useGetMissionTypes';
 import { useGetMissionsByAccount } from '../../hooks/useGetMissionsByAccount';
 import AddMissionDrawer from '../../components/AddMissionDrawer/AddMissionDrawer';
+import { enqueueSnackbar } from '../../utils/snackbarUtils';
+import styles from './PlanningPage.module.scss';
 
 interface MissionEvent extends EventInput {
     /**
@@ -46,31 +47,73 @@ interface MissionEvent extends EventInput {
   
 
 const PlanningPage: React.FC = () => {
-  const [events, setEvents] = useState<MissionEvent[]>([]);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [viewMode, setViewMode] = useState<'timeGridDay' | 'timeGridWeek'>('timeGridWeek');
   const [dateRange, setDateRange] = useState<string>('');
   const [selectedEmployee, setSelectedEmployee] = useState<string>('');
-
-  const tokenData = getUserDataFromToken();
-
-  const { data: missionTypes, isLoading: areMissionTypesLoading } = useGetMissionTypes();
-
-//   const { data: missions, isLoading, error } = useGetMissionsByAccount({
-//     accountId: tokenData!.id,
-//     from: "2020-05-01",
-//     to: "2030-05-10",
-//   });
-
-//   console.debug("missions : ", missions);
-
-  const calendarRef = useRef<FullCalendar | null>(null);
-
+  const [calendarStartDate, setCalendarStartDate] = useState<string | null>(null);
+  const [calendarEndDate, setCalendarEndDate] = useState<string | null>(null);
+  const [events, setEvents] = useState<MissionEvent[]>([]);
+  
   const [newEvent, setNewEvent] = useState<MissionEvent>({
     title: '',
     start: '',
     end: '',
   });
+  
+  const calendarRef = useRef<FullCalendar | null>(null);
+  
+  const tokenData = getUserDataFromToken();
+  const today = new Date();
+
+  const getWeekRange = (date: Date) => {
+    const day = date.getDay();
+    const diffToMonday = (day === 0 ? -6 : 1) - day;
+    const monday = new Date(date);
+    monday.setDate(date.getDate() + diffToMonday);
+    const sunday = new Date(monday);
+    sunday.setDate(monday.getDate() + 6);
+    return {
+      monday: monday.toISOString(),
+      sunday: sunday.toISOString(),
+    };
+};
+
+  const defaultFrom = viewMode === 'timeGridDay'
+    ? today.toISOString()
+    : getWeekRange(today).monday;
+  
+  const defaultTo = viewMode === 'timeGridDay'
+    ? new Date(today.getTime() + 24 * 60 * 60 * 1000).toISOString()
+    : getWeekRange(today).sunday;
+
+
+  const { data: missionTypes, isLoading: areMissionTypesLoading } = useGetMissionTypes();
+
+  const { data: missions} = useGetMissionsByAccount({
+    accountId: tokenData!.id,
+    from: calendarStartDate ?? defaultFrom,
+    to: calendarEndDate ?? defaultTo,
+  });
+
+  useEffect(() => {
+    if (missions) {
+      const transformedEvents: MissionEvent[] = missions.map((mission) => ({
+        id: mission.id.toString(),
+        title: mission.missionType?.longLibel || 'Mission',
+        start: mission.timeBegin,
+        end: mission.timeEnd || mission.estimatedEnd || '',
+        adresse: mission.address,
+        categorie: mission.missionType?.shortLibel,
+        description: mission.description,
+        backgroundColor: mission.missionType?.color,
+        borderColor: mission.missionType?.color,
+      }));
+      setEvents(transformedEvents);
+    }
+  }, [missions]);
+
+
 
   const handleEmployeeChange = (event: SelectChangeEvent) => {
     setSelectedEmployee(event.target.value);
@@ -119,8 +162,24 @@ const PlanningPage: React.FC = () => {
     const localDate = new Date(date.getTime() - offset * 60 * 1000);
     return localDate.toISOString().slice(0, 16); // YYYY-MM-DDTHH:mm
   };
-
   const handleDateSelect = (selectInfo: { startStr: string; endStr: string }) => {
+    const selectedStart = new Date(selectInfo.startStr);
+    const selectedEnd = new Date(selectInfo.endStr);
+  
+    const isConflict = events.some(event => {
+      const eventStart = new Date(event.start as string);
+      const eventEnd = new Date(event.end as string);
+  
+      return (
+        (selectedStart < eventEnd && selectedEnd > eventStart)
+      );
+    });
+  
+    if (isConflict) {
+      enqueueSnackbar('Une mission existe déjà dans cette plage horaire.', 'error')
+      return;
+    }
+  
     setNewEvent({
       title: '',
       start: formatDateForInput(selectInfo.startStr),
@@ -172,7 +231,7 @@ const PlanningPage: React.FC = () => {
         <p className={styles.dateRange}>{dateRange}</p>
 
         <div className={styles.rightSection}>
-            <FormControl size="small" style={{ minWidth: 180, marginRight: '1rem' }}>
+            <FormControl className={styles.employeeForm} size="small">
                 <InputLabel id="employee-select-label">Choix des employé(e)s</InputLabel>
                 <Select
                 labelId="employee-select-label"
@@ -202,28 +261,32 @@ const PlanningPage: React.FC = () => {
         </div>
 
       <div className={styles.calendarContainer}>
-      <FullCalendar
-        ref={calendarRef}
-        headerToolbar={{
-            left: '',
-            center: '',
-            right: ''
-        }}
-        plugins={[timeGridPlugin, interactionPlugin]}
-        initialView="timeGridWeek"
-        events={events}
-        editable={true}
-        selectable={true}
-        select={handleDateSelect}
-        nowIndicator={true}
-        slotMinTime="08:00:00"
-        slotMaxTime="20:00:00"
-        height="auto"
-        locale={frLocale}
-        datesSet={(arg) => {
-            setDateRange(formatDateRange(arg.start, arg.end));
-        }}
-        />
+        <FullCalendar
+            ref={calendarRef}
+            headerToolbar={{
+                left: '',
+                center: '',
+                right: ''
+            }}
+            plugins={[timeGridPlugin, interactionPlugin]}
+            initialView="timeGridWeek"
+            events={events}
+            editable={true}
+            selectable={true}
+            select={handleDateSelect}
+            nowIndicator={true}
+            slotMinTime="08:00:00"
+            timeZone="Europe/Paris"
+            slotMaxTime="20:00:00"
+            height="auto"
+            locale={frLocale}
+            datesSet={(arg) => {
+                console.debug("arg.start, arg.end :", arg.start, arg.end);
+                setDateRange(formatDateRange(arg.start, arg.end));
+                setCalendarStartDate(arg.start.toISOString());
+                setCalendarEndDate(arg.end.toISOString());
+            }}
+            />
       </div>
 
         <AddMissionDrawer
@@ -235,6 +298,10 @@ const PlanningPage: React.FC = () => {
             onClose={() => setOpenDialog(false)}
 
         />
+
+        <>
+        <Button onClick={() => enqueueSnackbar('Erreur!', 'error')}>Error success</Button>
+        </>
     </div>
   );
 };
