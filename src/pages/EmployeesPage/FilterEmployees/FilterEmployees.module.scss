@@ -65,7 +65,7 @@
   @include mixinBreakpoints(sm) {
     flex-direction: column;
     flex-wrap: wrap;
-    height: 100%;
+    height: auto;
     gap: 10px;
 
     .filterTab {

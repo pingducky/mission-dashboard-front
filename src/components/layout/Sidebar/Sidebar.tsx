@@ -103,7 +103,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, name, firstname, isLoadin
               <IconButton
                 startIcon={<HomeOutlinedIcon />}
                 text="Tableau de bord"
-                fontWeight="regular"
+                fontWeight="medium"
                 onClick={() => onMenuClick("dashboard")}
                 isDisabled={false}
                 variant={"ghost"}
@@ -118,7 +118,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, name, firstname, isLoadin
               <IconButton
                 startIcon={<CalendarMonthOutlinedIcon />}
                 text="Planning"
-                fontWeight="bold"
+                fontWeight="medium"
                 onClick={() => onMenuClick("planning")}
                 isDisabled={false}
                 variant={"ghost"}
@@ -148,7 +148,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, name, firstname, isLoadin
               <IconButton
                 startIcon={<ListAltIcon />}
                 text="Liste missions"
-                fontWeight="regular"
+                fontWeight="medium"
                 onClick={() => onMenuClick("missions")}
                 isDisabled={false}
                 variant={"ghost"}
@@ -166,7 +166,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, name, firstname, isLoadin
               <IconButton
                 startIcon={<NotificationsNoneIcon />}
                 text="Notifications"
-                fontWeight="regular"
+                fontWeight="medium"
                 onClick={() => onMenuClick("notifications")}
                 isDisabled={false}
                 variant={"ghost"}
@@ -181,7 +181,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, name, firstname, isLoadin
               <IconButton
                 startIcon={<PersonOutlineIcon />}
                 text="Compte"
-                fontWeight="regular"
+                fontWeight="medium"
                 onClick={() => onMenuClick("compte")}
                 isDisabled={false}
                 variant={"ghost"}
@@ -196,7 +196,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, name, firstname, isLoadin
               <IconButton
                 startIcon={<LogoutIcon />}
                 text="Se déconnecter"
-                fontWeight="regular"
+                fontWeight="medium"
                 onClick={() => onMenuClick("logout")}
                 isDisabled={false}
                 variant={"ghost"}

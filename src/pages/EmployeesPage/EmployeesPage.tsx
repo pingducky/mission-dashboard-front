@@ -42,7 +42,11 @@ const EmployeesPage: React.FC<EmployeesPageProps> = ({
             <ul className={styles.listEmployeeContainer}>
                 {employeeBoxes}
             </ul>
-            <button className={styles.addButton} onClick={() => handleNavigation('salarieCreation', 'salarieCreation')}>+</button>
+            <div className={styles.addButtonContainer}>
+                <div className={styles.blurEffect}></div>
+                <p className={styles.addButtonTexte}>Ajout d'un employé</p>
+               <button className={styles.addButton} onClick={() => handleNavigation('salarieCreation', 'salarieCreation')}>+</button> 
+            </div>
         </>
     );
 };

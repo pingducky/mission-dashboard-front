@@ -31,19 +31,19 @@
   }
 
   // Styles dynamiques
-  &.regular {
+  &.regular span {
     font-weight: var(--font-weight-regular);
   }
 
-  &.medium {
+  &.medium span {
     font-weight: var(--font-weight-medium);
   }
 
-  &.semibold {
+  &.semibold span {
     font-weight: var(--font-weight-semibold);
   }
 
-  &.bold {
+  &.bold span {
     font-weight: var(--font-weight-bold);
   }
 
