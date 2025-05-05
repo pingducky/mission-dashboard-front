@@ -9,30 +9,64 @@ import Popper from '@mui/material/Popper';
 import { useState } from "react";
 import ModeEditOutlinedIcon from '@mui/icons-material/ModeEditOutlined';
 import ArchiveOutlinedIcon from '@mui/icons-material/ArchiveOutlined';
-import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
-import Styles from "./EmployeeBox.module.scss";
+import { useArchiveEmployee } from "../../hooks/useArchiveEmployee";
+import { useReactivateEmployee  } from "../../hooks/useReactivateEmployee";
+import styles from "./EmployeeBox.module.scss";
 
 interface EmployeeBoxProps {
     employee: User;
+    refetchEmployees: () => void;
 }
 
-function EmployeeBox({ employee }: EmployeeBoxProps) {
+function EmployeeBox({ employee, refetchEmployees }: EmployeeBoxProps) {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
+    const { mutate: archiveEmployee } = useArchiveEmployee();
+    const { mutate: reactivateEmployee } = useReactivateEmployee();
+    
+    const handleArchive = () => {
+        archiveEmployee(employee.id, {
+            onSuccess: () => {
+                refetchEmployees();
+            },
+            onError: (error: unknown) => {
+                if (error instanceof Error) {
+                    alert("Erreur : " + error.message);
+                } else {
+                    alert("Erreur inconnue lors de l'archivage");
+                }
+            }
+        });
+    };
+    
+    const handleReactivate = () => {
+        reactivateEmployee(employee.id, {
+            onSuccess: () => {
+                refetchEmployees();
+            },
+            onError: (error: unknown) => {
+                if (error instanceof Error) {
+                    alert("Erreur : " + error.message);
+                } else {
+                    alert("Erreur inconnue lors du réactivage");
+                }
+            }
+        });
+    };
 
     return (
-        <div className={Styles.employeeBox}>
+        <div className={styles.employeeBox}>
             <span 
                 className={clsx(
-                    Styles.employeeLetters,
+                    styles.employeeLetters,
                     {
-                        [Styles.online]: employee.isOnline
+                        [styles.online]: employee.isOnline
                     }
                 ) }
             >
                 {capitalize(employee.firstName[0] + employee.lastName[0])}
             </span>
-            <div className={Styles.ellipsise}>
+            <div className={styles.ellipsise}>
                 <IconButton
                     startIcon={<MoreHorizOutlinedIcon/>}
                     text=""
@@ -48,7 +82,7 @@ function EmployeeBox({ employee }: EmployeeBoxProps) {
                 <Popper
                     open={open}
                     anchorEl={anchorEl}
-                    className={Styles.popup}
+                    className={styles.popup}
                     onClick={(e) => {
                         e.stopPropagation();
                     }}
@@ -69,24 +103,13 @@ function EmployeeBox({ employee }: EmployeeBoxProps) {
                         <li>
                             <IconButton
                                 startIcon={<ArchiveOutlinedIcon/>}
-                                text="Archiver"
+                                text={employee.archivedAt ? "Réactiver" : "Archiver"}
                                 variant={"ghost"}
                                 isRounded={false}
                                 isDisabled={false}
-                                color="darkGray"
+                                color={employee.archivedAt ? "blue" : "red"}
                                 fontWeight="medium"
-                            >
-                            </IconButton>
-                        </li>
-                        <li>
-                            <IconButton
-                                startIcon={<DeleteForeverOutlinedIcon/>}
-                                text="Supprimer"
-                                variant={"ghost"}
-                                isRounded={false}
-                                isDisabled={false}
-                                color="red"
-                                fontWeight="medium"
+                                onClick={employee.archivedAt ? handleReactivate : handleArchive}
                             >
                             </IconButton>
                         </li>
@@ -95,22 +118,22 @@ function EmployeeBox({ employee }: EmployeeBoxProps) {
             </div>
             <h3>{employee.firstName} {employee.lastName}</h3>
             <p>Agent Polyvalent</p>
-            <div className={Styles.employeeInfos}>
-                <div className={Styles.flexContainer}>
+            <div className={styles.employeeInfos}>
+                <div className={styles.flexContainer}>
                     <div>
                         <h4>Infos</h4>
                         <p>XXXXX</p>
                     </div>
                     <div>
                         <h4>Date d'embauche</h4>
-                        <p>XXXXX</p>
+                        <p>{employee.hiringDate && new Date(employee.hiringDate.toString()).toLocaleDateString()}</p>
                     </div>
                 </div>
-                <div className={Styles.iconInfo}>
+                <div className={styles.iconInfo}>
                     <EmailOutlinedIcon/> 
                     <p>{employee.email}</p>
                 </div>
-                <div className={Styles.iconInfo}>
+                <div className={styles.iconInfo}>
                     <LocalPhoneOutlinedIcon/>
                     <p>{employee.phoneNumber}</p>
                 </div>

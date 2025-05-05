@@ -1,6 +1,21 @@
 import { useQuery } from '@tanstack/react-query';
 import { getUserDataFromToken } from '../utils/auth';
 
+export type Role = {
+    /**
+     * Id du role.
+     */
+    id: number;
+    /**
+     * Libelle court du rôle
+     */
+    shortLibel: string;
+    /**
+     * Libelle long du rôle.
+     */
+    longLibel: string;
+};
+
 export type User = {
     /** 
      * Id de l'utilisateur, utilisé pour l'identifier de manière unique.
@@ -30,6 +45,18 @@ export type User = {
      * Adresse physique de l'utilisateur. 
      */ 
     address: string | null;
+    /**
+     * Ville de l'utilisateur.
+     */
+    city: string | null;
+    /**
+     * Code postal de l'utilisateur.
+     */
+    postalCode: string | null;
+    /**
+     * Code du pays de l'utilisateur
+     */
+    countryCode: string | null;
     /** 
      * Indique si l'utilisateur souhaite recevoir des notifications par email. 
      */ 
@@ -41,11 +68,35 @@ export type User = {
     /** 
      * Indique si le compte de l'utilisateur est activé. 
      */ 
-    isEnabled: boolean;
+    archivedAt: Date;
     /**
-     * Indique le l'utilisateur est en ligne
+     * Indique si l'utilisateur est en ligne.
      */
     isOnline: boolean;
+    /**
+     * Indique si l'utilisateur autorise le suivi gps.
+     */
+    isGpsTrackingAllowed: boolean;
+    /**
+     * Indique si l'utilisateur est administrateur.
+     */
+    isAdmin: boolean;
+    /**
+     * Date d'emploi de l'utilisateur.
+     */
+    hiringDate: Date;
+    /**
+     * nombre de retards
+     */
+    delay: number
+    /**
+     * nombre d'absences
+     */
+    absence: number
+    /**
+     * roles de l'agent
+     */
+    roles: Role[]
 };
 
 const fetchUserById = async (id: string, token: string): Promise<User> => {

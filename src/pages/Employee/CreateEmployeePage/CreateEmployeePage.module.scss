@@ -3,19 +3,25 @@
 @use '../../../app/styles/mixins'as *;
 
 
-:has(.container) {
+:has(.createEmployeeContainer) {
   overflow-y: hidden;
 }
-.container {
+
+.createEmployeeContainer {
   display: flex;
   background-color: $white;
   padding: 20px 30px;
   border-radius: 8px;
   overflow-y: auto;
   max-height: calc(100% - 40px);
+  gap: 30px;
 
-  
-  .sidebar {
+  @include mixinBreakpoints(xs) {
+    padding: 15px 20px;
+    gap: 20px;
+  }
+
+  .menu {
     position: sticky;
     top: 20px;
     align-self: flex-start;
@@ -23,25 +29,23 @@
     display: flex;
     flex-direction: column;
     gap: 24px;
-  
+
     button {
       justify-content: flex-start;
-  
-      @include mixinBreakpoints(xs) {
+
+      @include mixinBreakpoints(lg) {
         :global(.iconTextGlobal) {
           display: none;
         }
       }
     }
   }
-  
+
   .separator {
     width: 1px;
-    background-color: $mediumGray;
-    margin-right: 24px;
-    margin-left: 8px;
+    background-color: $grayBackground;
   }
-  
+
   .content {
     flex: 1;
     position: relative;
@@ -50,45 +54,53 @@
 
     .sectionTitle {
       font-size: 25px;
+      font-weight: var(--font-weight-medium);
     }
 
     .subSectionTitle {
       color: $darkGray;
       font-size: 15px;
       margin-bottom: 30px;
+      padding-bottom: 15px;
+      border-bottom: solid 1px $grayBackground;
     }
 
     .selectRole {
       margin-top: 25px;
       width: 50%;
+
+      @include mixinBreakpoints(xl) {
+        width: 100%;
+      }
     }
 
     .validateButtons {
       display: flex;
-      gap: 30px;
+      flex-wrap: wrap;
+      column-gap: 30px;
+      row-gap: 10px;
       margin-top: 50px;
-      justify-content: center;
+      justify-content: flex-end;
     }
   }
-  
+
   .section {
     margin-bottom: 48px;
   }
-  
+
   .formGrid {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 16px;
+
+    @include mixinBreakpoints(xl) {
+      grid-template-columns: 1fr;
+    }
   }
-  
-  .input {
-    flex-basis: calc(50% - 8px);
-    min-width: 250px;
-  }
-  
+
   .checkboxGroup {
     display: flex;
-    gap: 32px;
+    flex-wrap: wrap;
+    column-gap: 32px;
   }
 }
-  
