@@ -122,7 +122,7 @@ const CreateEmployeePage: React.FC<createEmployeePageProps> = ({
       notificationMail,
       notificationSms,
       isGpsTrackingAllowed,
-      isEnabled: true,
+      archivedAt: null,
       roleIds: selectedRole ? [Number(selectedRole)] : [],
     };
 
