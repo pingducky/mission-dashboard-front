@@ -175,6 +175,7 @@ const ParentPage: React.FC = () => {
         name={userData?.lastName}
         firstname={userData?.firstName}
         onMenuClick={(page) => handleNavigation(page, capitalize(page))}
+        isAdmin={userData?.isAdmin}
       />
 
       <div className={styles.content}>
