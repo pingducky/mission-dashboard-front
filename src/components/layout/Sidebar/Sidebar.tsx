@@ -13,8 +13,8 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeftOutlined";
 import ChevronRightIcon from "@mui/icons-material/ChevronRightOutlined";
 import { Drawer } from "@mui/material";
 import IconButton from "../IconButton/IconButton";
-import styles from "./Sidebar.module.scss";
 import DisplayProfilName from "./profilName/displayProfilName";
+import styles from "./Sidebar.module.scss";
 
 interface SidebarProps {
   /**
@@ -50,7 +50,6 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, name, firstname, isLoadin
   const toggleDrawer = () => {
     setIsOpen(!isOpen);
   };
-  console.log('isAdmin : ' + isAdmin);
 
   // Ajout de la détection de clic extérieur (pour mobile)
   useEffect(() => {
