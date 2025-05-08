@@ -1,5 +1,4 @@
 import "../../app/styles/global.scss";
-import DisplayProfilName from "../../components/layout/Sidebar/profilName/displayProfilName";
 
 const PlanningPage: React.FC = () => {
     return (
