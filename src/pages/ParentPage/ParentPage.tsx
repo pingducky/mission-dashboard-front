@@ -21,6 +21,7 @@ import { EmployeePage } from "../EmployeePage/EmployeePage";
 import { useGetEmployee } from "../../hooks/useGetEmployee";
 import { useGetUserFiles } from "../../hooks/useGetUserFiles";
 import CreateEmployeePage from "../Employee/CreateEmployeePage/CreateEmployeePage";
+import AccountPage from "../AccountPage/AccountPage";
 import styles from "./ParentPage.module.scss";
 
 type BreadcrumbItem = {
@@ -157,7 +158,8 @@ const ParentPage: React.FC = () => {
       case "notifications":
         return <div>Notifications Page</div>;
       case "compte":
-        return <div>Compte Page</div>;
+        // return <div>Compte Page</div>;
+        return <AccountPage />;
       case "logout":
         return <div>Déconnexion Page</div>;
       default:
