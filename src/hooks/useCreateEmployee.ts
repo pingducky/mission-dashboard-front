@@ -47,10 +47,10 @@ type CreateEmployeePayload = {
      * Autorisation de la géolocalisation GPS
      */
     isGpsTrackingAllowed: boolean;
-    /**
-     * Employé activé
+     /**
+     * Date d'archivage (null à la création)
      */
-    isEnabled: boolean;
+    archivedAt?: Date | null;
     /**
      * Liste des IDs de rôles assignés
      */
