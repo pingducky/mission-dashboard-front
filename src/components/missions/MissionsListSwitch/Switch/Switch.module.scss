@@ -47,6 +47,10 @@
         cursor: pointer;
         transition: color 0.2s ease;
 
+        &:hover{
+            background-color: transparent!important;
+        }
+
         @include mixinBreakpoints(sm) {
             padding: 8px 10px;
         }

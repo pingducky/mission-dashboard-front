@@ -50,7 +50,15 @@ const MissionsListSwitch = () => {
     !isLoading && (
       <div className={styles.missionWwrapper}>
         <Switch activeTab={activeTab} onTabChange={setActiveTab} />
-        <MissionsList missions={selectedMissions} />
+        {selectedMissions.length > 0 ? (
+          <MissionsList missions={selectedMissions} />
+        ) : (
+          <p className={styles.noMissionMessage}>
+            {activeTab === "past"
+              ? "Aucune mission passée."
+              : "Aucune mission prévue."}
+          </p>
+        )}
       </div>
     )
   );

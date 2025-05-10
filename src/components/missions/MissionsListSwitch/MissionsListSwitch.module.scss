@@ -10,4 +10,10 @@
     @include mixinBreakpoints(xs) {
         padding: 10px;
     }
+
+    .noMissionMessage {
+        padding: 8px 15px;
+        font-style: italic;
+        color: $darkGray;
+    }
 }
