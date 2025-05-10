@@ -1,6 +1,6 @@
-@use "../../../app/styles/colors" as *;
-@use "../../../app/styles/mixins" as *;
-@use "../../../app/styles/themes" as *;
+@use "../../../app/styles/colors"as *;
+@use "../../../app/styles/mixins"as *;
+@use "../../../app/styles/themes"as *;
 
 .iconButtonContainer {
   display: flex;
@@ -18,7 +18,7 @@
   .iconText {
     transition: all 0.3s ease;
   }
-  
+
 
   &.disabled {
     filter: saturate(0.5);
@@ -31,19 +31,19 @@
   }
 
   // Styles dynamiques
-  &.regular {
+  &.regular span {
     font-weight: var(--font-weight-regular);
   }
 
-  &.medium {
+  &.medium span {
     font-weight: var(--font-weight-medium);
   }
 
-  &.semibold {
+  &.semibold span {
     font-weight: var(--font-weight-semibold);
   }
 
-  &.bold {
+  &.bold span {
     font-weight: var(--font-weight-bold);
   }
 
@@ -56,7 +56,8 @@
     &.blue {
       background-color: $blue;
 
-      &:hover {
+      &:hover,
+      &.active {
         background-color: $white;
         color: $blue;
       }
@@ -65,7 +66,8 @@
     &.darkblue {
       background-color: $darkBlue;
 
-      &:hover {
+      &:hover,
+      &.active {
         background-color: $white;
         color: $darkBlue;
       }
@@ -74,7 +76,8 @@
     &.pink {
       background-color: $pink;
 
-      &:hover {
+      &:hover,
+      &.active {
         background-color: $white;
         color: $pink;
       }
@@ -83,7 +86,8 @@
     &.black {
       background-color: $black;
 
-      &:hover {
+      &:hover,
+      &.active {
         background-color: $white;
         color: $black;
       }
@@ -93,7 +97,8 @@
       background-color: $white;
       color: $black;
 
-      &:hover {
+      &:hover,
+      &.active {
         background-color: $black;
         color: $white;
       }
@@ -103,7 +108,8 @@
       background-color: $darkGray;
       color: $white;
 
-      &:hover {
+      &:hover,
+      &.active {
         background-color: $white;
         color: $darkGray;
       }
@@ -130,7 +136,8 @@
       border-color: $blue;
       color: $blue;
 
-      &:hover {
+      &:hover,
+      &.active {
         background-color: $blue;
         color: $white;
       }
@@ -140,7 +147,8 @@
       border-color: $darkBlue;
       color: $darkBlue;
 
-      &:hover {
+      &:hover,
+      &.active {
         background-color: $darkBlue;
         color: $white;
       }
@@ -150,7 +158,8 @@
       border-color: $pink;
       color: $pink;
 
-      &:hover {
+      &:hover,
+      &.active {
         background-color: $pink;
         color: $white;
       }
@@ -160,7 +169,8 @@
       border-color: $black;
       color: $black;
 
-      &:hover {
+      &:hover,
+      &.active {
         background-color: $black;
         color: $white;
       }
@@ -170,7 +180,8 @@
       border-color: $white;
       color: $white;
 
-      &:hover {
+      &:hover,
+      &.active {
         background-color: $white;
         color: $black;
       }
@@ -179,6 +190,12 @@
     &.darkGray {
       border-color: $darkGray;
       color: $darkGray;
+
+      &:hover,
+      &.active {
+        background-color: $darkGray;
+        color: $white;
+      }
     }
 
     &.red {
@@ -210,30 +227,72 @@
 
     &.blue {
       color: $blue;
+
+      &.active,
+      &:hover {
+        background-color: $blueBackground;
+        color: $blue;
+      }
     }
 
     &.darkblue {
       color: $darkBlue;
+
+      &.active,
+      &:hover {
+        background-color: $darkBlueBackground;
+        color: $darkBlue;
+      }
     }
 
     &.pink {
       color: $pink;
+
+      &.active,
+      &:hover {
+        background-color: $pinkBackground;
+        color: $pink;
+      }
     }
 
     &.black {
       color: $black;
+
+      &.active,
+      &:hover {
+        background-color: $darkBackground;
+        color: $black;
+      }
     }
 
     &.white {
       color: $white;
+
+      &.active,
+      &:hover {
+        background-color: $whiteBackground;
+        color: $black;
+      }
     }
 
     &.darkGray {
       color: $darkGray;
+
+      &.active,
+      &:hover {
+        background-color: $darkBlueBackground;
+        color: $darkBlue;
+      }
     }
 
     &.red {
       color: $red;
+
+      &.active,
+      &:hover {
+        background-color: $redkBackground;
+        color: $red;
+      }
     }
 
     &.lightGray {

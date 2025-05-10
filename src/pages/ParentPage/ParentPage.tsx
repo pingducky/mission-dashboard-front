@@ -16,7 +16,6 @@ import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useLogout } from "../../hooks/useLogout";
 import EmployeesPage from "../EmployeesPage/EmployeesPage";
-import { EmployeeFilter, useListEmployee } from "../../hooks/useGetAllEmployees";
 import DashboardPage from "../DashboardPage/DashboardPage";
 import { EmployeePage } from "../EmployeePage/EmployeePage";
 import { useGetEmployee } from "../../hooks/useGetEmployee";
@@ -35,7 +34,6 @@ const ParentPage: React.FC = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
   const logoutMutation = useLogout();
-  const [employeesFilter, setEmployeesFilter] = useState<EmployeeFilter>("all");
   const [employeeId, setEmployeeId] = useState<number>(0);
   const tokenData = getUserDataFromToken(); 
 
@@ -96,7 +94,7 @@ const ParentPage: React.FC = () => {
       case "planning":
         return { title: "Planning", icon: <CalendarMonthOutlinedIcon /> };
       case "salarie":
-        return { title: "Salariés ("+employeeCount+")", icon: <GroupIcon /> };
+        return { title: "Salariés", icon: <GroupIcon /> };
       case "salarieDetail":
         return {
           title: breadcrumbs[breadcrumbs.length - 1]?.label || "Détails salarié",
@@ -123,8 +121,6 @@ const ParentPage: React.FC = () => {
     }
   };
 
-  const { data: employeeData } = useListEmployee(employeesFilter);
-  const employeeCount = employeeData?.length ?? 0;
   const { data: employee, isLoading: isEmployeeLoading } = useGetEmployee(activePage, employeeId);
   const { data: employeeFiles, isLoading: areFilesLoading} = useGetUserFiles(employeeId, activePage);
 
@@ -138,8 +134,6 @@ const ParentPage: React.FC = () => {
       case "salarie":
         return <EmployeesPage
           handleNavigation={handleNavigation}
-          employees={employeeData ?? []}
-          setEmployeesFilter={setEmployeesFilter}
           setEmployeeId={setEmployeeId}
         />;
       case "salarieDetail":
@@ -183,6 +177,7 @@ const ParentPage: React.FC = () => {
         name={userData?.lastName}
         firstname={userData?.firstName}
         onMenuClick={(page) => handleNavigation(page, capitalize(page))}
+        isAdmin={userData?.isAdmin}
       />
 
       <div className={styles.content}>

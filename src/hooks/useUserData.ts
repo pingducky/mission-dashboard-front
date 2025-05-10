@@ -68,7 +68,7 @@ export type User = {
     /** 
      * Indique si le compte de l'utilisateur est activé. 
      */ 
-    isEnabled: boolean;
+    archivedAt: Date;
     /**
      * Indique si l'utilisateur est en ligne.
      */
@@ -124,7 +124,7 @@ export const useUserData = () => {
         queryKey: ['userData', userInfo?.id],
         queryFn: () => {
             if (!userInfo) throw new Error('Aucun token ou ID utilisateur');
-            return fetchUserById(userInfo.id, userInfo.token);
+            return fetchUserById(userInfo.id.toString(), userInfo.token);
         },
         enabled: !!userInfo,
     });

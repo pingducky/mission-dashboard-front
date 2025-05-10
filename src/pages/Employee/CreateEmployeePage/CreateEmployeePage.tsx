@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   Checkbox,
   FormControlLabel,
@@ -7,9 +7,9 @@ import {
   Select,
   TextField,
 } from '@mui/material';
-import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
+import BusinessCenterOutlinedIcon from '@mui/icons-material/BusinessCenterOutlined';
 import CloseIcon from '@mui/icons-material/Close';
-import DescriptionIcon from '@mui/icons-material/Description';
+import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import DoneIcon from '@mui/icons-material/Done';
 import InfoOutlineIcon from '@mui/icons-material/InfoOutline';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
@@ -122,7 +122,7 @@ const CreateEmployeePage: React.FC<createEmployeePageProps> = ({
       notificationMail,
       notificationSms,
       isGpsTrackingAllowed,
-      isEnabled: true,
+      archivedAt: null,
       roleIds: selectedRole ? [Number(selectedRole)] : [],
     };
 
@@ -151,51 +151,78 @@ const CreateEmployeePage: React.FC<createEmployeePageProps> = ({
     submitEmployee();
   };
   
+  const infoRef = useRef<HTMLDivElement | null>(null);
+  const notifRef = useRef<HTMLDivElement | null>(null);
+  const docRef = useRef<HTMLDivElement | null>(null);
+  const paramRef = useRef<HTMLDivElement | null>(null);
+  
+  const scrollToSection = (ref: React.RefObject<HTMLDivElement>) => {
+    if (ref.current) {
+      ref.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   return (
-    <div className={styles.container}>
-      <div className={styles.sidebar}>
+    <div className={styles.createEmployeeContainer}>
+      <div className={styles.menu}>
         <IconButton
           specialClass={styles.menuBtn}
           startIcon={<InfoOutlineIcon />}
           text="Informations générales"
           variant="ghost"
-          isRounded
+          isRounded={false}
           color={"darkGray"}
+          fontWeight={'medium'}
           isActive={activeButton === 'info'}
-          onClick={() => {setActiveButton('info')}}
+          onClick={() => {
+            setActiveButton('info');
+            scrollToSection(infoRef);
+          }}
         />
         <IconButton
           startIcon={<NotificationsNoneIcon />}
           text="Notifications"
           variant="ghost"
-          isRounded
+          isRounded={false}
           color={"darkGray"}
+          fontWeight={'medium'}
           isActive={activeButton === 'notif'}
-          onClick={() => {setActiveButton('notif')}}
+          onClick={() => {
+            setActiveButton('notif');
+            scrollToSection(notifRef);
+          }}
         />
         <IconButton
-          startIcon={<DescriptionIcon />}
+          startIcon={<DescriptionOutlinedIcon />}
           text="Documents"
           variant="ghost"
-          isRounded
+          isRounded={false}
           color={"darkGray"}
+          fontWeight={'medium'}
           isActive={activeButton === 'doc'}
-          onClick={() => {setActiveButton('doc')}}
+          onClick={() => {
+            setActiveButton('doc');
+            scrollToSection(docRef);
+          }}
         />
         <IconButton
-          startIcon={<BusinessCenterIcon />}
+          startIcon={<BusinessCenterOutlinedIcon />}
           text="Paramètres entreprise"
           variant="ghost"
-          isRounded
+          isRounded={false}
           color={"darkGray"}
+          fontWeight={'medium'}
           isActive={activeButton === 'param'}
-          onClick={() => {setActiveButton('param')}}
+          onClick={() => {
+            setActiveButton('param');
+            scrollToSection(paramRef);
+          }}
         />
       </div>
 
       <div className={styles.separator} />
       <div className={styles.content}>
-        <div className={styles.section}>
+        <div className={styles.section} ref={infoRef}>
           <p className={styles.sectionTitle}>Informations générales</p>
           <p className={styles.subSectionTitle}>Vous pouvez ajouter ou consulter vos documents administratifs</p>
 
@@ -288,7 +315,7 @@ const CreateEmployeePage: React.FC<createEmployeePageProps> = ({
           </div>
         </div>
 
-        <div className={styles.section}>
+        <div className={styles.section} ref={notifRef}>
           <p className={styles.sectionTitle}>Notifications</p>
           <p className={styles.subSectionTitle}>Vous pouvez modifier préférences en termes de notifications</p>
           <div className={styles.checkboxGroup}>
@@ -313,13 +340,13 @@ const CreateEmployeePage: React.FC<createEmployeePageProps> = ({
           </div>
         </div>
 
-        <div className={styles.section}>
+        <div className={styles.section} ref={docRef}>
           <p className={styles.sectionTitle}>Documents</p>
           <p className={styles.subSectionTitle}>Vous pouvez ajouter ou consulter vos documents administratifs</p>               
           <p>Oups, la fonctionnalité n'est pas encore créé.</p>
         </div>
 
-        <div className={styles.section}>
+        <div className={styles.section} ref={paramRef}>
           <p className={styles.sectionTitle}>Paramètres de l'entreprise</p>
           <p className={styles.subSectionTitle}>Vous pouvez modifier préférences en termes de notifications</p>
           <div className={styles.checkboxGroup}>
@@ -356,10 +383,13 @@ const CreateEmployeePage: React.FC<createEmployeePageProps> = ({
 
         <div className={styles.validateButtons}>
           <IconButton
-            text='annuler'
+            text='Annuler'
             variant='outlined'
             isRounded
             startIcon={<CloseIcon/>}
+            color='red'
+            fontWeight='medium'
+            onClick={() => handleNavigation("salarie", "Salariés")}
           />
 
           <IconButton
@@ -367,6 +397,7 @@ const CreateEmployeePage: React.FC<createEmployeePageProps> = ({
             variant='filled'
             isRounded
             startIcon={<DoneIcon />}
+            fontWeight='medium'
             onClick={handleSubmit}
           />
         </div>

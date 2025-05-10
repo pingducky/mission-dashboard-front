@@ -13,8 +13,8 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeftOutlined";
 import ChevronRightIcon from "@mui/icons-material/ChevronRightOutlined";
 import { Drawer } from "@mui/material";
 import IconButton from "../IconButton/IconButton";
+import DisplayProfilName from "./profilName/displayProfilName";
 import styles from "./Sidebar.module.scss";
-import DisplayProfilName from "../../sidebar/profilName/displayProfilName";
 
 interface SidebarProps {
   /**
@@ -37,9 +37,13 @@ interface SidebarProps {
    * Props pour gérer les clicks
    */
   onMenuClick: (page: string) => void;
+  /**
+   * Vérifier si admin
+   */
+  isAdmin?: boolean; 
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ activePage, name, firstname, isLoading, onMenuClick }) => {
+const Sidebar: React.FC<SidebarProps> = ({ activePage, name, firstname, isLoading, onMenuClick, isAdmin }) => {
   const [isOpen, setIsOpen] = useState(true);
   const drawerRef = useRef<HTMLDivElement>(null);
 
@@ -103,58 +107,65 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, name, firstname, isLoadin
               <IconButton
                 startIcon={<HomeOutlinedIcon />}
                 text="Tableau de bord"
-                fontWeight="regular"
+                fontWeight="medium"
                 onClick={() => onMenuClick("dashboard")}
-                specialClass={clsx(styles.specialButton, {
-                  [styles.active]: activePage == "dashboard",
-                })}
                 isDisabled={false}
                 variant={"ghost"}
                 color={"darkGray"}
                 isRounded={false}
+                isActive={activePage === "dashboard"}
+                specialClass={clsx(styles.specialButton, {
+                  [styles.active]: activePage == "dashboard",
+                })}
               />
 
               <IconButton
                 startIcon={<CalendarMonthOutlinedIcon />}
                 text="Planning"
-                fontWeight="bold"
+                fontWeight="medium"
                 onClick={() => onMenuClick("planning")}
+                isDisabled={false}
+                variant={"ghost"}
+                color={"darkGray"}
+                isRounded={false}
+                isActive={activePage === "planning"}
                 specialClass={clsx(styles.specialButton, {
                   [styles.active]: activePage == "planning",
                 })}
-                isDisabled={false}
-                variant={"ghost"}
-                color={"darkGray"}
-                isRounded={false}
               />
+              {isAdmin && (
+                <>
+                  <IconButton
+                    startIcon={<GroupIcon />}
+                    text="Salarié"
+                    fontWeight="medium"
+                    onClick={() => onMenuClick("salarie")}
+                    isDisabled={false}
+                    variant={"ghost"}
+                    color={"darkGray"}
+                    isRounded={false}
+                    isActive={activePage === "salarie"}
+                    specialClass={clsx(styles.specialButton, {
+                      [styles.active]: activePage == "salarie",
+                    })}
+                  />
 
-              <IconButton
-                startIcon={<GroupIcon />}
-                text="Salarié"
-                fontWeight="medium"
-                specialClass={clsx(styles.specialButton, {
-                  [styles.active]: activePage == "salarie",
-                })}
-                onClick={() => onMenuClick("salarie")}
-                isDisabled={false}
-                variant={"ghost"}
-                color={"darkGray"}
-                isRounded={false}
-              />
-
-              <IconButton
-                startIcon={<ListAltIcon />}
-                text="Liste missions"
-                fontWeight="regular"
-                onClick={() => onMenuClick("missions")}
-                specialClass={clsx(styles.specialButton, {
-                  [styles.active]: activePage == "missions",
-                })}
-                isDisabled={false}
-                variant={"ghost"}
-                color={"darkGray"}
-                isRounded={false}
-              />
+                  <IconButton
+                    startIcon={<ListAltIcon />}
+                    text="Liste missions"
+                    fontWeight="medium"
+                    onClick={() => onMenuClick("missions")}
+                    isDisabled={false}
+                    variant={"ghost"}
+                    color={"darkGray"}
+                    isRounded={false}
+                    isActive={activePage === "missions"}
+                    specialClass={clsx(styles.specialButton, {
+                      [styles.active]: activePage == "missions",
+                    })}
+                  />
+                </>
+              )}
             </div>
 
             <div className={styles.iconButtonList}>
@@ -162,41 +173,43 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, name, firstname, isLoadin
               <IconButton
                 startIcon={<NotificationsNoneIcon />}
                 text="Notifications"
-                fontWeight="regular"
+                fontWeight="medium"
                 onClick={() => onMenuClick("notifications")}
-                specialClass={clsx(styles.specialButton, {
-                  [styles.active]: activePage == "notifications",
-                })}
                 isDisabled={false}
                 variant={"ghost"}
                 color={"darkGray"}
                 isRounded={false}
+                isActive={activePage === "notifications"}
+                specialClass={clsx(styles.specialButton, {
+                  [styles.active]: activePage == "notifications",
+                })}
               />
 
               <IconButton
                 startIcon={<PersonOutlineIcon />}
                 text="Compte"
-                fontWeight="regular"
+                fontWeight="medium"
                 onClick={() => onMenuClick("compte")}
-                specialClass={clsx(styles.specialButton, {
-                  [styles.active]: activePage == "compte",
-                })}
                 isDisabled={false}
                 variant={"ghost"}
                 color={"darkGray"}
                 isRounded={false}
+                isActive={activePage === "compte"}
+                specialClass={clsx(styles.specialButton, {
+                  [styles.active]: activePage == "compte",
+                })}
               />
 
               <IconButton
                 startIcon={<LogoutIcon />}
                 text="Se déconnecter"
-                fontWeight="regular"
+                fontWeight="medium"
                 onClick={() => onMenuClick("logout")}
-                specialClass={styles.specialButton}
                 isDisabled={false}
                 variant={"ghost"}
                 color={"darkGray"}
                 isRounded={false}
+                specialClass={styles.specialButton}
               />
             </div>
           </div>

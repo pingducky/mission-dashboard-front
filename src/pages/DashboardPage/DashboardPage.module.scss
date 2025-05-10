@@ -3,6 +3,10 @@
 @use '../../app/styles/mixins'as *;
 
 .dashboardContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+
     .dashboardWelcome {
         position: relative;
         background-color: $pastelBlue;
@@ -67,7 +71,6 @@
         display: flex;
         flex-direction: column;
         gap: 15px;
-        margin-top: 40px;
 
         h2 {
             color: $darkGray;
