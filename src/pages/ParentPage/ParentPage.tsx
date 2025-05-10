@@ -129,8 +129,7 @@ const ParentPage: React.FC = () => {
       case "dashboard":
         return <DashboardPage firstname={userData?.firstName} />;
       case "planning":
-        return (<PlanningPage/>
-        )
+        return <PlanningPage/>
       case "salarie":
         return <EmployeesPage
           handleNavigation={handleNavigation}

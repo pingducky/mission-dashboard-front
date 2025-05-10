@@ -1,9 +1,21 @@
 import { jwtDecode } from 'jwt-decode';
 
 export type TokenPayload = {
+    /**
+     * Id de l'utilisateur
+     */
     id: string;
+    /**
+     * Email
+     */
     email: string;
+    /**
+     * Token
+     */
     token: string,
+    /**
+     * Est admin
+     */
     isAdmin: boolean,
 };
 

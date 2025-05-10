@@ -6,9 +6,9 @@ import { useAuthentication } from "../../hooks/useAuthentication";
 import { useNavigate } from "react-router-dom";
 import Button from '@mui/material/Button';
 import { useAuth } from "../../context/AuthContext";
-import styles from "./LoginForm.module.scss";
 import { TokenPayload } from "../../utils/auth";
 import { jwtDecode } from "jwt-decode";
+import styles from "./LoginForm.module.scss";
 
 const LoginForm: React.FC = () =>  {
     const [email, setEmail] = React.useState("");

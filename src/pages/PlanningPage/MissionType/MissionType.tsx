@@ -2,8 +2,17 @@ import React from 'react';
 import styles from './MissionType.module.scss';
 
 interface MissionTypeProps {
+  /**
+   * Nom
+   */
   nom: string;
+  /**
+   * Code
+   */
   code: string;
+  /**
+   * Couleure
+   */
   color: string;
 }
 
@@ -15,7 +24,7 @@ const MissionType: React.FC<MissionTypeProps> = ({ nom, code, color }) => {
       <div
         className={styles.circle}
         style={{ backgroundColor: color }}
-      ></div>
+      />
       <span className={styles.text}>{nom}</span>
     </div>
   );

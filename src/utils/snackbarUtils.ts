@@ -1,4 +1,3 @@
-// snackbarUtils.ts
 import { VariantType, OptionsObject, SnackbarKey } from 'notistack';
 
 let snackbarRef: ((msg: string, options?: OptionsObject) => SnackbarKey) | null = null;
@@ -13,6 +12,6 @@ export const enqueueSnackbar = (message: string, variant?: VariantType) => {
   if (snackbarRef) {
     snackbarRef(message, variant ? { variant } : undefined);
   } else {
-    console.warn('Snackbar is not ready yet.');
+    console.warn('La configuration des snackbars ne sont pas terminé.');
   }
 };

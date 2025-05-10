@@ -1,4 +1,3 @@
-// SnackbarUtilsConfigurator.tsx
 import { useSnackbar } from 'notistack';
 import { useEffect } from 'react';
 import { setSnackbarRef } from './snackbarUtils';

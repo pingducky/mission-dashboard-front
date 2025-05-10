@@ -96,13 +96,13 @@ const createMission = async (data: CreateMissionPayload) => {
 
   formData.append("description", data.description);
   formData.append("timeBegin", data.timeBegin);
-  if (data.timeEnd) formData.append("timeEnd", data.timeEnd);
   formData.append("address", data.address);
   formData.append("city", data.city);
   formData.append("postalCode", data.postalCode);
   formData.append("countryCode", data.countryCode);
   formData.append("missionTypeId", String(data.missionTypeId));
   formData.append("accountAssignIds", JSON.stringify([1,2]));
+  if (data.timeEnd) formData.append("timeEnd", data.timeEnd);
 
   if (data.estimatedEnd) formData.append("estimatedEnd", data.estimatedEnd);
 

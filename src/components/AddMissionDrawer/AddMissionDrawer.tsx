@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Drawer,
   TextField,
@@ -13,21 +13,48 @@ import {
 } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material';
 import { MissionType } from '../../hooks/useGetMissionTypes';
-import styles from './AddMissionDrawer.module.scss';
 import MissionTypeColor from '../../pages/PlanningPage/MissionType/MissionType';
 import { CreateMissionPayload } from '../../hooks/useCreateMission';
 import { enqueueSnackbar } from '../../utils/snackbarUtils';
+import styles from './AddMissionDrawer.module.scss';
 
 interface AddMissionDrawerProps {
+  /**
+   * Ouverture drawer
+   */
   isOpen: boolean;
+  /**
+   * Liste des employées
+   */
   employees?: Array<{
+    /**
+     * Id de l'employée
+     */
     id: number,
+    /**
+     * Nom complet
+     */
     fullName: string,
   }>;
+  /**
+   * Date de début
+   */
   startDate?: string;
+  /**
+   * Date de fin
+   */
   endDate?: string;
+  /**
+   * Types de mission
+   */
   missionTypes?: MissionType[];
+  /**
+   * Evènement à la création d'une mission
+   */
   onCreate: (payload: CreateMissionPayload) => void;
+  /**
+   * Evènement lors de la fermeture
+   */
   onClose: () => void;
 }
 
@@ -42,7 +69,6 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
 }) => {
   const [selectedEmployees, setSelectedEmployees] = React.useState<string[]>([]);
   const [selectedMissionType, setSelectedMissionType] = React.useState<number | "">("");
-
   const [start, setStart] = React.useState(startDate || '');
   const [end, setEnd] = React.useState(endDate || '');
   const [companyName, setCompanyName] = React.useState('');
@@ -66,16 +92,23 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
     { code: 'IT', name: 'Italie' },
   ];
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isOpen) {
       setErrors({});
     }
   }, [isOpen]);
 
+  useEffect(() => {
+    setStart(startDate || '');
+  }, [startDate]);
+  
+  useEffect(() => {
+    setEnd(endDate || '');
+  }, [endDate]);
+
   const handleSelectChange = (event: SelectChangeEvent<string[]>) => {
     setSelectedEmployees(event.target.value as string[]);
   };
-  
   
   const handleMissionTypeChange = (event: SelectChangeEvent<number>) => {
     setSelectedMissionType(Number(event.target.value));
@@ -116,6 +149,7 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
       ':' + pad(date.getSeconds()) +
       getTimezoneOffset(date);
   };
+  
 
 const handleCreate = () => {
   if (!validateFields()) {
@@ -155,14 +189,6 @@ const handleCreate = () => {
   setSelectedMissionType('');
   setErrors({});
 };
-
-  React.useEffect(() => {
-    setStart(startDate || '');
-  }, [startDate]);
-  
-  React.useEffect(() => {
-    setEnd(endDate || '');
-  }, [endDate]);
 
   return (
     <Drawer anchor="right" open={isOpen} onClose={onClose}>

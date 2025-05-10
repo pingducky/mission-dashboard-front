@@ -16,10 +16,10 @@ import { useGetMissionTypes } from '../../hooks/useGetMissionTypes';
 import { useGetMissionsByAccount } from '../../hooks/useGetMissionsByAccount';
 import AddMissionDrawer from '../../components/AddMissionDrawer/AddMissionDrawer';
 import { enqueueSnackbar } from '../../utils/snackbarUtils';
-import styles from './PlanningPage.module.scss';
 import { CreateMissionPayload, useCreateMission } from '../../hooks/useCreateMission';
 import { useQueryClient } from '@tanstack/react-query';
 import { useListEmployee } from '../../hooks/useGetAllEmployees';
+import styles from './PlanningPage.module.scss';
 
 interface MissionEvent extends EventInput {
     /**
@@ -71,7 +71,8 @@ const PlanningPage: React.FC = () => {
   const tokenData = getUserDataFromToken();
   const today = new Date();
 
-
+  const { data: missionTypes, isLoading: areMissionTypesLoading } = useGetMissionTypes();
+  
   const getWeekRange = (date: Date) => {
     const day = date.getDay();
     const diffToMonday = (day === 0 ? -6 : 1) - day;
@@ -83,7 +84,7 @@ const PlanningPage: React.FC = () => {
       monday: monday.toISOString(),
       sunday: sunday.toISOString(),
     };
-};
+  };
 
   const defaultFrom = viewMode === 'timeGridDay'
     ? today.toISOString()
@@ -93,17 +94,14 @@ const PlanningPage: React.FC = () => {
     ? new Date(today.getTime() + 24 * 60 * 60 * 1000).toISOString()
     : getWeekRange(today).sunday;
 
-
-  const { data: missionTypes, isLoading: areMissionTypesLoading } = useGetMissionTypes();
-
   const missionQueryParams = {
     accountId: selectedEmployee || tokenData!.id,
     from: calendarStartDate ?? defaultFrom,
     to: calendarEndDate ?? defaultTo,
   };
-
+  
   const { data: missions } = useGetMissionsByAccount(missionQueryParams);
-
+  
   const createMissionMutation = useCreateMission();
   const queryClient = useQueryClient();
 
@@ -346,7 +344,6 @@ const PlanningPage: React.FC = () => {
         onClose={() => setOpenDialog(false)}
         onCreate={handleCreateMission}
       />
-
     </div>
   );
 };
