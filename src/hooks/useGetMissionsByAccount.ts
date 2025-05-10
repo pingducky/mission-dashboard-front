@@ -1,97 +1,126 @@
 import { useQuery } from "@tanstack/react-query";
+import { MissionType } from "./useGetMissionTypes";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-export type MissionType = {
-  id: number;
-  shortLibel: string;
-  longLibel: string;
-};
-
-export type Picture = {
+type limitedAccountModel = {
+    /**
+     * Id
+     */
     id: number;
-    name: string;
-    alt?: string;
-    path: string;
-    idMessage?: number | null;
-    idMission?: number | null;
-  };
-
-export type MissionModel = {
-  id: number;
-  description: string;
-  timeBegin: string;
-  estimatedEnd?: string;
-  timeEnd?: string;
-  address: string;
-  idMissionType: number;
-  pictures: Picture[];
-  missionType: MissionType;
+    /**
+     * Prénom
+     */
+    firstName: string;
+    /**
+     * Nom
+     */
+    lastName: string;
 };
 
-export type CategorizedMissions = {
-  past: MissionModel[];
-  current: MissionModel[];
-  future: MissionModel[];
+export type Mission = {
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Description
+     */
+    description: string;
+    /**
+     * Date de début
+     */
+    timeBegin: string;
+    /**
+     * Date de fin
+     */
+    estimatedEnd: string;
+    /**
+     * Date de fin
+     */
+    timeEnd?: string | null;
+    /**
+     * Adresse
+     */
+    address: string;
+    /**
+     * Ville
+     */
+    city?: string | null;
+    /**
+     * Code postale
+     */
+    postalCode?: string | null;
+    /**
+     * Code pays
+     */
+    countryCode?: string | null;
+    /**
+     * Id du type de mission
+     */
+    idMissionType: number;
+    /**
+     * Comptes lié à la mission
+     */
+    AccountModels: limitedAccountModel[];
+    /**
+     * Type de mission
+     */
+    missionType: MissionType;
 };
 
-type filterTime = "past" | "current" | "future"
-
-const getMissionsByAccount = async (
-  accountId: number,
-  filters: filterTime[] = ["past", "current", "future"],
-  limit?: number
-): Promise<CategorizedMissions> => {
-  const queryParams = new URLSearchParams();
-  queryParams.append("filters", filters.join(","));
-  if (limit) {
-    queryParams.append("limit", limit.toString());
-  }
-
-  const res = await fetch(
-    `${API_URL}/mission/missionCategorized/${accountId}?${queryParams.toString()}`,
-    {
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-      },
-    }
-  );
-
-  if (!res.ok) {
-    throw new Error("Erreur lors de la récupération des missions");
-  }
-
-  return res.json();
-};
-
-type UseGetMissionsByAccountOptions = {
+type Params = {
     /**
      * Id du compte
      */
-    accountId: number;
+    accountId: string;
     /**
-     * Filtres 
+     * Date de début
      */
-    filters?: filterTime[];
+    from?: string;
     /**
-     * Limite
+     * Date de fin
+     */
+    to?: string;
+    /**
+     * Filtre type
+     */
+    filterByType?: number;
+    /**
+     * Limit
      */
     limit?: number;
-    /**
-     * Est active 
-     */
-    enabled?: boolean;
-  };
-  
-export const useGetMissionsByAccount = ({
-  accountId,
-  filters = ["past", "current", "future"],
-  limit,
-  enabled = true,
-}: UseGetMissionsByAccountOptions) => {
-  return useQuery({
-    queryKey: ["missions", accountId, filters, limit],
-    queryFn: () => getMissionsByAccount(accountId, filters, limit),
-    enabled: enabled && !!accountId,
-  });
+};
+
+const getMissionsByAccount = async ({ accountId, from, to, filterByType, limit }: Params): Promise<Mission[]> => {
+    const params = new URLSearchParams();
+
+    if (from) params.append("from", from);
+    if (to) params.append("to", to);
+    if (filterByType !== undefined) params.append("filterByType", filterByType.toString());
+    if (limit !== undefined) params.append("limit", limit.toString());
+    const url = `${API_URL}/mission/listMissions/${accountId}?${params.toString()}`;
+
+    const response = await fetch(url, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
+        },
+    });
+
+    if (!response.ok) {
+        throw new Error("Erreur lors de la récupération des missions");
+    }
+
+    const data = await response.json();
+    return data.missions;
+};
+
+export const useGetMissionsByAccount = (params: Params, enabled = true) => {
+    return useQuery({
+        queryKey: ["missions", params],
+        queryFn: () => getMissionsByAccount(params),
+        enabled,
+    });
 };

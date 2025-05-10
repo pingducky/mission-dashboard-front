@@ -6,6 +6,8 @@ import { useAuthentication } from "../../hooks/useAuthentication";
 import { useNavigate } from "react-router-dom";
 import Button from '@mui/material/Button';
 import { useAuth } from "../../context/AuthContext";
+import { TokenPayload } from "../../utils/auth";
+import { jwtDecode } from "jwt-decode";
 import styles from "./LoginForm.module.scss";
 
 const LoginForm: React.FC = () =>  {
@@ -16,7 +18,8 @@ const LoginForm: React.FC = () =>  {
     const { mutate } = useAuthentication(email, password, {
         onSuccess: (data) => {
             if (data?.token) {
-                login(data.token);
+                const isAdmin = jwtDecode<TokenPayload>(data.token).isAdmin;
+                login(data.token, isAdmin);
                 navigate("/");
             } else{
                 alert("Identifiants incorrects");

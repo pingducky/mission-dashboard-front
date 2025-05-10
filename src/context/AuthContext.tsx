@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  login: (token: string) => void;
+  login: (token: string, isAdmin: boolean) => void;
   logout: () => void;
   isLoading: boolean;
 }
@@ -19,11 +19,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setIsLoading(false);
   }, []);
 
-  const login = (token: string) => {
+  const login = (token: string, isAdmin: boolean) => {
     sessionStorage.setItem('token', token);
+    sessionStorage.setItem('isAdmin', String(isAdmin));
     setIsAuthenticated(true);
   };
-
   const logout = () => {
     sessionStorage.removeItem('token');
     setIsAuthenticated(false);
