@@ -3,7 +3,7 @@ import { EventInput } from '@fullcalendar/core';
 import FullCalendar from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { Button, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import frLocale from '@fullcalendar/core/locales/fr';
 import AddIcon from '@mui/icons-material/Add';
 import IconButton from '../../components/layout/IconButton/IconButton';
@@ -19,6 +19,7 @@ import { enqueueSnackbar } from '../../utils/snackbarUtils';
 import styles from './PlanningPage.module.scss';
 import { CreateMissionPayload, useCreateMission } from '../../hooks/useCreateMission';
 import { useQueryClient } from '@tanstack/react-query';
+import { useListEmployee } from '../../hooks/useGetAllEmployees';
 
 interface MissionEvent extends EventInput {
     /**
@@ -56,17 +57,20 @@ const PlanningPage: React.FC = () => {
   const [calendarStartDate, setCalendarStartDate] = useState<string | null>(null);
   const [calendarEndDate, setCalendarEndDate] = useState<string | null>(null);
   const [events, setEvents] = useState<MissionEvent[]>([]);
-  
+
+  const { data: employeeData } = useListEmployee('all');
+
   const [newEvent, setNewEvent] = useState<MissionEvent>({
     title: '',
     start: '',
     end: '',
   });
-  
+
   const calendarRef = useRef<FullCalendar | null>(null);
   
   const tokenData = getUserDataFromToken();
   const today = new Date();
+
 
   const getWeekRange = (date: Date) => {
     const day = date.getDay();
@@ -93,10 +97,11 @@ const PlanningPage: React.FC = () => {
   const { data: missionTypes, isLoading: areMissionTypesLoading } = useGetMissionTypes();
 
   const missionQueryParams = {
-    accountId: tokenData!.id,
+    accountId: selectedEmployee || tokenData!.id,
     from: calendarStartDate ?? defaultFrom,
     to: calendarEndDate ?? defaultTo,
   };
+
   const { data: missions } = useGetMissionsByAccount(missionQueryParams);
 
   const createMissionMutation = useCreateMission();
@@ -110,12 +115,16 @@ const PlanningPage: React.FC = () => {
         queryKey: ['missions', missionQueryParams],
       });
       setOpenDialog(false);
-    } catch (error: any) {
-      enqueueSnackbar(error.message || 'Erreur lors de la création de la mission', 'error');
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        enqueueSnackbar(error.message, 'error');
+      } else {
+        enqueueSnackbar('Erreur lors de la création de la mission', 'error');
+      }
     }
   };
 
-  const toParisISOString = (utcDateString) => {
+  const toParisISOString = (utcDateString : string | undefined) => {
     if (!utcDateString) return '';
     const date = new Date(utcDateString);
     return date.toLocaleString('sv-SE', { timeZone: 'Europe/Paris' }).replace(' ', 'T');
@@ -127,7 +136,7 @@ const PlanningPage: React.FC = () => {
         id: mission.id.toString(),
         title: mission.missionType?.longLibel || 'Mission',
         start: toParisISOString(mission.timeBegin),
-        end: toParisISOString(mission.timeEnd || mission.estimatedEnd || ''),
+        end: toParisISOString(mission.estimatedEnd),
         adresse: mission.address,
         categorie: mission.missionType?.shortLibel,
         description: mission.description,
@@ -210,10 +219,9 @@ const PlanningPage: React.FC = () => {
     });
     setOpenDialog(true);
   };
-  
   return (
     <div>
-        { !areMissionTypesLoading && (<div className={styles.missionsType}>
+        { !areMissionTypesLoading && missionTypes?.length && (<div className={styles.missionsType}>
             <p>Types de misssions :</p>
 
             <div className={styles.missionsTypeList}>
@@ -253,22 +261,23 @@ const PlanningPage: React.FC = () => {
 
         <p className={styles.dateRange}>{dateRange}</p>
 
-        <div className={styles.rightSection}>
-            <FormControl className={styles.employeeForm} size="small">
+        <div>
+         <div className={styles.rightSection}>
+          {
+            !areMissionTypesLoading && tokenData?.isAdmin && (
+              <>
+                <FormControl className={styles.employeeForm} size="small">
                 <InputLabel id="employee-select-label">Choix des employé(e)s</InputLabel>
                 <Select
-                labelId="employee-select-label"
-                id="employee-select"
-                value={selectedEmployee}
-                onChange={handleEmployeeChange}
-                label="Choix des employé(e)s"
+                  labelId="employee-select-label"
+                  id="employee-select"
+                  value={selectedEmployee}
+                  onChange={handleEmployeeChange}
+                  label="Choix des employé(e)s"
                 >
-                <MenuItem value="">
-                    <em>Aucun</em>
-                </MenuItem>
-                <MenuItem value="alice">Alice</MenuItem>
-                <MenuItem value="bob">Bob</MenuItem>
-                <MenuItem value="charlie">Charlie</MenuItem>
+                {employeeData?.map((employee) => (
+                  <MenuItem value={employee.id}>{employee.firstName}</MenuItem>
+                ))}
                 </Select>
             </FormControl>
 
@@ -279,6 +288,10 @@ const PlanningPage: React.FC = () => {
                 startIcon={<AddIcon />}
                 onClick={() => setOpenDialog(true)}
             />
+              </>
+            )
+          }
+          </div>
         </div>
 
         </div>
@@ -292,10 +305,12 @@ const PlanningPage: React.FC = () => {
                 right: ''
             }}
             plugins={[timeGridPlugin, interactionPlugin]}
+            eventStartEditable={false}
+            eventDurationEditable={false}
             initialView="timeGridWeek"
             events={events}
             editable={true}
-            selectable={true}
+            selectable={tokenData?.isAdmin || false}
             select={handleDateSelect}
             nowIndicator={true}
             slotMinTime="08:00:00"
@@ -304,23 +319,34 @@ const PlanningPage: React.FC = () => {
             height="auto"
             locale={frLocale}
             datesSet={(arg) => {
-                console.debug("arg.start, arg.end :", arg.start, arg.end);
                 setDateRange(formatDateRange(arg.start, arg.end));
                 setCalendarStartDate(arg.start.toISOString());
                 setCalendarEndDate(arg.end.toISOString());
             }}
+            eventContent={(eventInfo) => (
+            <div className={styles.missionEvent}>
+                <b>{eventInfo.timeText}</b>
+                <i>{eventInfo.event.title}</i><br />
+                <span>{eventInfo.event.extendedProps.description}</span><br />
+                <span>{eventInfo.event.extendedProps.adresse}</span>
+              </div>
+            )}
             />
       </div>
 
-        <AddMissionDrawer
-            employees={[]} 
-            isOpen={openDialog}
-            startDate={newEvent.start}
-            endDate={newEvent.end}
-            missionTypes={missionTypes}
-            onClose={() => setOpenDialog(false)}
-            onCreate={handleCreateMission}
-        />
+      <AddMissionDrawer
+        employees={employeeData?.map((employee) => ({
+            id: employee.id,
+            fullName: employee.firstName
+        }))}
+        isOpen={openDialog}
+        startDate={newEvent.start}
+        endDate={newEvent.end}
+        missionTypes={missionTypes}
+        onClose={() => setOpenDialog(false)}
+        onCreate={handleCreateMission}
+      />
+
     </div>
   );
 };

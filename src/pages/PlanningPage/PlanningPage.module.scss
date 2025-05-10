@@ -7,6 +7,12 @@
   .fc {
     background-color: white;
   }
+
+  .missionEvent {
+    padding: 0 5px;
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 .missionsType {

@@ -20,7 +20,10 @@ import { enqueueSnackbar } from '../../utils/snackbarUtils';
 
 interface AddMissionDrawerProps {
   isOpen: boolean;
-  employees: string[];
+  employees?: Array<{
+    id: number,
+    fullName: string,
+  }>;
   startDate?: string;
   endDate?: string;
   missionTypes?: MissionType[];
@@ -30,6 +33,7 @@ interface AddMissionDrawerProps {
 
 const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
   isOpen,
+  employees,
   startDate,
   endDate,
   missionTypes,
@@ -69,12 +73,10 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
   }, [isOpen]);
 
   const handleSelectChange = (event: SelectChangeEvent<string[]>) => {
-    const {
-      target: { value },
-    } = event;
-    setSelectedEmployees(typeof value === 'string' ? value.split(',') : value);
+    setSelectedEmployees(event.target.value as string[]);
   };
-
+  
+  
   const handleMissionTypeChange = (event: SelectChangeEvent<number>) => {
     setSelectedMissionType(Number(event.target.value));
   };
@@ -97,24 +99,23 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
     return Object.values(newErrors).every((error) => !error);
   };
 
-  const pad = n => String(Math.floor(Math.abs(n))).padStart(2, '0');
+  const pad = (n: number): string => String(Math.floor(Math.abs(n))).padStart(2, '0');
 
-const getTimezoneOffset = date => {
-  const tzOffset = -date.getTimezoneOffset();
-  const sign = tzOffset >= 0 ? '+' : '-';
-  return sign + pad(tzOffset / 60) + ':' + pad(tzOffset % 60);
-};
-
-const toISOStringWithTimezone = date => {
-  return date.getFullYear() +
-    '-' + pad(date.getMonth() + 1) +
-    '-' + pad(date.getDate()) +
-    'T' + pad(date.getHours()) +
-    ':' + pad(date.getMinutes()) +
-    ':' + pad(date.getSeconds()) +
-    getTimezoneOffset(date);
-};
-
+  const getTimezoneOffset = (date: Date): string => {
+    const tzOffset = -date.getTimezoneOffset();
+    const sign = tzOffset >= 0 ? '+' : '-';
+    return sign + pad(Math.floor(tzOffset / 60)) + ':' + pad(Math.abs(tzOffset % 60));
+  };
+  
+  const toISOStringWithTimezone = (date: Date): string => {
+    return date.getFullYear() +
+      '-' + pad(date.getMonth() + 1) +
+      '-' + pad(date.getDate()) +
+      'T' + pad(date.getHours()) +
+      ':' + pad(date.getMinutes()) +
+      ':' + pad(date.getSeconds()) +
+      getTimezoneOffset(date);
+  };
 
 const handleCreate = () => {
   if (!validateFields()) {
@@ -128,17 +129,16 @@ const handleCreate = () => {
   const payload: CreateMissionPayload = {
     description: details,
     timeBegin: isoStartDate,
-    timeEnd: isoEndDate,
-    estimatedEnd: undefined,
+    timeEnd: undefined,
+    estimatedEnd: isoEndDate,
     address,
     city,
     postalCode,
     countryCode,
     missionTypeId: selectedMissionType as number,
-    accountAssignIds: selectedEmployees.map(() => 1),
+    accountAssignIds: selectedEmployees.map(Number),
     pictures: [],
   };
-
   onCreate(payload);
 
   setStart(startDate || '');
@@ -182,7 +182,7 @@ const handleCreate = () => {
               error={errors.start}
             />
             <TextField
-              label="Date de fin"
+              label="Date de fin estimé"
               type="datetime-local"
               fullWidth
               value={end}
@@ -301,12 +301,17 @@ const handleCreate = () => {
               value={selectedEmployees}
               onChange={handleSelectChange}
               input={<OutlinedInput label="Salariés" />}
-              renderValue={(selected) => (selected as string[]).join(', ')}
+              renderValue={(selected) =>
+                employees
+                  ?.filter(emp => selected.includes(emp.id.toString()))
+                  .map(emp => emp.fullName)
+                  .join(', ')
+              }
             >
-              {['Hugo', 'Elise', 'Corentin'].map((employee) => (
-                <MenuItem key={employee} value={employee}>
-                  <Checkbox checked={selectedEmployees.includes(employee)} />
-                  <ListItemText primary={employee} />
+              {employees?.map((employee) => (
+                <MenuItem key={employee.id} value={employee.id.toString()}>
+                  <Checkbox checked={selectedEmployees.includes(employee.id.toString())} />
+                  <ListItemText primary={employee.fullName} />
                 </MenuItem>
               ))}
             </Select>

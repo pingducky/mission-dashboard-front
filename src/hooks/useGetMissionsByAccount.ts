@@ -34,7 +34,7 @@ export type Mission = {
     /**
      * Date de fin
      */
-    estimatedEnd?: string | null;
+    estimatedEnd: string;
     /**
      * Date de fin
      */
@@ -99,7 +99,6 @@ const getMissionsByAccount = async ({ accountId, from, to, filterByType, limit }
     if (to) params.append("to", to);
     if (filterByType !== undefined) params.append("filterByType", filterByType.toString());
     if (limit !== undefined) params.append("limit", limit.toString());
-
     const url = `${API_URL}/mission/listMissions/${accountId}?${params.toString()}`;
 
     const response = await fetch(url, {

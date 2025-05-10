@@ -1,9 +1,10 @@
 import { jwtDecode } from 'jwt-decode';
 
-type TokenPayload = {
+export type TokenPayload = {
     id: string;
-    mail: string;
+    email: string;
     token: string,
+    isAdmin: boolean,
 };
 
 export const getUserDataFromToken = (): TokenPayload | null => {
@@ -14,8 +15,9 @@ export const getUserDataFromToken = (): TokenPayload | null => {
         const decoded = jwtDecode<TokenPayload>(token);
         return {
             id: decoded.id,
-            mail: decoded.mail,
+            email: decoded.email,
             token: token,
+            isAdmin: decoded.isAdmin
         };
     } catch (error) {
         console.error('Erreur lors du décodage du token:', error);

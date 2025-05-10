@@ -14,11 +14,11 @@ export type CreateMissionPayload = {
   /**
    * Date de fin estimé
    */
-  estimatedEnd?: string;
+  estimatedEnd: string;
   /**
    * Date de fin
    */
-  timeEnd: string;
+  timeEnd?: string;
   /**
    * Adresse
    */
@@ -92,20 +92,17 @@ export type CreateMissionResponse = {
   };
   
 const createMission = async (data: CreateMissionPayload) => {
-  console.debug("timeBegin in hook: ", data.timeBegin);
-  console.debug("timeEnd in hook: ", data.timeEnd);
-
   const formData = new FormData();
 
   formData.append("description", data.description);
   formData.append("timeBegin", data.timeBegin);
-  formData.append("timeEnd", data.timeEnd);
+  if (data.timeEnd) formData.append("timeEnd", data.timeEnd);
   formData.append("address", data.address);
   formData.append("city", data.city);
   formData.append("postalCode", data.postalCode);
   formData.append("countryCode", data.countryCode);
   formData.append("missionTypeId", String(data.missionTypeId));
-  formData.append("accountAssignIds", JSON.stringify(data.accountAssignIds));
+  formData.append("accountAssignIds", JSON.stringify([1,2]));
 
   if (data.estimatedEnd) formData.append("estimatedEnd", data.estimatedEnd);
 

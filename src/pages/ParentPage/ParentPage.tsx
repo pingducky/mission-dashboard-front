@@ -37,7 +37,7 @@ const ParentPage: React.FC = () => {
   const logoutMutation = useLogout();
   const [employeesFilter, setEmployeesFilter] = useState<EmployeeFilter>("all");
   const [employeeId, setEmployeeId] = useState<number>(0);
-  const tokenData = getUserDataFromToken();
+  const tokenData = getUserDataFromToken(); 
 
   useEffect(() => {
     if (!tokenData) {
@@ -123,7 +123,7 @@ const ParentPage: React.FC = () => {
     }
   };
 
-  const { data: employeeData } = useListEmployee(activePage, employeesFilter, sessionStorage.getItem("token"));
+  const { data: employeeData } = useListEmployee(employeesFilter);
   const employeeCount = employeeData?.length ?? 0;
   const { data: employee, isLoading: isEmployeeLoading } = useGetEmployee(activePage, employeeId);
   const { data: employeeFiles, isLoading: areFilesLoading} = useGetUserFiles(employeeId, activePage);
