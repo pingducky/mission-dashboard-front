@@ -1,0 +1,35 @@
+@use '../../app/styles/global.scss' as *;
+@use "../../app/styles/colors" as *;
+@use "../../app/styles/mixins.scss" as *;
+
+.actionButton {
+    justify-content: center;
+    border-radius: 50%;
+    height: 30px;
+    width: 30px;
+    transform: rotate(90deg);
+}
+
+ul {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    bottom: 35px;
+    padding: 5px;
+
+    li {
+        button {
+            border-radius: 0 !important;
+        }
+
+        &:first-child > button {
+            border-top-left-radius: 50% !important;
+            border-bottom-left-radius: 50% !important;
+        }
+
+        &:last-child > button {
+            border-top-right-radius: 50% !important;
+            border-bottom-right-radius: 50% !important;
+        }
+    }
+}

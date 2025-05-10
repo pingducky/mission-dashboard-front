@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { User } from "./useUserData";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -27,6 +28,7 @@ export type MissionModel = {
   idMissionType: number;
   pictures: Picture[];
   missionType: MissionType;
+  assignedUsers: User[];
 };
 
 export type CategorizedMissions = {

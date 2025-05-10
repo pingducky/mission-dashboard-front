@@ -76,7 +76,7 @@ export const EmployeePage: React.FC<EmployeePageProps> = ({
     }
 
     const handleStatus = (employee: User) => {
-        return "Membre " + (employee.isEnabled ? "Actif" : "Désactivé")
+        return "Membre " + (employee.archivedAt === null ? "Actif" : "Désactivé")
     }
 
     const handleContact = (employee: User, type: 'phone' | 'email') => {

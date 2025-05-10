@@ -1,38 +1,29 @@
 import { useQuery } from "@tanstack/react-query";
-import { User } from "./useUserData";
-
-export type MissionFilter = 'all' | 'active' | 'canceled' | 'finished' | 'scheduled';
-export type Mission = {
-
-}
+import { MissionModel } from "./useGetMissionsByAccount";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-const getAllMissions = async (token: string|null, filter: MissionFilter, id: number, isAdmin: boolean): Promise<User[]> => {
-    if (!token) {
-        window.location.href = "/login";
-        return [];
-    }
-
-    return await fetch(`${API_URL}/listMissions/:id?filter=`+filter, {
+const getAllMissions = async (filter: number, id: number): Promise<MissionModel[]> => {
+    const filterByType = filter && filter !== 0 ? `?filterByType=${filter}` : '';
+    return await fetch(`${API_URL}/mission/listMissions/${id}${filterByType}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
+            'Authorization': `Bearer ${sessionStorage.getItem('token')}`,
         },
     }).then (data => {
         return data.json();
-    }).catch(error => {
+    })
+    .catch(error => {
         throw error;
     });
 }
 
-export const useListMissions = (page: string, filter: MissionFilter = "all", token: string|null, id: number, isAdmin: boolean) => {
+export const useGetMissions = (filter: number, id: number) => {
     return useQuery({
-        queryKey: ["employees", token, filter],
-        queryFn: () => getAllMissions(token, filter, id, isAdmin),
+        queryKey: ["employees", filter],
+        queryFn: () => getAllMissions(filter, id),
         refetchOnWindowFocus: false,
         retry: false,
-        enabled: page === "salarie"
     });
 }
