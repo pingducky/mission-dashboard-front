@@ -22,7 +22,6 @@ const DisplayProfilName: React.FC<DisplayProfilNameProps> = ({
   name,
   isAdmin,
 }) => {
-  console.log("isAdmin : ", isAdmin);
 
   return (
     <div className={styles.profileContainer}>
