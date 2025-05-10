@@ -99,7 +99,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, name, firstname, isLoadin
             <img src={LogoCClean53} alt="Logo" />
           </div>
 
-          {isOpen && !isLoading && name && firstname && <DisplayProfilName name={firstname} firstname={name}/>}
+          {isOpen && !isLoading && name && firstname && <DisplayProfilName name={firstname} firstname={name} isAdmin={isAdmin}/>}
 
           <div className={styles.iconButtonListParent}>
             <div className={styles.iconButtonList}>
