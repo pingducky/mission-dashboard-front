@@ -1,12 +1,13 @@
-@use "./../../../../app/styles/themes.scss" as *;
+@use "./../../../../app/styles/themes.scss"as *;
+@use "./../../../../app/styles/colors.scss"as *;
 
 .profileContainer {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    justify-content: center;
-  }
-  
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: center;
+
+
   .avatar {
     width: 50px;
     height: 50px;
@@ -20,25 +21,36 @@
     font-weight: var(--font-weight-bold);
     color: #666;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+    .adminIcon {
+      position: absolute;
+      top: -2px;
+      right: -7px;
+      color: $pink;
+      transform: rotate(10deg);
+      width: 20px;
+    }
+
+    .initial {
+      position: relative;
+    }
   }
-  
-  .initial {
-    position: relative;
-  }
-  
+
+
+
   .info {
     display: flex;
     flex-direction: column;
+
+    .name {
+      font-size: var(--font-size-h4);
+      font-weight: 600;
+      color: #333;
+    }
+
+    .subtitle {
+      font-size: var(--font-size-text);
+      color: #999;
+    }
   }
-  
-  .name {
-    font-size: var(--font-size-h4);
-    font-weight: 600;
-    color: #333;
-  }
-  
-  .subtitle {
-    font-size: var(--font-size-text);
-    color: #999;
-  }
-  
+}
