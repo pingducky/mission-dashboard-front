@@ -16,35 +16,35 @@ interface DashboardPageProps {
 }
 
 const DashboardPage: React.FC<DashboardPageProps> = ({ firstname }) => {
-  const { data, isLoading, isError, error } = useGetDashboardStats();
+  const { data: dataDashboardStats, isLoading, isError, error } = useGetDashboardStats();
 
   const cards = [
     {
       icon: GroupsOutlinedIcon,
       label: "employés",
-      value: data?.employeeCount ?? 0,
+      value: dataDashboardStats?.employeeCount ?? 0,
       alt: "Illustrations d'employés",
     },
     {
       icon: VerifiedOutlinedIcon,
-      label: data?.isAdmin
+      label: dataDashboardStats?.isAdmin
         ? "missions réalisées parmis tous les employés"
         : "missions réalisées au total",
-      value: data?.missionsDoneCount ?? 0,
+      value: dataDashboardStats?.missionsDoneCount ?? 0,
       alt: "Illustration d'un certificat",
     },
     {
       icon: AccessTimeIcon,
       label: "de travail est prévu aujourd’hui",
-      value: data?.workingTimeToday ?? "N/A",
+      value: dataDashboardStats?.workingTimeToday ?? "N/A",
       alt: "Illustration d'une horloge",
     },
     {
       icon: AdsClickOutlinedIcon,
-      label: data?.isAdmin
+      label: dataDashboardStats?.isAdmin
         ? "missions prévues aujourd’hui parmis tous les employés"
         : "missions prévues aujourd’hui",
-      value: data?.missionsTodayCount ?? 0,
+      value: dataDashboardStats?.missionsTodayCount ?? 0,
       alt: "Illustration d'une cible",
     },
   ];
