@@ -21,6 +21,7 @@ import { EmployeePage } from "../EmployeePage/EmployeePage";
 import { useGetEmployee } from "../../hooks/useGetEmployee";
 import { useGetUserFiles } from "../../hooks/useGetUserFiles";
 import CreateEmployeePage from "../Employee/CreateEmployeePage/CreateEmployeePage";
+import AddSessionDrawer from "../../components/AddSessionDrawer/AddSessionDrawer";
 import styles from "./ParentPage.module.scss";
 
 type BreadcrumbItem = {
@@ -129,6 +130,8 @@ const ParentPage: React.FC = () => {
         return <DashboardPage firstname={userData?.firstName} />;
       case "planning":
         return <div>Planning Page</div>;
+      case "pointage":
+        return <AddSessionDrawer />;
       case "salarie":
         return <EmployeesPage
           handleNavigation={handleNavigation}
