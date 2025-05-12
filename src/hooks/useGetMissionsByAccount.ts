@@ -29,6 +29,9 @@ export type MissionModel = {
   pictures: Picture[];
   missionType: MissionType;
   assignedUsers: User[];
+  city: string;
+  postalCode: string;
+  countryCode: string;
 };
 
 export type CategorizedMissions = {

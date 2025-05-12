@@ -23,6 +23,7 @@ import { useGetEmployee } from "../../hooks/useGetEmployee";
 import { useGetUserFiles } from "../../hooks/useGetUserFiles";
 import CreateEmployeePage from "../Employee/CreateEmployeePage/CreateEmployeePage";
 import styles from "./ParentPage.module.scss";
+import ReadMissionPage from "../MissionsPage/ReadMission/ReadMissionPage";
 
 type BreadcrumbItem = {
   label: string;
@@ -147,10 +148,13 @@ const ParentPage: React.FC = () => {
       case "missions":
         return <MissionsPage
           handleNavigation={handleNavigation}
-          userId={userData?.id ?? 0}
+          userId={userData?.id!}
         />
       case "missionDetail":
-        return <div>Détails de la mission #{breadcrumbs[breadcrumbs.length - 1].id}</div>;
+        return <ReadMissionPage 
+          handleNavigation={handleNavigation}
+          missionId={parseInt(breadcrumbs[breadcrumbs.length - 1]?.id!)}
+        />;
       case "notifications":
         return <div>Notifications Page</div>;
       case "compte":

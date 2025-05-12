@@ -8,28 +8,43 @@
     height: 30px;
     width: 30px;
     transform: rotate(90deg);
+
+    &.open {
+        display: none;
+    }
 }
 
-ul {
+
+td:has(.actionButtonList) {
+    min-width: 160px;
     display: flex;
-    flex-direction: row;
-    position: relative;
-    bottom: 35px;
-    padding: 5px;
+    justify-content: space-around;
+    align-items: center;
+    min-height: 50px;
 
-    li {
-        button {
-            border-radius: 0 !important;
+    .actionButtonList {
+        display: none;
+        flex-direction: row;
+        padding: 5px;
+
+        &.open {
+            display: flex;
         }
 
-        &:first-child > button {
-            border-top-left-radius: 50% !important;
-            border-bottom-left-radius: 50% !important;
-        }
+        li {
+            button {
+                border-radius: 0;
+            }
 
-        &:last-child > button {
-            border-top-right-radius: 50% !important;
-            border-bottom-right-radius: 50% !important;
+            &:first-child > button {
+                border-top-left-radius: 50%;
+                border-bottom-left-radius: 50%;
+            }
+
+            &:last-child > button {
+                border-top-right-radius: 50%;
+                border-bottom-right-radius: 50%;
+            }
         }
     }
 }

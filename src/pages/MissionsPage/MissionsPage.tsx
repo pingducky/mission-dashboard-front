@@ -6,9 +6,9 @@ import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import { User } from '../../hooks/useUserData';
 import { safeDate } from '../../utils/dates';
 import TablePagination from '@mui/material/TablePagination';
-import style from './MissionsPage.module.scss'
 import { ActionButtons } from '../../components/ActionButtons/ActionButtons';
 import FilterMissions from './FilterMissions/FilterMissions';
+import style from './MissionsPage.module.scss'
 
 interface MisionsPageProps {
     /**
@@ -29,7 +29,6 @@ export const MissionsPage: React.FC<MisionsPageProps> = ({
     const [rowsPerPage, setRowsPerPage] = React.useState(15);
     const [filter, setFilter] = React.useState<number>(0);
     const {data: missionsData, isLoading } = useGetMissions(filter, userId) ?? [];
-
     const handleChangePage = (e: unknown, newPage: number) => {
         setPage(newPage);
     };
@@ -43,19 +42,16 @@ export const MissionsPage: React.FC<MisionsPageProps> = ({
         const datebegin = safeDate(mission.timeBegin);
         const dateEnd = safeDate(mission.estimatedEnd);
 
-        if(datebegin?.toLocaleDateString() === dateEnd?.toLocaleDateString()) {
-            return (
-                <>
-                    {datebegin?.toLocaleDateString('fr-FR', { weekday: 'long', month: 'long', day: 'numeric' })}
-                    <span className={style.grayText}>
-                        {datebegin?.toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'})}
-                        ~
-                        {dateEnd?.toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'})}
-                    </span>
-                </>
-            )
-        }
-        return (
+        return datebegin?.toLocaleDateString() === dateEnd?.toLocaleDateString() ? (
+            <>
+                {datebegin?.toLocaleDateString('fr-FR', { weekday: 'long', month: 'long', day: 'numeric' })}
+                <span className={style.grayText}>
+                    {datebegin?.toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'})}
+                    ~
+                    {dateEnd?.toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'})}
+                </span>
+            </>
+        ) : (
             <>
                 {datebegin?.toLocaleDateString('fr-FR', { month: 'long', day: 'numeric' })} 
                  -  
@@ -102,7 +98,7 @@ export const MissionsPage: React.FC<MisionsPageProps> = ({
     const missions = missionsData?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
         .map((mission: MissionModel) => {
         return (
-            <tr key={mission.id} onClick={() => handleNavigation('mission', mission.description, mission.id.toString())}>
+            <tr key={mission.id} onClick={() => handleNavigation('missionDetail', mission.description, mission.id.toString())}>
                 <th scope="row">{mission.description}</th>
                 <td>{mission.address}</td>
                 <td>{getMissionDates(mission)}</td>

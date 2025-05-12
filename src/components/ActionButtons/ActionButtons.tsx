@@ -1,20 +1,22 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import IconButton from "../layout/IconButton/IconButton";
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
-import Popper from '@mui/material/Popper';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
-import style from "./ActionButtons.module.scss";
 import clsx from "clsx";
+import style from "./ActionButtons.module.scss";
 
 
-export const ActionButtons = () => {
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+export const ActionButtons : React.FC = () => {
+    const [parent, setParent] = useState<null | HTMLElement>(null);
+    const [open, setOpen] = useState<Boolean>(false);
+
 
     const handleClickOutside = (event: MouseEvent) => {
-        if (anchorEl && !anchorEl.contains(event.target as Node)) {
-            setAnchorEl(null);
+        if (open && parent && !parent.contains(event.target as Node)) {
+            setParent(null);
+            setOpen(false);
         }
     };
 
@@ -31,65 +33,53 @@ export const ActionButtons = () => {
                 isDisabled={false}
                 onClick={(e) => {
                     e?.stopPropagation();
-                    setAnchorEl(anchorEl ? null : e?.target as HTMLElement);
+                    setParent(parent ? null : (e?.target as HTMLElement).closest('td'));
+                    setOpen(!open);
                 }}
                 specialClass={clsx(style.actionButton, {
-                    [style.open]: Boolean(anchorEl),
+                    [style.open]: Boolean(parent),
                 })}
             />
-            <Popper
-                open={Boolean(anchorEl)}
-                anchorEl={anchorEl}
-                className={style.popup}
-                onClick={(e) => {
-                    e.stopPropagation();
-                }}
-            >
-                <ul>
-                    <li>
-                        <IconButton
-                            startIcon={<EditOutlinedIcon/>}
-                            color='white'
-                            text=''
-                            variant={"filled"}
-                            isRounded={false}
-                            isDisabled={false}
-                            onClick={(e) => {
-                                e?.stopPropagation();
-                                setAnchorEl(anchorEl ? null : e?.target as HTMLElement);
-                            }}
-                        />
-                    </li>
-                    <li>
-                        <IconButton
-                            startIcon={<DeleteForeverOutlinedIcon/>}
-                            color='white'
-                            text=''
-                            variant={"filled"}
-                            isRounded={false}
-                            isDisabled={false}
-                            onClick={(e) => {
-                                e?.stopPropagation();
-                                setAnchorEl(anchorEl ? null : e?.target as HTMLElement);
-                            }}
-                        />
-                    </li>
-                    <li>
-                        <IconButton
-                            startIcon={<InfoOutlinedIcon/>}
-                            color='white'
-                            text=''
-                            variant={"filled"}
-                            isRounded={false}
-                            isDisabled={false}
-                            onClick={(e) => {
-                                e?.stopPropagation();
-                                setAnchorEl(anchorEl ? null : e?.target as HTMLElement);
-                            }}
-                        />
-                    </li>
-                </ul>
-            </Popper>
+            <ul className={clsx(style.actionButtonList , {
+                [style.open]: Boolean(open),
+            })}>
+                <li>
+                    <IconButton
+                        startIcon={<EditOutlinedIcon/>}
+                        color='white'
+                        text=''
+                        variant={"filled"}
+                        isRounded={false}
+                        isDisabled={false}
+                        onClick={(e) => {
+                            e?.stopPropagation();
+                        }}
+                    />
+                </li>
+                <li>
+                    <IconButton
+                        startIcon={<DeleteForeverOutlinedIcon/>}
+                        color='white'
+                        text=''
+                        variant={"filled"}
+                        isRounded={false}
+                        isDisabled={false}
+                        onClick={(e) => {
+                            e?.stopPropagation();
+                        }}
+                    />
+                </li>
+                <li>
+                    <IconButton
+                        startIcon={<InfoOutlinedIcon/>}
+                        color='white'
+                        text=''
+                        variant={"filled"}
+                        isRounded={false}
+                        isDisabled={false}
+                    />
+                </li>
+            </ul>
         </>
     )
 }
