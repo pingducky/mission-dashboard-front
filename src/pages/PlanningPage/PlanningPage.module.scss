@@ -81,31 +81,31 @@
       margin: 10px 0;
     }
   }
-}
 
-.toggleGroup {
-  background: none;
-  border: none;
-
-  :global(.MuiToggleButton-root) {
-    text-transform: none;
-    border: none;
+  .toggleGroup {
     background: none;
-    color: $darkGray;
-    font-weight: 500;
-    padding: 6px 12px;
-    border-radius: 6px;
-
-    &:hover {
-      background-color: rgba(0, 0, 255, 0.04);
-    }
-
-    &[aria-pressed="true"] {
-      background-color: $blue;
-      color: white;
-
+    border: none;
+  
+    :global(.MuiToggleButton-root) {
+      text-transform: none;
+      border: none;
+      background: none;
+      color: $darkGray;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 6px;
+  
       &:hover {
-        background-color: $lightBlue;
+        background-color: rgba(0, 0, 255, 0.04);
+      }
+  
+      &[aria-pressed="true"] {
+        background-color: $blue;
+        color: white;
+  
+        &:hover {
+          background-color: $lightBlue;
+        }
       }
     }
   }
