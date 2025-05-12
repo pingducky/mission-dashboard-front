@@ -1,0 +1,29 @@
+.drawerContent {
+    width: 500px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    
+  .section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .row {
+    display: flex;
+    gap: 16px;
+  }
+  
+  .row > * {
+    flex: 1;
+  }
+  
+  .formValidationSection {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 16px;
+  }
+}
