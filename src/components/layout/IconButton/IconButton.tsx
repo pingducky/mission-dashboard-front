@@ -4,7 +4,15 @@ import styles from "./IconButton.module.scss";
 
 type fontWeight = "regular" | "medium" | "semibold" | "bold";
 type variant = "ghost" | "outlined" | "filled";
-type color = "white" | "darkblue" | "blue" | "pink" | "black" | "darkGray" | "red" | "lightGray";
+type color =
+  | "white"
+  | "darkblue"
+  | "blue"
+  | "pink"
+  | "black"
+  | "darkGray"
+  | "red"
+  | "lightGray";
 
 interface IconButtonProps {
   /**
@@ -49,7 +57,6 @@ interface IconButtonProps {
   onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
-
 const IconButton: React.FC<IconButtonProps> = ({
   text,
   fontWeight = "regular",
@@ -58,7 +65,7 @@ const IconButton: React.FC<IconButtonProps> = ({
   specialClass,
   startIcon,
   variant = "filled",
-  color  = "blue",
+  color = "blue",
   isRounded = true,
   onClick,
 }) => {
@@ -81,12 +88,8 @@ const IconButton: React.FC<IconButtonProps> = ({
       disabled={isDisabled}
       onClick={isDisabled ? undefined : onClick}
     >
-      {
-        startIcon && <span className={styles.iconBtn}>
-            {startIcon}
-          </span>
-        }
-      <span className={`iconTextGlobal ${styles.iconText}`}>{text}</span>
+      {startIcon && <span className={styles.iconBtn}>{startIcon}</span>}
+      {text && <span className={`iconTextGlobal ${styles.iconText}`}>{text}</span>}
     </button>
   );
 };

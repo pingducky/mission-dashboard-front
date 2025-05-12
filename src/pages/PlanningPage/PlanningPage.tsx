@@ -20,6 +20,7 @@ import { CreateMissionPayload, useCreateMission } from '../../hooks/useCreateMis
 import { useQueryClient } from '@tanstack/react-query';
 import { useListEmployee } from '../../hooks/useGetAllEmployees';
 import styles from './PlanningPage.module.scss';
+import AddSessionDrawer from '../../components/AddSessionDrawer/AddSessionDrawer';
 
 interface MissionEvent extends EventInput {
     /**
@@ -357,7 +358,7 @@ const PlanningPage: React.FC = () => {
         />
       </div>
   
-      <AddMissionDrawer
+      {/* <AddMissionDrawer
         employees={employeeData?.map((employee) => ({
           id: employee.id,
           fullName: employee.firstName
@@ -368,6 +369,11 @@ const PlanningPage: React.FC = () => {
         missionTypes={missionTypes}
         onClose={() => setOpenDialog(false)}
         onCreate={handleCreateMission}
+      /> */}
+
+      <AddSessionDrawer 
+      isOpen={openDialog}
+      onClose={() => setOpenDialog(false)}
       />
     </div>
   );
