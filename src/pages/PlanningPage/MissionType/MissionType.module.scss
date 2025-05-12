@@ -1,18 +1,18 @@
 @use "./../../../app/styles/colors.scss" as *;
 
 .container {
-    display: flex;
-    align-items: center;
-  }
-  
+  display: flex;
+  align-items: center;
+
   .circle {
     width: 10px;
     height: 10px;
     border-radius: 50%;
     margin-right: 10px;
   }
-  
+
   .text {
     font-size: 14px;
     color: $darkGray;
   }
+}

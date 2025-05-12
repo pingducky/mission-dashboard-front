@@ -4,8 +4,8 @@
     display: flex;
     flex-direction: column;
     gap: 24px;
-  }
-  
+
+    
   .section {
     display: flex;
     flex-direction: column;
@@ -21,9 +21,9 @@
     flex: 1;
   }
   
-  .footer {
+  .formValidationSection {
     display: flex;
     justify-content: flex-end;
     margin-top: 16px;
   }
-  
+}

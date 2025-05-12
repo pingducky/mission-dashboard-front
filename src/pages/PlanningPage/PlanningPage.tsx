@@ -145,6 +145,22 @@ const PlanningPage: React.FC = () => {
     }
   }, [missions]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      const isMobile = window.innerWidth < 768;
+      setViewMode(isMobile ? 'timeGridDay' : 'timeGridWeek');
+      const calendarApi = calendarRef.current?.getApi();
+      if (calendarApi) {
+        calendarApi.changeView(isMobile ? 'timeGridDay' : 'timeGridWeek');
+      }
+    };
+  
+    handleResize();
+  
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const handleEmployeeChange = (event: SelectChangeEvent) => {
     setSelectedEmployee(event.target.value);
   };
@@ -219,28 +235,36 @@ const PlanningPage: React.FC = () => {
   };
   return (
     <div>
-        { !areMissionTypesLoading && missionTypes?.length && (<div className={styles.missionsType}>
+      {
+        !areMissionTypesLoading && missionTypes?.length && (
+          <div className={styles.missionsType}>
             <p>Types de misssions :</p>
-
+  
             <div className={styles.missionsTypeList}>
-                {
-                    missionTypes?.map((type) => (
-                        <MissionType nom={type.longLibel} code={type.shortLibel} color={type.color}/>
-                    ))
-                }
+              {
+                missionTypes?.map((type) => (
+                  <MissionType
+                    nom={type.longLibel}
+                    code={type.shortLibel}
+                    color={type.color}
+                  />
+                ))
+              }
             </div>
-        </div>)
-        }
+          </div>
+        )
+      }
+  
       <div className={styles.detachedHeader}>
-        <div>
+        <div className={styles.leftSection}>
           <MuiIconButton size="small" onClick={handlePrev}>
             <ChevronLeftIcon />
           </MuiIconButton>
-
+  
           <MuiIconButton size="small" onClick={handleNext}>
             <ChevronRightIcon />
           </MuiIconButton>
-
+  
           <ToggleButtonGroup
             value={viewMode}
             exclusive
@@ -256,86 +280,87 @@ const PlanningPage: React.FC = () => {
             </ToggleButton>
           </ToggleButtonGroup>
         </div>
-
+  
         <p className={styles.dateRange}>{dateRange}</p>
-
+  
         <div>
-         <div className={styles.rightSection}>
-          {
-            !areMissionTypesLoading && tokenData?.isAdmin && (
-              <>
-                <FormControl className={styles.employeeForm} size="small">
-                <InputLabel id="employee-select-label">Choix des employé(e)s</InputLabel>
-                <Select
-                  labelId="employee-select-label"
-                  id="employee-select"
-                  value={selectedEmployee}
-                  onChange={handleEmployeeChange}
-                  label="Choix des employé(e)s"
-                >
-                {employeeData?.map((employee) => (
-                  <MenuItem value={employee.id}>{employee.firstName}</MenuItem>
-                ))}
-                </Select>
-            </FormControl>
-
-            <IconButton
-                text="Créer une mission"
-                variant="filled"
-                isRounded={false}
-                startIcon={<AddIcon />}
-                onClick={() => setOpenDialog(true)}
-            />
-              </>
-            )
-          }
+          <div className={styles.rightSection}>
+            {
+              !areMissionTypesLoading && tokenData?.isAdmin && (
+                <>
+                  <FormControl className={styles.employeeForm} size="small">
+                    <InputLabel id="employee-select-label">Choix des employé(e)s</InputLabel>
+                    <Select
+                      labelId="employee-select-label"
+                      id="employee-select"
+                      value={selectedEmployee}
+                      onChange={handleEmployeeChange}
+                      label="Choix des employé(e)s"
+                    >
+                      {
+                        employeeData?.map((employee) => (
+                          <MenuItem value={employee.id}>{employee.firstName}</MenuItem>
+                        ))
+                      }
+                    </Select>
+                  </FormControl>
+  
+                  <IconButton
+                    text="Créer une mission"
+                    variant="filled"
+                    isRounded={false}
+                    startIcon={<AddIcon />}
+                    onClick={() => setOpenDialog(true)}
+                  />
+                </>
+              )
+            }
           </div>
         </div>
-
-        </div>
-
+      </div>
+  
       <div className={styles.calendarContainer}>
         <FullCalendar
-            ref={calendarRef}
-            headerToolbar={{
-                left: '',
-                center: '',
-                right: ''
-            }}
-            plugins={[timeGridPlugin, interactionPlugin]}
-            eventStartEditable={false}
-            eventDurationEditable={false}
-            initialView="timeGridWeek"
-            events={events}
-            editable={true}
-            selectable={tokenData?.isAdmin || false}
-            select={handleDateSelect}
-            nowIndicator={true}
-            slotMinTime="08:00:00"
-            timeZone="Europe/Paris"
-            slotMaxTime="20:00:00"
-            height="auto"
-            locale={frLocale}
-            datesSet={(arg) => {
-                setDateRange(formatDateRange(arg.start, arg.end));
-                setCalendarStartDate(arg.start.toISOString());
-                setCalendarEndDate(arg.end.toISOString());
-            }}
-            eventContent={(eventInfo) => (
+          ref={calendarRef}
+          headerToolbar={{
+            left: '',
+            center: '',
+            right: ''
+          }}
+          plugins={[timeGridPlugin, interactionPlugin]}
+          eventStartEditable={false}
+          eventDurationEditable={false}
+          initialView={viewMode}
+          events={events}
+          editable={true}
+          selectable={tokenData?.isAdmin || false}
+          select={handleDateSelect}
+          nowIndicator={true}
+          slotMinTime="08:00:00"
+          timeZone="Europe/Paris"
+          slotMaxTime="20:00:00"
+          height="auto"
+          locale={frLocale}
+          datesSet={(arg) => {
+            setDateRange(formatDateRange(arg.start, arg.end));
+            setCalendarStartDate(arg.start.toISOString());
+            setCalendarEndDate(arg.end.toISOString());
+          }}
+          eventContent={(eventInfo) => (
             <div className={styles.missionEvent}>
-                <b>{eventInfo.timeText}</b>
-                <i>{eventInfo.event.title}</i><br />
-                <span>{eventInfo.event.extendedProps.description}</span><br />
-                <span>{eventInfo.event.extendedProps.adresse}</span>
-              </div>
-            )}
-            />
+              <b>{eventInfo.timeText}</b>
+              <i>{eventInfo.event.title}</i><br />
+              <span>{eventInfo.event.extendedProps.description}</span><br />
+              <span>{eventInfo.event.extendedProps.adresse}</span>
+            </div>
+          )}
+        />
       </div>
-
+  
       <AddMissionDrawer
         employees={employeeData?.map((employee) => ({
-            id: employee.id,
-            fullName: employee.firstName
+          id: employee.id,
+          fullName: employee.firstName
         }))}
         isOpen={openDialog}
         startDate={newEvent.start}

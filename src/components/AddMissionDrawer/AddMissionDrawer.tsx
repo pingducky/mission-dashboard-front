@@ -101,7 +101,7 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
   useEffect(() => {
     setStart(startDate || '');
   }, [startDate]);
-  
+
   useEffect(() => {
     setEnd(endDate || '');
   }, [endDate]);
@@ -109,7 +109,7 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
   const handleSelectChange = (event: SelectChangeEvent<string[]>) => {
     setSelectedEmployees(event.target.value as string[]);
   };
-  
+
   const handleMissionTypeChange = (event: SelectChangeEvent<number>) => {
     setSelectedMissionType(Number(event.target.value));
   };
@@ -139,7 +139,7 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
     const sign = tzOffset >= 0 ? '+' : '-';
     return sign + pad(Math.floor(tzOffset / 60)) + ':' + pad(Math.abs(tzOffset % 60));
   };
-  
+
   const toISOStringWithTimezone = (date: Date): string => {
     return date.getFullYear() +
       '-' + pad(date.getMonth() + 1) +
@@ -149,46 +149,45 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
       ':' + pad(date.getSeconds()) +
       getTimezoneOffset(date);
   };
-  
 
-const handleCreate = () => {
-  if (!validateFields()) {
-    enqueueSnackbar('Veuillez remplir tous les champs obligatoires.', 'error');
-    return;
-  }
-  
-  const isoStartDate = toISOStringWithTimezone(new Date(start));
-  const isoEndDate = toISOStringWithTimezone(new Date(end));
+  const handleCreate = () => {
+    if (!validateFields()) {
+      enqueueSnackbar('Veuillez remplir tous les champs obligatoires.', 'error');
+      return;
+    }
 
-  const payload: CreateMissionPayload = {
-    description: details,
-    timeBegin: isoStartDate,
-    timeEnd: undefined,
-    estimatedEnd: isoEndDate,
-    address,
-    city,
-    postalCode,
-    countryCode,
-    missionTypeId: selectedMissionType as number,
-    accountAssignIds: selectedEmployees.map(Number),
-    pictures: [],
+    const isoStartDate = toISOStringWithTimezone(new Date(start));
+    const isoEndDate = toISOStringWithTimezone(new Date(end));
+
+    const payload: CreateMissionPayload = {
+      description: details,
+      timeBegin: isoStartDate,
+      timeEnd: undefined,
+      estimatedEnd: isoEndDate,
+      address,
+      city,
+      postalCode,
+      countryCode,
+      missionTypeId: selectedMissionType as number,
+      accountAssignIds: selectedEmployees.map(Number),
+      pictures: [],
+    };
+    onCreate(payload);
+
+    setStart(startDate || '');
+    setEnd(endDate || '');
+    setCompanyName('');
+    setEmail('');
+    setPhone('');
+    setAddress('');
+    setCity('');
+    setPostalCode('');
+    setCountryCode('FR');
+    setDetails('');
+    setSelectedEmployees([]);
+    setSelectedMissionType('');
+    setErrors({});
   };
-  onCreate(payload);
-
-  setStart(startDate || '');
-  setEnd(endDate || '');
-  setCompanyName('');
-  setEmail('');
-  setPhone('');
-  setAddress('');
-  setCity('');
-  setPostalCode('');
-  setCountryCode('FR');
-  setDetails('');
-  setSelectedEmployees([]);
-  setSelectedMissionType('');
-  setErrors({});
-};
 
   return (
     <Drawer anchor="right" open={isOpen} onClose={onClose}>
@@ -289,19 +288,19 @@ const handleCreate = () => {
               onChange={(e) => setPostalCode(e.target.value)}
               error={errors.postalCode}
             />
-              <Select
-                labelId="country-select-label"
-                id="country-select"
-                value={countryCode}
-                onChange={(e) => setCountryCode(e.target.value)}
-                fullWidth
-              >
-                {countryList.map((country) => (
-                  <MenuItem key={country.code} value={country.code}>
-                    {country.name}
-                  </MenuItem>
-                ))}
-              </Select>
+            <Select
+              labelId="country-select-label"
+              id="country-select"
+              value={countryCode}
+              onChange={(e) => setCountryCode(e.target.value)}
+              fullWidth
+            >
+              {countryList.map((country) => (
+                <MenuItem key={country.code} value={country.code}>
+                  {country.name}
+                </MenuItem>
+              ))}
+            </Select>
           </div>
         </section>
 
@@ -344,7 +343,7 @@ const handleCreate = () => {
           </FormControl>
         </section>
 
-        <div className={styles.footer}>
+        <div className={styles.formValidationSection}>
           <Button variant="contained" color="primary" onClick={handleCreate}>
             Créer
           </Button>

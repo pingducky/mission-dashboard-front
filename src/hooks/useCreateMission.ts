@@ -50,47 +50,46 @@ export type CreateMissionPayload = {
 };
 
 export type CreateMissionResponse = {
+  /**
+   * Id de la mission
+   */
+  missionId: number;
+  /**
+   * Assignation des missions aux comptes réussis
+   */
+  assignedAccountIds: number[];
+  /**
+   * Assignation des missions aux comptes en échec
+   */
+  failedAssignments: {
     /**
-     * Id de la mission
+     * Id compte utilisateur
      */
-    missionId: number;
+    accountId: number;
     /**
-     * Assignation des missions aux comptes réussis
+     * Raison de l'échec d'assignation 
      */
-    assignedAccountIds: number[];
+    reason: string;
+  }[];
+  /**
+   * Fichiers uploadés avec succès
+   */
+  uploadedFiles: string[];
+  /**
+   * Fichiers qui n'ont pas pu être upload
+   */
+  rejectedFiles: {
     /**
-     * Assignation des missions aux comptes en échec
+     * Id
      */
-    failedAssignments: {
-      /**
-       * Id compte utilisateur
-       */
-      accountId: number;
-      /**
-       * Raison de l'échec d'assignation 
-       */
-      reason: string;
-    }[];
+    id: string;
     /**
-     * Fichiers uploadés avec succès
+     * Raison
      */
-    uploadedFiles: string[];
-    /**
-     * Fichiers qui n'ont pas pu être upload
-     */
-    rejectedFiles: {
-      /**
-       * Id
-       */
-      id: string;
-  
-      /**
-       * Raison
-       */
-      reason: string;
-    }[];
-  };
-  
+    reason: string;
+  }[];
+};
+
 const createMission = async (data: CreateMissionPayload) => {
   const formData = new FormData();
 
@@ -101,7 +100,7 @@ const createMission = async (data: CreateMissionPayload) => {
   formData.append("postalCode", data.postalCode);
   formData.append("countryCode", data.countryCode);
   formData.append("missionTypeId", String(data.missionTypeId));
-  formData.append("accountAssignIds", JSON.stringify([1,2]));
+  formData.append("accountAssignIds", JSON.stringify([1, 2]));
   if (data.timeEnd) formData.append("timeEnd", data.timeEnd);
 
   if (data.estimatedEnd) formData.append("estimatedEnd", data.estimatedEnd);

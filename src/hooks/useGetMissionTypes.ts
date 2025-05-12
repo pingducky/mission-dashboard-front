@@ -14,7 +14,7 @@ export type MissionType = {
      */
     longLibel: string;
     /**
-     * Code couleure
+     * Code couleur
      */
     color: string;
 }

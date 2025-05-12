@@ -24,6 +24,7 @@
     display: flex;
     gap: 15px;
     margin-top: 15px;
+    flex-wrap: wrap;
   }
 }
 
@@ -36,21 +37,49 @@
   justify-content: space-between;
   align-items: center;
   padding: 15px;
-  width: 100%;
   box-sizing: border-box;
+  flex-wrap: wrap;
+
+  .leftSection {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 
   .rightSection {
-    display:  flex;
-    
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+
     .employeeForm {
       min-width: 180px;
-      margin-right: 15px;
     }
   }
+
   .dateRange {
     font-size: var(--font-size-h4);
     color: $darkGray;
     font-weight: var(--font-weight-medium);
+    justify-content: center;
+  }
+
+  @media (max-width: 900px) {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
+    .leftSection,
+    .rightSection {
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .dateRange {
+      width: 100%;
+      margin: 10px 0;
+    }
   }
 }
 
