@@ -25,3 +25,11 @@ export const getWeekRange = (date: Date) => {
 export const toParisISOString = (date : string | Date) => {
   return new Date(date).toISOString()
 };
+
+// Todo : comprendre pourquoi un new Date() sur le toParisISOString() renvoie un décallage de 2h
+export const toParisISOStringV2 = (date: string | Date) => {
+  const d = new Date(date);
+  const offset = -120;
+  d.setMinutes(d.getMinutes() - offset);
+  return d.toISOString();
+};

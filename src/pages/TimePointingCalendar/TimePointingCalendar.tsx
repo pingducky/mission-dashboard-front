@@ -12,8 +12,9 @@ import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, ToggleBut
 import styles from "./TimePointingCalendar.module.scss";
 import { getUserDataFromToken } from "../../utils/auth";
 import { useListEmployee } from "../../hooks/useGetAllEmployees";
-import { getWeekRange, toParisISOString } from "../../utils/dates";
+import { getWeekRange, toParisISOString, toParisISOStringV2 } from "../../utils/dates";
 import { useGetWorkSessionsByAccount } from "../../hooks/useGetWorkSessionsByAccount";
+import { formatInTimeZone } from 'date-fns-tz';
 import { EventInput } from "@fullcalendar/core/index.js";
 
 interface WorkSessionEvent extends EventInput {
@@ -119,12 +120,15 @@ const TimePointingCalendar: React.FC = () => {
       }, []);
 
     useEffect(() => {
+        const date = new Date();
+        const parisDateNow = formatInTimeZone(date, 'Europe/Paris', 'yyyy-MM-dd HH:mm:ss');
+
     if (workSessions) {
         const transformedEvents: WorkSessionEvent[] = workSessions.map((workSession) => ({
         id: workSession.id.toString(),
         title: 'Session de travail',
         start: toParisISOString(workSession.startTime),
-        end: toParisISOString(workSession.endTime || new Date().toISOString()),
+        end: workSession.endTime ? toParisISOString(workSession.endTime) : toParisISOStringV2(parisDateNow),
         isOngoing: !workSession.endTime
         }));
         setEvents(transformedEvents);
