@@ -136,7 +136,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, name, firstname, isLoadin
               />
               <IconButton
                 startIcon={<WorkHistoryOutlinedIcon />}
-                text="Pointage"
+                text="Suivi des Heures"
                 fontWeight="medium"
                 onClick={() => onMenuClick("pointage")}
                 isDisabled={false}

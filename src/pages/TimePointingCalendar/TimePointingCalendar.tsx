@@ -1,0 +1,230 @@
+import FullCalendar from "@fullcalendar/react";
+import { useEffect, useRef, useState } from "react";
+import timeGridPlugin from '@fullcalendar/timegrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import frLocale from '@fullcalendar/core/locales/fr';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import MuiIconButton from '@mui/material/IconButton';
+import AddIcon from '@mui/icons-material/Add';
+import IconButton from '../../components/layout/IconButton/IconButton';
+import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, ToggleButton, ToggleButtonGroup } from "@mui/material";
+import styles from "./TimePointingCalendar.module.scss";
+import { getUserDataFromToken } from "../../utils/auth";
+import { useListEmployee } from "../../hooks/useGetAllEmployees";
+import { getWeekRange, toParisISOString } from "../../utils/dates";
+import { useGetWorkSessionsByAccount } from "../../hooks/useGetWorkSessionsByAccount";
+import { EventInput } from "@fullcalendar/core/index.js";
+
+interface WorkSessionEvent extends EventInput {
+    /**
+     * Titre de la session de travail
+     */
+    title: string;
+    /**
+     * Date et heure de début de session (format ISO 8601)
+     */
+    start: string;
+    /**
+     * Date et heure de fin de session (format ISO 8601)
+     */
+    end: string;
+    /**
+     * Description détaillée de la mission
+     */
+    description?: string;
+  }
+  
+const TimePointingCalendar: React.FC = () => {
+    const [viewMode, setViewMode] = useState<'timeGridDay' | 'timeGridWeek'>('timeGridWeek');
+    const [dateRange, setDateRange] = useState<string>('');
+    const [calendarStartDate, setCalendarStartDate] = useState<string | null>(null);
+    const [calendarEndDate, setCalendarEndDate] = useState<string | null>(null);
+    const [selectedEmployee, setSelectedEmployee] = useState<string>('');
+    const calendarRef = useRef<FullCalendar | null>(null);
+    const tokenData = getUserDataFromToken();
+    const [events, setEvents] = useState<WorkSessionEvent[]>([]);
+    const today = new Date();
+
+    const { data: employeeData } = useListEmployee('all');
+
+    const defaultFrom = viewMode === 'timeGridDay'
+        ? today.toISOString()
+        : getWeekRange(today).monday;
+      
+      const defaultTo = viewMode === 'timeGridDay'
+        ? new Date(today.getTime() + 24 * 60 * 60 * 1000).toISOString()
+        : getWeekRange(today).sunday;
+    
+      const workSessionQueryParams = {
+        accountId: selectedEmployee || tokenData!.id,
+        from: calendarStartDate ?? defaultFrom,
+        to: calendarEndDate ?? defaultTo,
+      };
+      
+      const { data: workSessions } = useGetWorkSessionsByAccount(workSessionQueryParams);
+      console.debug("workSessions : ", workSessions);
+
+    const handlePrev = () => {
+        const calendarApi = calendarRef.current?.getApi();
+        if (calendarApi) {
+            calendarApi.prev();
+        }
+    };
+
+    const handleNext = () => {
+        const calendarApi = calendarRef.current?.getApi();
+        if (calendarApi) {
+            calendarApi.next();
+        }
+    };
+
+    const handleViewChange = (
+        event: React.MouseEvent<HTMLElement>,
+        newView: 'timeGridDay' | 'timeGridWeek' | null
+    ) => {
+        if (newView) {
+            setViewMode(newView);
+            const calendarApi = calendarRef.current?.getApi();
+            if (calendarApi) {
+                calendarApi.changeView(newView);
+                calendarApi.today();
+            }
+        }
+    };
+
+    const formatDateRange = (startStr: Date, endStr: Date) => {
+        const locale = 'fr-FR';
+        const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short' };
+        const start = new Date(startStr);
+        const end = new Date(endStr);
+        end.setDate(end.getDate() - 1);
+        return `${start.toLocaleDateString(locale, options)} – ${end.toLocaleDateString(locale, options)} ${end.getFullYear()}`;
+    };
+
+      useEffect(() => {
+        const handleResize = () => {
+          const isMobile = window.innerWidth < 768;
+          setViewMode(isMobile ? 'timeGridDay' : 'timeGridWeek');
+          const calendarApi = calendarRef.current?.getApi();
+          if (calendarApi) {
+            calendarApi.changeView(isMobile ? 'timeGridDay' : 'timeGridWeek');
+          }
+        };
+      
+        handleResize();
+      
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+      }, []);
+
+    useEffect(() => {
+    if (workSessions) {
+        const transformedEvents: WorkSessionEvent[] = workSessions.map((workSession) => ({
+        id: workSession.id.toString(),
+        title: 'Session de travail',
+        start: toParisISOString(workSession.startTime),
+        end: toParisISOString(workSession.endTime || new Date().toISOString()),
+        }));
+        setEvents(transformedEvents);
+    }
+    }, [workSessions]);
+
+
+    return (
+        <div>
+            <div className={styles.detachedHeader}>
+                <div className={styles.leftSection}>
+                    <MuiIconButton size="small" onClick={handlePrev}>
+                        <ChevronLeftIcon />
+                    </MuiIconButton>
+
+                    <MuiIconButton size="small" onClick={handleNext}>
+                        <ChevronRightIcon />
+                    </MuiIconButton>
+
+                    <ToggleButtonGroup
+                        value={viewMode}
+                        exclusive
+                        onChange={handleViewChange}
+                        size="small"
+                        className={styles.toggleGroup}
+                    >
+                        <ToggleButton value="timeGridDay" className={styles.toggleButton}>
+                            Jour
+                        </ToggleButton>
+                        <ToggleButton value="timeGridWeek" className={styles.toggleButton}>
+                            Semaine
+                        </ToggleButton>
+                    </ToggleButtonGroup>
+                </div>
+
+                <p className={styles.dateRange}>{dateRange}</p>
+
+                <div>
+                    <div className={styles.rightSection}>
+                        {
+                            tokenData?.isAdmin && (
+                                <>
+                                    <FormControl className={styles.employeeForm} size="small">
+                                        <InputLabel id="employee-select-label">Choix des employé(e)s</InputLabel>
+                                        <Select
+                                            labelId="employee-select-label"
+                                            id="employee-select"
+                                            value={selectedEmployee}
+                                            label="Choix des employé(e)s"
+                                            onChange={(value: SelectChangeEvent) => setSelectedEmployee(value.target.value)}
+                                        >
+                                            {
+                        employeeData?.map((employee) => (
+                          <MenuItem value={employee.id}>{employee.firstName}</MenuItem>
+                        ))
+                      }
+                                        </Select>
+                                    </FormControl>
+
+                                    <IconButton
+                                        text="Enregistrer une session de travail"
+                                        variant="filled"
+                                        isRounded={false}
+                                        startIcon={<AddIcon />}
+                                    // onClick={() => setOpenDialog(true)}
+                                    />
+                                </>
+                            )
+                        }
+                    </div>
+                </div>
+            </div>
+            <FullCalendar
+                ref={calendarRef}
+                headerToolbar={{
+                    left: '',
+                    center: '',
+                    right: ''
+                }}
+                plugins={[timeGridPlugin, interactionPlugin]}
+                eventStartEditable={false}
+                eventDurationEditable={false}
+                initialView={viewMode}
+                events={events}
+                editable={true}
+                selectable={tokenData?.isAdmin || false}
+                // select={handleDateSelect}
+                nowIndicator={true}
+                slotMinTime="08:00:00"
+                timeZone="Europe/Paris"
+                slotMaxTime="20:00:00"
+                height="auto"
+                locale={frLocale}
+                datesSet={(arg) => {
+                    setDateRange(formatDateRange(arg.start, arg.end));
+                    setCalendarStartDate(arg.start.toISOString());
+                    setCalendarEndDate(arg.end.toISOString());
+                }}
+            />
+        </div>
+    )
+}
+
+export default TimePointingCalendar;

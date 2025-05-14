@@ -1,0 +1,112 @@
+@use "./../../app/styles/themes.scss" as *;
+@use "./../../app/styles/colors.scss" as *;
+
+.calendarContainer {
+  background-color: white;
+
+  .fc {
+    background-color: white;
+  }
+
+  .missionEvent {
+    padding: 0 5px;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.missionsType {
+  background-color: white;
+  padding: 15px;
+  border-radius: 15px;
+
+  .missionsTypeList {
+    display: flex;
+    gap: 15px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+  }
+}
+
+.detachedHeader {
+  display: flex;
+  width: 100%;
+  background-color: white;
+  border-radius: 15px;
+  margin: 20px 0;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  box-sizing: border-box;
+  flex-wrap: wrap;
+
+  .leftSection {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .rightSection {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+
+    .employeeForm {
+      min-width: 180px;
+    }
+  }
+
+  .dateRange {
+    font-size: var(--font-size-h4);
+    color: $darkGray;
+    font-weight: var(--font-weight-medium);
+    justify-content: center;
+  }
+
+  @media (max-width: 900px) {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
+    .leftSection,
+    .rightSection {
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .dateRange {
+      width: 100%;
+      margin: 10px 0;
+    }
+  }
+
+  .toggleGroup {
+    background: none;
+    border: none;
+  
+    :global(.MuiToggleButton-root) {
+      text-transform: none;
+      border: none;
+      background: none;
+      color: $darkGray;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 6px;
+  
+      &:hover {
+        background-color: rgba(0, 0, 255, 0.04);
+      }
+  
+      &[aria-pressed="true"] {
+        background-color: $blue;
+        color: white;
+  
+        &:hover {
+          background-color: $lightBlue;
+        }
+      }
+    }
+  }
+}

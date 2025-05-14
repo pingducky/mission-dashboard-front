@@ -24,6 +24,7 @@ import PlanningPage from "../PlanningPage/PlanningPage";
 import CreateEmployeePage from "../Employee/CreateEmployeePage/CreateEmployeePage";
 import AddSessionDrawer from "../../components/AddSessionDrawer/AddSessionDrawer";
 import styles from "./ParentPage.module.scss";
+import TimePointingCalendar from "../TimePointingCalendar/TimePointingCalendar";
 
 type BreadcrumbItem = {
   label: string;
@@ -132,7 +133,7 @@ const ParentPage: React.FC = () => {
       case "planning":
         return <PlanningPage/>
       case "pointage":
-        return <AddSessionDrawer />;
+        return <TimePointingCalendar/>
       case "salarie":
         return <EmployeesPage
           handleNavigation={handleNavigation}
