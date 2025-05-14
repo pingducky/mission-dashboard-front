@@ -193,12 +193,20 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
   );
 
   // Préparer les paramètres en dehors de l'effet
-const missionQueryParams = useMemo(() => ({
-  accountId: tokenData.id,
-  from: calendarStartDate ?? defaultFrom,
-  to: calendarEndDate ?? defaultTo,
-}), [selectedEmployee, calendarStartDate, calendarEndDate, defaultFrom, defaultTo]);
-
+  const missionQueryParams = useMemo(
+    () => ({
+      accountId: tokenData.id,
+      from: calendarStartDate ?? defaultFrom,
+      to: calendarEndDate ?? defaultTo,
+    }),
+    [
+      selectedEmployee,
+      calendarStartDate,
+      calendarEndDate,
+      defaultFrom,
+      defaultTo,
+    ]
+  );
 
   const { data: missions } = useGetMissionsByAccount(missionQueryParams);
 
@@ -403,23 +411,29 @@ const missionQueryParams = useMemo(() => ({
             <p>Vous pouvez sélectionnés une mission qui vous est attribué</p>
             <hr />
           </div>
-          {!interventionDate ? (
-            <p>Veuillez choisir une date d'intervention.</p>
-          ) : missions && missions.length > 0 ? (
-            <Select
-              value={selectedMissions}
-              onChange={handleMissionChange}
-              fullWidth
-            >
-              {missions.map((mission) => (
-                <MenuItem key={mission.id} value={mission.id}>
-                  {mission.description} - {mission.timeBegin}
-                </MenuItem>
-              ))}
-            </Select>
+          {interventionDate && startTime && endTime ? (
+            missions && missions.length > 0 ? (
+              <Select
+                value={selectedMissions}
+                onChange={handleMissionChange}
+                fullWidth
+              >
+                {missions.map((mission) => (
+                  <MenuItem key={mission.id} value={mission.id}>
+                    {mission.description} - {mission.timeBegin}
+                  </MenuItem>
+                ))}
+              </Select>
+            ) : (
+              <p>Aucune mission vous est attribuée ce jour.</p>
+            )
           ) : (
-            <p>Aucune mission vous est attribuée ce jour.</p>
+            <p>
+              Veuillez choisir la date et les heures de début et de fin
+              d'intervention.
+            </p>
           )}
+
           {/* {!interventionDate ? (
             <p>Veuillez choisir une date d'intervention.</p>
           ) : missions?.length === 0 ? (
