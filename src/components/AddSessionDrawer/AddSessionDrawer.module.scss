@@ -7,7 +7,7 @@
     padding: 24px;
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 30px;
 
     .section {
         display: flex;
@@ -21,6 +21,11 @@
 
             p {
                 color: $darkGray;
+
+                &.textWarning {
+                    font-style: italic;
+                    color: $pink;
+                }
             }
 
             hr {
@@ -40,7 +45,7 @@
         .pauseRow {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            gap: 10px;
 
             .btnDeletePause {
                 width: 50px;

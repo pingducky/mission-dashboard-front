@@ -122,5 +122,7 @@ export const useGetMissionsByAccount = (params: Params, enabled = true) => {
         queryKey: ["missions", params],
         queryFn: () => getMissionsByAccount(params),
         enabled,
+        refetchOnWindowFocus: false, // Pour éviter les requêtes intempestives
+        staleTime: 1000 * 60 * 5,   // 5 minutes pour limiter les recharges
     });
 };

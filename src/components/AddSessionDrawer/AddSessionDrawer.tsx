@@ -1,26 +1,14 @@
 import React, { useEffect, useState } from "react";
-import {
-  Drawer,
-  TextField,
-  Select,
-  MenuItem,
-  InputLabel,
-  FormControl,
-  OutlinedInput,
-  Checkbox,
-  ListItemText,
-  Button,
-} from "@mui/material";
+import { Drawer, TextField, Select, MenuItem } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material";
-// import { MissionType } from '../../hooks/useGetMissionTypes';
-// import MissionTypeColor from '../../pages/PlanningPage/MissionType/MissionType';
-// import { CreateMissionPayload } from '../../hooks/useCreateMission';
-// import { enqueueSnackbar } from '../../utils/snackbarUtils';
 import IconButton from "../layout/IconButton/IconButton";
 import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
 import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
-import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
+import { useGetMissionsByAccount } from "../../hooks/useGetMissionsByAccount";
+import { getUserDataFromToken } from "../../utils/auth";
+import { CreateSessionPayload } from "../../hooks/useCreateSession";
+import { enqueueSnackbar } from "../../utils/snackbarUtils";
 import styles from "./AddSessionDrawer.module.scss";
 
 interface AddSessionDrawerProps {
@@ -28,35 +16,43 @@ interface AddSessionDrawerProps {
    * Ouverture drawer
    */
   isOpen: boolean;
-  //   /**
-  //    * Liste des employées
-  //    */
-  //   employees?: Array<{
-  //     /**
-  //      * Id de l'employée
-  //      */
-  //     id: number,
-  //     /**
-  //      * Nom complet
-  //      */
-  //     fullName: string,
-  //   }>;
-  //   /**
-  //    * Date de début
-  //    */
-  //   startDate?: string;
-  //   /**
-  //    * Date de fin
-  //    */
-  //   endDate?: string;
-  //   /**
-  //    * Types de mission
-  //    */
-  //   missionTypes?: MissionType[];
-  //   /**
-  //    * Evènement à la création d'une mission
-  //    */
-  //   onCreate: (payload: CreateMissionPayload) => void;
+  /**
+   * Liste des missions
+   */
+  missions?: Array<{
+    /**
+     * Id de la mission
+     */
+    id: number;
+    /**
+     * Titre de la mission
+     */
+    title: string;
+    /**
+     * Date début de la mission
+     */
+    start: Date;
+    /**
+     * Date de fin estimée de la mission
+     */
+    end: Date;
+    /**
+     * Adresse postal de la mission
+     */
+    adresse: string;
+  }>;
+  /**
+   * Date de début
+   */
+  startDate?: string;
+  /**
+   * Date de fin
+   */
+  endDate?: string;
+  /**
+   * Evènement à la création d'une mission
+   */
+  onCreate: (payload: CreateSessionPayload) => void;
   /**
    * Evènement lors de la fermeture
    */
@@ -65,40 +61,168 @@ interface AddSessionDrawerProps {
 
 const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
   isOpen,
+  missions,
+  startDate,
+  endDate,
+  onCreate,
   onClose,
 }) => {
-  const [pauses, setPauses] = useState([]);
-  const [selectedMission, setSelectedMission] = useState("");
-  const [errors, setErrors] = React.useState<{ [key: string]: boolean }>({});
+  const [pauses, setPauses] = useState<
+    { start: string; end: string; error: boolean }[]
+  >([]);
+  const [selectedMissions, setSelectedMissions] = useState<string>("");
+  const [interventionDate, setInterventionDate] = useState<string>("");
+  const [startTime, setStartTime] = useState<string>(startDate || "");
+  const [endTime, setEndTime] = useState<string>(endDate || "");
 
-  const addPause = () => {
-    setPauses([...pauses, { start: "", end: "" }]);
+  const [errors, setErrors] = useState<{ [key: string]: boolean }>({});
+
+  // Effect Hook pour réinitialiser les erreurs
+  useEffect(() => {
+    if (isOpen) setErrors({});
+  }, [isOpen]);
+
+  // // Effet pour la mise à jour des heures de début et de fin
+  useEffect(() => setStartTime(startDate || ""), [startDate]);
+  useEffect(() => setEndTime(endDate || ""), [endDate]);
+
+  useEffect(() => setStartTime(startDate || ""), [startDate]);
+  useEffect(() => setEndTime(endDate || ""), [endDate]);
+
+
+  const validateFields = () => {
+    const newErrors: { [key: string]: boolean } = {
+      startTime: !startTime,
+      endTime: !endTime,
+      pauses: !pauses,
+      missions: selectedMissions.length === 0,
+    };
+    setErrors(newErrors);
+    return Object.values(newErrors).every((error) => !error);
   };
 
-  const removePause = (index) => {
-    setPauses(pauses.filter((_, i) => i !== index));
+  const toISOStringWithTimezone = (date: string, time: string) => {
+    return new Date(`${date}T${time}`).toISOString();
   };
 
-  const handlePauseChange = (index, field, value) => {
-    const updatedPauses = [...pauses];
-    updatedPauses[index][field] = value;
-    setPauses(updatedPauses);
-  };
+  const handleDateChange = (value: string) => setInterventionDate(value);
+  const handleStartTimeChange = (value: string) => setStartTime(value);
+  const handleEndTimeChange = (value: string) => setEndTime(value);
 
-  const handleMissionChange = (event) => {
-    setSelectedMission(event.target.value);
+  const handleCreate = () => {
+    if (!validateFields()) {
+      enqueueSnackbar(
+        "Veuillez remplir tous les champs obligatoires.",
+        "error"
+      );
+      return;
+    }
+
+    // Récupération de l'idAccount depuis le token
+    const tokenData = getUserDataFromToken();
+    if (!tokenData?.id) {
+      enqueueSnackbar("Erreur : identifiant de compte manquant.");
+      return;
+    }
+
+    const isoStartDate = toISOStringWithTimezone(interventionDate, startTime);
+    const isoEndDate = toISOStringWithTimezone(interventionDate, endTime);
+
+    const payload: CreateSessionPayload = {
+      idAccount: Number(tokenData.id),
+      idMission: Number(selectedMissions),
+      startTime: isoStartDate,
+      endTime: isoEndDate,
+      status,
+      pauses: [],
+    };
+
+    onCreate(payload);
+
+    setInterventionDate("");
+    setStartTime("");
+    setEndTime("");
+    setSelectedMissions("");
+    setErrors({});
   };
 
   const handleCancel = () => {
     setPauses([]);
-    setSelectedMission("");
+    setSelectedMissions("");
+    setStartTime("");
+    setEndTime("");
     onClose();
   };
-  useEffect(() => {
-    if (isOpen) {
-      setErrors({});
-    }
-  }, [isOpen]);
+
+  const addPause = () => {
+    if (!startTime || !endTime) return;
+    setPauses([...pauses, { start: "", end: "", error: false }]);
+  };
+
+  const removePause = (index: number) => {
+    setPauses(pauses.filter((_, i) => i !== index));
+  };
+
+  const handlePauseChange = (index: number, field: string, value: string) => {
+    const updatedPauses = [...pauses];
+    updatedPauses[index][field] = value;
+
+    const start = new Date(`${interventionDate}T${updatedPauses[index].start}`);
+    const end = new Date(`${interventionDate}T${updatedPauses[index].end}`);
+    const sessionStart = new Date(`${interventionDate}T${startTime}`);
+    const sessionEnd = new Date(`${interventionDate}T${endTime}`);
+
+    const isInvalid = start < sessionStart || end > sessionEnd || start >= end;
+    updatedPauses[index].error = isInvalid;
+
+    setPauses(updatedPauses);
+  };
+
+  // const handleMissionChange = (event: SelectChangeEvent<string[]>) => {
+  //   setSelectedMissions(event.target.value as string[]);
+  // };
+
+  // const tokenData = getUserDataFromToken();
+  // const getWeekRange = (date: Date) => {
+  //   const day = date.getDay();
+  //   const diffToMonday = (day === 0 ? -6 : 1) - day;
+  //   const monday = new Date(date);
+  //   monday.setDate(date.getDate() + diffToMonday);
+  //   const sunday = new Date(monday);
+  //   sunday.setDate(monday.getDate() + 6);
+  //   return {
+  //     monday: monday.toISOString(),
+  //     sunday: sunday.toISOString(),
+  //   };
+  // };
+  // const today = new Date();
+  // const calculateDateRange = (viewMode: string, date: Date) => {
+  //   const todayISO = date.toISOString();
+  //   if (viewMode === "timeGridDay") {
+  //     return {
+  //       from: todayISO,
+  //       to: new Date(date.getTime() + 24 * 60 * 60 * 1000).toISOString(),
+  //     };
+  //   } else {
+  //     const weekRange = getWeekRange(date);
+  //     return {
+  //       from: weekRange.monday,
+  //       to: weekRange.sunday,
+  //     };
+  //   }
+  // };
+  // // const { from, to } = calculateDateRange(viewMode, today);
+  // // // Chargement des missions
+  // // const { data: missions } = useGetMissionsByAccount(
+  // //   {
+  // //     accountId: tokenData!.id,
+  // //     from: from,
+  // //     to: to,
+  // //   },
+  // //   Boolean(interventionDate) // Ne fait la requête que si la date est définie
+  // // );
+
+  //   setSelectedMission(event.target.value);
 
   return (
     <Drawer anchor="right" open={isOpen} onClose={onClose}>
@@ -117,23 +241,48 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
 
           <div className={styles.row}>
             <TextField
+              label="Date d'intervention"
+              type="date"
+              fullWidth
+              value={interventionDate}
+              onChange={(e) => handleDateChange(e.target.value)}
+              InputLabelProps={{ shrink: true }}
+              error={errors.start}
+            />
+            <TextField
+              label="Heure de début"
+              type="time"
+              fullWidth
+              value={startTime}
+              onChange={(e) => handleStartTimeChange(e.target.value)}
+              InputLabelProps={{ shrink: true }}
+            />
+            <TextField
+              label="Heure de fin"
+              type="time"
+              fullWidth
+              value={endTime}
+              onChange={(e) => handleEndTimeChange(e.target.value)}
+              InputLabelProps={{ shrink: true }}
+            />
+            {/* <TextField
               label="Date de début"
               type="datetime-local"
               fullWidth
-              //   value={start}
-              //   onChange={(e) => setStart(e.target.value)}
+              value={startTime}
+              onChange={(e) => setStartTime(e.target.value)}
               InputLabelProps={{ shrink: true }}
-              error={errors.start}
+              error={errors.startTime}
             />
             <TextField
               label="Date de fin estimé"
               type="datetime-local"
               fullWidth
-              //   value={end}
-              //   onChange={(e) => setEnd(e.target.value)}
+              value={endTime}
+              onChange={(e) => setEndTime(e.target.value)}
               InputLabelProps={{ shrink: true }}
-              error={errors.end}
-            />
+              error={errors.endTime}
+            /> */}
           </div>
         </section>
 
@@ -142,6 +291,9 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
             <h3>Gestion des pauses</h3>
             <p>
               Vous pouvez ajouter les pauses pendant votre session de travail
+            </p>
+            <p className={styles.textWarning}>
+              Les pauses ajoutés seront soustraits de vos heures de travail
             </p>
             <hr />
           </div>
@@ -152,13 +304,21 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
             isRounded={false}
             startIcon={<AddOutlinedIcon />}
             onClick={addPause}
+            isDisabled={!startTime && !endTime}
           />
           {pauses.map((pause, index) => (
             <div key={index} className={styles.pauseRow}>
               <TextField
                 label="Début pause"
-                type="datetime-local"
+                type="time"
+                fullWidth
                 value={pause.start}
+                error={pause.error}
+                helperText={
+                  pause.error
+                    ? "L'heure de pause n'est pas comprise dans la date d'intervention"
+                    : ""
+                }
                 InputLabelProps={{ shrink: true }}
                 onChange={(e) =>
                   handlePauseChange(index, "start", e.target.value)
@@ -166,8 +326,15 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
               />
               <TextField
                 label="Fin pause"
-                type="datetime-local"
+                type="time"
+                fullWidth
                 value={pause.end}
+                error={pause.error}
+                helperText={
+                  pause.error
+                    ? "L'heure de pause n'est pas comprise dans la date d'intervention"
+                    : ""
+                }
                 InputLabelProps={{ shrink: true }}
                 onChange={(e) =>
                   handlePauseChange(index, "end", e.target.value)
@@ -186,7 +353,7 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
           ))}
         </section>
 
-        <section className={styles.section}>
+        {/* <section className={styles.section}>
           <div className={styles.sectionTitle}>
             <h3>Commentaires supplémentaires</h3>
             <p>
@@ -196,15 +363,15 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
             <hr />
           </div>
           <TextField
-            label="Détails"
+            label="Commentaires"
             multiline
             minRows={5}
             fullWidth
-            // value={details}
+            value={details}
             // onChange={(e) => setDetails(e.target.value)}
-            placeholder="Ajoutez les commentaires ici..."
+            placeholder="Ajoutez des commentaires ici..."
           />
-        </section>
+        </section> */}
 
         <section className={styles.section}>
           <div className={styles.sectionTitle}>
@@ -212,15 +379,52 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
             <p>Vous pouvez sélectionnés une mission qui vous est attribué</p>
             <hr />
           </div>
+          {/* {!interventionDate ? (
+            <p>Veuillez choisir une date d'intervention.</p>
+          ) : missions && missions.length > 0 ? (
+            <Select
+              value={selectedMission}
+              onChange={handleMissionChange}
+              fullWidth
+            >
+              {missions.map((mission) => (
+                <MenuItem key={mission.id} value={mission.id}>
+                  {mission.description} - {mission.timeBegin}
+                </MenuItem>
+              ))}
+            </Select>
+          ) : (
+            <p>Aucune mission vous est attribuée ce jour.</p>
+          )} */}
+          {/* {!interventionDate ? (
+            <p>Veuillez choisir une date d'intervention.</p>
+          ) : missions?.length === 0 ? (
+            <p>Aucune mission vous est attribuée ce jour.</p>
+          ) : (
+            <Select
+              value={selectedMission}
+              onChange={handleMissionChange}
+              fullWidth
+            >
+              {missions?.map((mission) => (
+                <MenuItem key={mission.id} value={mission.id}>
+                  {mission.description} - {mission.timeBegin}
+                </MenuItem>
+              ))}
+            </Select>
+          )} */}
+          {/*
           <Select
             value={selectedMission}
             onChange={handleMissionChange}
             fullWidth
           >
-            <MenuItem value="mission1">Mission 1</MenuItem>
-            <MenuItem value="mission2">Mission 2</MenuItem>
-            <MenuItem value="mission3">Mission 3</MenuItem>
-          </Select>
+            {missions?.map((mission) => (
+              <MenuItem key={mission.id} value={mission.id}>
+                {mission.description} - {mission.timeBegin}
+              </MenuItem>
+            ))}
+          </Select>*/}
         </section>
 
         <div className={styles.btnContainer}>
@@ -238,7 +442,8 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
             color="darkblue"
             isRounded={false}
             startIcon={<CheckOutlinedIcon />}
-            // onClick={() => setOpenDialog(true)}
+            onClick={handleCreate}
+            // isDisabled={isLoading}
           />
         </div>
       </div>
