@@ -143,10 +143,6 @@ const PlanningPage: React.FC = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const handleEmployeeChange = (event: SelectChangeEvent) => {
-    setSelectedEmployee(event.target.value);
-  };
-
   const formatDateRange = (startStr: Date, endStr: Date) => {
     const locale = 'fr-FR';
     const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short' };

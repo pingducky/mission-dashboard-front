@@ -22,8 +22,6 @@ export const getWeekRange = (date: Date) => {
   };
 };
 
-export const toParisISOString = (utcDateString : string | undefined) => {
-  if (!utcDateString) return '';
-  const date = new Date(utcDateString);
-  return date.toLocaleString('sv-SE', { timeZone: 'Europe/Paris' }).replace(' ', 'T');
+export const toParisISOString = (date : string | Date) => {
+  return new Date(date).toISOString()
 };

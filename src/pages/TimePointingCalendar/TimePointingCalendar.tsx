@@ -41,9 +41,9 @@ const TimePointingCalendar: React.FC = () => {
     const [calendarStartDate, setCalendarStartDate] = useState<string | null>(null);
     const [calendarEndDate, setCalendarEndDate] = useState<string | null>(null);
     const [selectedEmployee, setSelectedEmployee] = useState<string>('');
+    const [events, setEvents] = useState<WorkSessionEvent[]>([]);
     const calendarRef = useRef<FullCalendar | null>(null);
     const tokenData = getUserDataFromToken();
-    const [events, setEvents] = useState<WorkSessionEvent[]>([]);
     const today = new Date();
 
     const { data: employeeData } = useListEmployee('all');
@@ -129,7 +129,6 @@ const TimePointingCalendar: React.FC = () => {
         }));
         setEvents(transformedEvents);
     }
-    console.debug("workSessions ", workSessions)
     }, [workSessions]);
 
 
