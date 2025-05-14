@@ -21,6 +21,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useListEmployee } from '../../hooks/useGetAllEmployees';
 import styles from './PlanningPage.module.scss';
 import AddSessionDrawer from '../../components/AddSessionDrawer/AddSessionDrawer';
+import { CreateSessionPayload } from '../../hooks/useCreateSession';
 
 interface MissionEvent extends EventInput {
     /**
@@ -107,6 +108,23 @@ const PlanningPage: React.FC = () => {
   const queryClient = useQueryClient();
 
   const handleCreateMission = async (payload: CreateMissionPayload) => {
+    try {
+      await createMissionMutation.mutateAsync(payload);
+      enqueueSnackbar('Mission créée avec succès', 'success');
+      queryClient.invalidateQueries({
+        queryKey: ['missions', missionQueryParams],
+      });
+      setOpenDialog(false);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        enqueueSnackbar(error.message, 'error');
+      } else {
+        enqueueSnackbar('Erreur lors de la création de la mission', 'error');
+      }
+    }
+  };
+
+  const handleCreateSession = async (payload: CreateMissionPayload) => {
     try {
       await createMissionMutation.mutateAsync(payload);
       enqueueSnackbar('Mission créée avec succès', 'success');
@@ -370,18 +388,12 @@ const PlanningPage: React.FC = () => {
       /> */}
 
       <AddSessionDrawer
-        missions={missions?.map((mission) => ({
-          id: mission.id.toString(),
-          title: mission.missionType?.longLibel || "Mission",
-          start: toParisISOString(mission.timeBegin),
-          end: toParisISOString(mission.estimatedEnd),
-          adresse: mission.address,
-        }))}
         isOpen={openDialog}
         onClose={() => setOpenDialog(false)}
         startDate={newEvent.start}
-        endDate={newEvent.end}
-      />
+        endDate={newEvent.end} 
+        onCreate={handleCreateSession}
+        />
     </div>
   );
 };

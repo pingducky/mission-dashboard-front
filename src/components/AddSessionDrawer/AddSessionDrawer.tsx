@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Drawer, TextField, Select, MenuItem } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material";
 import IconButton from "../layout/IconButton/IconButton";
@@ -16,31 +16,6 @@ interface AddSessionDrawerProps {
    * Ouverture drawer
    */
   isOpen: boolean;
-  /**
-   * Liste des missions
-   */
-  missions?: Array<{
-    /**
-     * Id de la mission
-     */
-    id: number;
-    /**
-     * Titre de la mission
-     */
-    title: string;
-    /**
-     * Date début de la mission
-     */
-    start: Date;
-    /**
-     * Date de fin estimée de la mission
-     */
-    end: Date;
-    /**
-     * Adresse postal de la mission
-     */
-    adresse: string;
-  }>;
   /**
    * Date de début
    */
@@ -61,7 +36,6 @@ interface AddSessionDrawerProps {
 
 const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
   isOpen,
-  missions,
   startDate,
   endDate,
   onCreate,
@@ -70,7 +44,9 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
   const [pauses, setPauses] = useState<
     { start: string; end: string; error: boolean }[]
   >([]);
-  const [selectedMissions, setSelectedMissions] = useState<string>("");
+  // const [selectedMissions, setSelectedMissions] = useState<string>("");
+  const [selectedMissions, setSelectedMissions] = useState<string[]>([]);
+
   const [interventionDate, setInterventionDate] = useState<string>("");
   const [startTime, setStartTime] = useState<string>(startDate || "");
   const [endTime, setEndTime] = useState<string>(endDate || "");
@@ -88,7 +64,6 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
 
   useEffect(() => setStartTime(startDate || ""), [startDate]);
   useEffect(() => setEndTime(endDate || ""), [endDate]);
-
 
   const validateFields = () => {
     const newErrors: { [key: string]: boolean } = {
@@ -108,8 +83,9 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
   const handleDateChange = (value: string) => setInterventionDate(value);
   const handleStartTimeChange = (value: string) => setStartTime(value);
   const handleEndTimeChange = (value: string) => setEndTime(value);
-
-  const handleCreate = () => {
+  // Récupération de l'idAccount depuis le token
+  const tokenData = getUserDataFromToken();
+  const handleCreate = (tokenData) => {
     if (!validateFields()) {
       enqueueSnackbar(
         "Veuillez remplir tous les champs obligatoires.",
@@ -118,8 +94,6 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
       return;
     }
 
-    // Récupération de l'idAccount depuis le token
-    const tokenData = getUserDataFromToken();
     if (!tokenData?.id) {
       enqueueSnackbar("Erreur : identifiant de compte manquant.");
       return;
@@ -142,13 +116,14 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
     setInterventionDate("");
     setStartTime("");
     setEndTime("");
-    setSelectedMissions("");
+    setSelectedMissions([]);
     setErrors({});
   };
 
   const handleCancel = () => {
     setPauses([]);
-    setSelectedMissions("");
+    setSelectedMissions([]);
+    setInterventionDate("");
     setStartTime("");
     setEndTime("");
     onClose();
@@ -178,9 +153,58 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
     setPauses(updatedPauses);
   };
 
-  // const handleMissionChange = (event: SelectChangeEvent<string[]>) => {
-  //   setSelectedMissions(event.target.value as string[]);
-  // };
+  // MISSIONS
+  const [viewMode, setViewMode] = useState<"timeGridDay" | "timeGridWeek">(
+    "timeGridWeek"
+  );
+  const [selectedEmployee, setSelectedEmployee] = useState<string>("");
+  const [calendarStartDate, setCalendarStartDate] = useState<string | null>(
+    null
+  );
+  const [calendarEndDate, setCalendarEndDate] = useState<string | null>(null);
+
+  const getWeekRange = (date: Date) => {
+    const day = date.getDay();
+    const diffToMonday = (day === 0 ? -6 : 1) - day;
+    const monday = new Date(date);
+    monday.setDate(date.getDate() + diffToMonday);
+    const sunday = new Date(monday);
+    sunday.setDate(monday.getDate() + 6);
+    return {
+      monday: monday.toISOString(),
+      sunday: sunday.toISOString(),
+    };
+  };
+  const today = useMemo(() => new Date(), []);
+  const defaultFrom = useMemo(
+    () =>
+      viewMode === "timeGridDay"
+        ? today.toISOString()
+        : getWeekRange(today).monday,
+    [viewMode, today]
+  );
+
+  const defaultTo = useMemo(
+    () =>
+      viewMode === "timeGridDay"
+        ? new Date(today.getTime() + 24 * 60 * 60 * 1000).toISOString()
+        : getWeekRange(today).sunday,
+    [viewMode, today]
+  );
+
+  // Préparer les paramètres en dehors de l'effet
+const missionQueryParams = useMemo(() => ({
+  accountId: tokenData.id,
+  from: calendarStartDate ?? defaultFrom,
+  to: calendarEndDate ?? defaultTo,
+}), [selectedEmployee, calendarStartDate, calendarEndDate, defaultFrom, defaultTo]);
+
+
+  const { data: missions } = useGetMissionsByAccount(missionQueryParams);
+
+  const handleMissionChange = (event: SelectChangeEvent<string[]>) => {
+    setSelectedMissions(event.target.value as string[]);
+  };
 
   // const tokenData = getUserDataFromToken();
   // const getWeekRange = (date: Date) => {
@@ -379,11 +403,11 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
             <p>Vous pouvez sélectionnés une mission qui vous est attribué</p>
             <hr />
           </div>
-          {/* {!interventionDate ? (
+          {!interventionDate ? (
             <p>Veuillez choisir une date d'intervention.</p>
           ) : missions && missions.length > 0 ? (
             <Select
-              value={selectedMission}
+              value={selectedMissions}
               onChange={handleMissionChange}
               fullWidth
             >
@@ -395,7 +419,7 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
             </Select>
           ) : (
             <p>Aucune mission vous est attribuée ce jour.</p>
-          )} */}
+          )}
           {/* {!interventionDate ? (
             <p>Veuillez choisir une date d'intervention.</p>
           ) : missions?.length === 0 ? (
@@ -413,9 +437,9 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
               ))}
             </Select>
           )} */}
-          {/*
-          <Select
-            value={selectedMission}
+
+          {/* <Select
+            value={selectedMissions}
             onChange={handleMissionChange}
             fullWidth
           >
@@ -424,7 +448,7 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
                 {mission.description} - {mission.timeBegin}
               </MenuItem>
             ))}
-          </Select>*/}
+          </Select> */}
         </section>
 
         <div className={styles.btnContainer}>
