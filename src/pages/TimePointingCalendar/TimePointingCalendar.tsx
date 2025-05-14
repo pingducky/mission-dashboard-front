@@ -125,9 +125,11 @@ const TimePointingCalendar: React.FC = () => {
         title: 'Session de travail',
         start: toParisISOString(workSession.startTime),
         end: toParisISOString(workSession.endTime || new Date().toISOString()),
+        isOngoing: !workSession.endTime
         }));
         setEvents(transformedEvents);
     }
+    console.debug("workSessions ", workSessions)
     }, [workSessions]);
 
 
@@ -196,33 +198,46 @@ const TimePointingCalendar: React.FC = () => {
                     </div>
                 </div>
             </div>
-            <FullCalendar
-                ref={calendarRef}
-                headerToolbar={{
-                    left: '',
-                    center: '',
-                    right: ''
-                }}
-                plugins={[timeGridPlugin, interactionPlugin]}
-                eventStartEditable={false}
-                eventDurationEditable={false}
-                initialView={viewMode}
-                events={events}
-                editable={true}
-                selectable={tokenData?.isAdmin || false}
-                // select={handleDateSelect}
-                nowIndicator={true}
-                slotMinTime="08:00:00"
-                timeZone="Europe/Paris"
-                slotMaxTime="20:00:00"
-                height="auto"
-                locale={frLocale}
-                datesSet={(arg) => {
-                    setDateRange(formatDateRange(arg.start, arg.end));
-                    setCalendarStartDate(arg.start.toISOString());
-                    setCalendarEndDate(arg.end.toISOString());
-                }}
-            />
+            <div className={styles.calendarContainer}>
+                <FullCalendar
+                    ref={calendarRef}
+                    headerToolbar={{
+                        left: '',
+                        center: '',
+                        right: ''
+                    }}
+                    plugins={[timeGridPlugin, interactionPlugin]}
+                    eventStartEditable={false}
+                    eventDurationEditable={false}
+                    initialView={viewMode}
+                    events={events}
+                    editable={true}
+                    selectable={tokenData?.isAdmin || false}
+                    // select={handleDateSelect}
+                    nowIndicator={true}
+                    slotMinTime="08:00:00"
+                    timeZone="Europe/Paris"
+                    slotMaxTime="20:00:00"
+                    height="auto"
+                    locale={frLocale}
+                    datesSet={(arg) => {
+                        setDateRange(formatDateRange(arg.start, arg.end));
+                        setCalendarStartDate(arg.start.toISOString());
+                        setCalendarEndDate(arg.end.toISOString());
+                    }}
+                    eventContent={(eventInfo) => {
+                        const isOngoing = eventInfo.event.extendedProps.isOngoing;
+                        return (
+                            <div className={styles.workEvent}>
+                                <b>{eventInfo.timeText}</b>
+                                <span>
+                                    {isOngoing ? "Session de travail en cours" : "Session de travail Terminée"}
+                                </span>
+                            </div>
+                        );
+                    }}
+                />
+            </div>
         </div>
     )
 }
