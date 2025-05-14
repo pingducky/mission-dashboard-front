@@ -16,6 +16,7 @@ import { MissionType } from '../../hooks/useGetMissionTypes';
 import MissionTypeColor from '../../pages/PlanningPage/MissionType/MissionType';
 import { CreateMissionPayload } from '../../hooks/useCreateMission';
 import { enqueueSnackbar } from '../../utils/snackbarUtils';
+import { EventImpl } from '@fullcalendar/core/internal';
 import styles from './AddMissionDrawer.module.scss';
 
 interface AddMissionDrawerProps {
@@ -56,6 +57,10 @@ interface AddMissionDrawerProps {
    * Evènement lors de la fermeture
    */
   onClose: () => void;
+  /**
+   * Lectur seul
+   */
+  mission: EventImpl|null;
 }
 
 const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
@@ -65,7 +70,8 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
   endDate,
   missionTypes,
   onCreate,
-  onClose
+  onClose,
+  mission = null,
 }) => {
   const [selectedEmployees, setSelectedEmployees] = React.useState<string[]>([]);
   const [selectedMissionType, setSelectedMissionType] = React.useState<number | "">("");
@@ -189,6 +195,14 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
     setErrors({});
   };
 
+  const handleValidationSection = (mission: boolean) => !mission && (
+    <div className={styles.formValidationSection}>
+      <Button variant="contained" color="primary" onClick={handleCreate}>
+        Créer
+      </Button>
+    </div>
+  );
+
   return (
     <Drawer anchor="right" open={isOpen} onClose={onClose}>
       <div className={styles.drawerContent}>
@@ -201,19 +215,21 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
               label="Date de début"
               type="datetime-local"
               fullWidth
-              value={start}
+              value={!mission ? start : new Date((mission.start ?? '')).toISOString().slice(0, 16)}
               onChange={(e) => setStart(e.target.value)}
               InputLabelProps={{ shrink: true }}
               error={errors.start}
+              disabled={!!mission}
             />
             <TextField
               label="Date de fin estimé"
               type="datetime-local"
               fullWidth
-              value={end}
+              value={!mission ? end : new Date((mission.end ?? '')).toISOString().slice(0, 16)}
               onChange={(e) => setEnd(e.target.value)}
               InputLabelProps={{ shrink: true }}
               error={errors.end}
+              disabled={!!mission}
             />
           </div>
 
@@ -222,9 +238,10 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
               <InputLabel id="mission-type-label">Type de mission</InputLabel>
               <Select
                 labelId="mission-type-label"
-                value={selectedMissionType}
+                value={!mission ? selectedMissionType : mission.extendedProps.categorie}
                 onChange={handleMissionTypeChange}
                 input={<OutlinedInput label="Type de mission" />}
+                disabled={!!mission}
               >
                 {missionTypes?.map((type) => (
                   <MenuItem key={type.id} value={type.id}>
@@ -245,6 +262,7 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
               value={companyName}
               onChange={(e) => setCompanyName(e.target.value)}
               error={errors.companyName}
+              disabled={!!mission}
             />
           </div>
           <div className={styles.row}>
@@ -254,6 +272,7 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               error={errors.email}
+              disabled={!!mission}
             />
             <TextField
               label="Numéro de l'entreprise"
@@ -261,22 +280,25 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               error={errors.phone}
+              disabled={!!mission}
             />
           </div>
           <div className={styles.row}>
             <TextField
               label="Adresse"
               fullWidth
-              value={address}
+              value={!mission ? address : mission.extendedProps.adresse}
               onChange={(e) => setAddress(e.target.value)}
               error={errors.address}
+              disabled={!!mission}
             />
             <TextField
               label="Ville"
               fullWidth
-              value={city}
+              value={!mission ? city : mission.extendedProps.city}
               onChange={(e) => setCity(e.target.value)}
               error={errors.city}
+              disabled={!!mission}
             />
           </div>
           <div className={styles.row}>
@@ -284,16 +306,18 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
               label="Code postal"
               type="number"
               fullWidth
-              value={postalCode}
+              value={!mission ? postalCode : mission.extendedProps.postalCode}
               onChange={(e) => setPostalCode(e.target.value)}
               error={errors.postalCode}
+              disabled={!!mission}
             />
             <Select
               labelId="country-select-label"
               id="country-select"
-              value={countryCode}
+              value={!mission ? countryCode : mission.extendedProps.countryCode}
               onChange={(e) => setCountryCode(e.target.value)}
               fullWidth
+              disabled={!!mission}
             >
               {countryList.map((country) => (
                 <MenuItem key={country.code} value={country.code}>
@@ -311,9 +335,10 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
             multiline
             minRows={5}
             fullWidth
-            value={details}
+            value={!mission ? details : mission.extendedProps.description}
             onChange={(e) => setDetails(e.target.value)}
             placeholder="Ajoutez des détails ici..."
+            disabled={!!mission}
           />
         </section>
 
@@ -323,7 +348,7 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
             <InputLabel>Salariés</InputLabel>
             <Select
               multiple
-              value={selectedEmployees}
+              value={!mission ? selectedEmployees : mission.extendedProps.employees}
               onChange={handleSelectChange}
               input={<OutlinedInput label="Salariés" />}
               renderValue={(selected) =>
@@ -332,6 +357,7 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
                   .map(emp => emp.fullName)
                   .join(', ')
               }
+              disabled={!!mission}
             >
               {employees?.map((employee) => (
                 <MenuItem key={employee.id} value={employee.id.toString()}>
@@ -343,11 +369,7 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
           </FormControl>
         </section>
 
-        <div className={styles.formValidationSection}>
-          <Button variant="contained" color="primary" onClick={handleCreate}>
-            Créer
-          </Button>
-        </div>
+        {handleValidationSection(!!mission)}
       </div>
     </Drawer>
   );
