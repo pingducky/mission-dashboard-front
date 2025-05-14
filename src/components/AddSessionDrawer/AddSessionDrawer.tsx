@@ -129,6 +129,8 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
     onClose();
   };
 
+  const pauseWarningMessage = "Veuillez sélectionner la date et les heures d'intervention pour ajouter une pause.";
+
   const addPause = () => {
     if (!startTime || !endTime) return;
     setPauses([...pauses, { start: "", end: "", error: false }]);
@@ -329,6 +331,11 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
             </p>
             <hr />
           </div>
+          {!(interventionDate && startTime && endTime) && (
+            <p className={styles.noDate}>
+              {pauseWarningMessage}
+            </p>
+          )}
           <IconButton
             text="Ajouter une pause"
             variant="filled"
@@ -336,7 +343,7 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
             isRounded={false}
             startIcon={<AddOutlinedIcon />}
             onClick={addPause}
-            isDisabled={!startTime && !endTime}
+            isDisabled={!(interventionDate && startTime && endTime)}
           />
           {pauses.map((pause, index) => (
             <div key={index} className={styles.pauseRow}>
@@ -428,41 +435,10 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
               <p>Aucune mission vous est attribuée ce jour.</p>
             )
           ) : (
-            <p>
-              Veuillez choisir la date et les heures de début et de fin
-              d'intervention.
+            <p className={styles.noDate}>
+              {pauseWarningMessage}
             </p>
           )}
-
-          {/* {!interventionDate ? (
-            <p>Veuillez choisir une date d'intervention.</p>
-          ) : missions?.length === 0 ? (
-            <p>Aucune mission vous est attribuée ce jour.</p>
-          ) : (
-            <Select
-              value={selectedMission}
-              onChange={handleMissionChange}
-              fullWidth
-            >
-              {missions?.map((mission) => (
-                <MenuItem key={mission.id} value={mission.id}>
-                  {mission.description} - {mission.timeBegin}
-                </MenuItem>
-              ))}
-            </Select>
-          )} */}
-
-          {/* <Select
-            value={selectedMissions}
-            onChange={handleMissionChange}
-            fullWidth
-          >
-            {missions?.map((mission) => (
-              <MenuItem key={mission.id} value={mission.id}>
-                {mission.description} - {mission.timeBegin}
-              </MenuItem>
-            ))}
-          </Select> */}
         </section>
 
         <div className={styles.btnContainer}>
@@ -481,7 +457,6 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
             isRounded={false}
             startIcon={<CheckOutlinedIcon />}
             onClick={handleCreate}
-            // isDisabled={isLoading}
           />
         </div>
       </div>

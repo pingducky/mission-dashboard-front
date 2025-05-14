@@ -52,6 +52,11 @@
                 height: 50px;
             }
         }
+
+        .noDate {
+            color: $red;
+            font-style: italic;
+        }
     }
 
     .btnContainer {
