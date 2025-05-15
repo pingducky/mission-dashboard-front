@@ -66,7 +66,7 @@ export type CreateSessionResponse = {
 };
 
 const createSession = async (data: CreateSessionPayload) => {
-  const res = await fetch(`${API_URL}/session`, {
+  const res = await fetch(`${API_URL}/workSession/manualSession`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

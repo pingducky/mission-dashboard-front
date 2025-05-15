@@ -19,9 +19,9 @@ import { enqueueSnackbar } from '../../utils/snackbarUtils';
 import { CreateMissionPayload, useCreateMission } from '../../hooks/useCreateMission';
 import { useQueryClient } from '@tanstack/react-query';
 import { useListEmployee } from '../../hooks/useGetAllEmployees';
-import styles from './PlanningPage.module.scss';
 import AddSessionDrawer from '../../components/AddSessionDrawer/AddSessionDrawer';
-import { CreateSessionPayload } from '../../hooks/useCreateSession';
+import styles from './PlanningPage.module.scss';
+
 
 interface MissionEvent extends EventInput {
     /**
@@ -108,23 +108,6 @@ const PlanningPage: React.FC = () => {
   const queryClient = useQueryClient();
 
   const handleCreateMission = async (payload: CreateMissionPayload) => {
-    try {
-      await createMissionMutation.mutateAsync(payload);
-      enqueueSnackbar('Mission créée avec succès', 'success');
-      queryClient.invalidateQueries({
-        queryKey: ['missions', missionQueryParams],
-      });
-      setOpenDialog(false);
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        enqueueSnackbar(error.message, 'error');
-      } else {
-        enqueueSnackbar('Erreur lors de la création de la mission', 'error');
-      }
-    }
-  };
-
-  const handleCreateSession = async (payload: CreateMissionPayload) => {
     try {
       await createMissionMutation.mutateAsync(payload);
       enqueueSnackbar('Mission créée avec succès', 'success');
@@ -391,8 +374,7 @@ const PlanningPage: React.FC = () => {
         isOpen={openDialog}
         onClose={() => setOpenDialog(false)}
         startDate={newEvent.start}
-        endDate={newEvent.end} 
-        onCreate={handleCreateSession}
+        endDate={newEvent.end}
         />
     </div>
   );

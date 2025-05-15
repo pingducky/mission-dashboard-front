@@ -7,7 +7,7 @@ import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import { useGetMissionsByAccount } from "../../hooks/useGetMissionsByAccount";
 import { getUserDataFromToken } from "../../utils/auth";
-import { CreateSessionPayload } from "../../hooks/useCreateSession";
+import { useCreateSession  } from "../../hooks/useCreateSession";
 import { enqueueSnackbar } from "../../utils/snackbarUtils";
 import styles from "./AddSessionDrawer.module.scss";
 
@@ -25,10 +25,6 @@ interface AddSessionDrawerProps {
    */
   endDate?: string;
   /**
-   * Evènement à la création d'une mission
-   */
-  onCreate: (payload: CreateSessionPayload) => void;
-  /**
    * Evènement lors de la fermeture
    */
   onClose: () => void;
@@ -38,7 +34,6 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
   isOpen,
   startDate,
   endDate,
-  onCreate,
   onClose,
 }) => {
   const [pauses, setPauses] = useState<
@@ -67,10 +62,9 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
 
   const validateFields = () => {
     const newErrors: { [key: string]: boolean } = {
+      interventionDate: !interventionDate,
       startTime: !startTime,
       endTime: !endTime,
-      pauses: !pauses,
-      missions: selectedMissions.length === 0,
     };
     setErrors(newErrors);
     return Object.values(newErrors).every((error) => !error);
@@ -84,17 +78,17 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
   const handleStartTimeChange = (value: string) => setStartTime(value);
   const handleEndTimeChange = (value: string) => setEndTime(value);
   // Récupération de l'idAccount depuis le token
-  const tokenData = getUserDataFromToken();
-  const handleCreate = (tokenData) => {
+  const tokenData = useMemo(() => getUserDataFromToken(), []);
+
+  // Utilisation de votre hook useCreateSession
+  const { mutateAsync: createSession } = useCreateSession();
+  const handleCreate = async () => {
     if (!validateFields()) {
-      enqueueSnackbar(
-        "Veuillez remplir tous les champs obligatoires.",
-        "error"
-      );
+      enqueueSnackbar("Veuillez remplir tous les champs obligatoires.", "error");
       return;
     }
 
-    if (!tokenData?.id) {
+    if (!tokenData || !tokenData.id) {
       enqueueSnackbar("Erreur : identifiant de compte manquant.");
       return;
     }
@@ -102,22 +96,29 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
     const isoStartDate = toISOStringWithTimezone(interventionDate, startTime);
     const isoEndDate = toISOStringWithTimezone(interventionDate, endTime);
 
-    const payload: CreateSessionPayload = {
+    const payload = {
       idAccount: Number(tokenData.id),
       idMission: Number(selectedMissions),
       startTime: isoStartDate,
       endTime: isoEndDate,
-      status,
+      status: "ended", // ou le statut désiré
       pauses: [],
     };
 
-    onCreate(payload);
-
-    setInterventionDate("");
-    setStartTime("");
-    setEndTime("");
-    setSelectedMissions([]);
-    setErrors({});
+    try {
+      // Appel à votre hook pour créer la session
+      const response = await createSession(payload);
+      enqueueSnackbar('Session créée avec succès', 'success');
+      onClose(); // Fermer le Drawer après la création
+      // Réinitialiser les champs
+      setInterventionDate("");
+      setStartTime("");
+      setEndTime("");
+      setSelectedMissions([]);
+      setErrors({});
+    } catch (error) {
+      enqueueSnackbar(error.message || "Erreur lors de la création de la session", "error");
+    }
   };
 
   const handleCancel = () => {
@@ -129,7 +130,8 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
     onClose();
   };
 
-  const pauseWarningMessage = "Veuillez sélectionner la date et les heures d'intervention pour ajouter une pause.";
+  const pauseWarningMessage =
+    "Veuillez sélectionner la date et les heures d'intervention pour ajouter une pause.";
 
   const addPause = () => {
     if (!startTime || !endTime) return;
@@ -159,7 +161,6 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
   const [viewMode, setViewMode] = useState<"timeGridDay" | "timeGridWeek">(
     "timeGridWeek"
   );
-  const [selectedEmployee, setSelectedEmployee] = useState<string>("");
   const [calendarStartDate, setCalendarStartDate] = useState<string | null>(
     null
   );
@@ -201,13 +202,7 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
       from: calendarStartDate ?? defaultFrom,
       to: calendarEndDate ?? defaultTo,
     }),
-    [
-      selectedEmployee,
-      calendarStartDate,
-      calendarEndDate,
-      defaultFrom,
-      defaultTo,
-    ]
+    [calendarStartDate, calendarEndDate, defaultFrom, defaultTo]
   );
 
   const { data: missions } = useGetMissionsByAccount(missionQueryParams);
@@ -215,48 +210,6 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
   const handleMissionChange = (event: SelectChangeEvent<string[]>) => {
     setSelectedMissions(event.target.value as string[]);
   };
-
-  // const tokenData = getUserDataFromToken();
-  // const getWeekRange = (date: Date) => {
-  //   const day = date.getDay();
-  //   const diffToMonday = (day === 0 ? -6 : 1) - day;
-  //   const monday = new Date(date);
-  //   monday.setDate(date.getDate() + diffToMonday);
-  //   const sunday = new Date(monday);
-  //   sunday.setDate(monday.getDate() + 6);
-  //   return {
-  //     monday: monday.toISOString(),
-  //     sunday: sunday.toISOString(),
-  //   };
-  // };
-  // const today = new Date();
-  // const calculateDateRange = (viewMode: string, date: Date) => {
-  //   const todayISO = date.toISOString();
-  //   if (viewMode === "timeGridDay") {
-  //     return {
-  //       from: todayISO,
-  //       to: new Date(date.getTime() + 24 * 60 * 60 * 1000).toISOString(),
-  //     };
-  //   } else {
-  //     const weekRange = getWeekRange(date);
-  //     return {
-  //       from: weekRange.monday,
-  //       to: weekRange.sunday,
-  //     };
-  //   }
-  // };
-  // // const { from, to } = calculateDateRange(viewMode, today);
-  // // // Chargement des missions
-  // // const { data: missions } = useGetMissionsByAccount(
-  // //   {
-  // //     accountId: tokenData!.id,
-  // //     from: from,
-  // //     to: to,
-  // //   },
-  // //   Boolean(interventionDate) // Ne fait la requête que si la date est définie
-  // // );
-
-  //   setSelectedMission(event.target.value);
 
   return (
     <Drawer anchor="right" open={isOpen} onClose={onClose}>
@@ -299,24 +252,6 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
               onChange={(e) => handleEndTimeChange(e.target.value)}
               InputLabelProps={{ shrink: true }}
             />
-            {/* <TextField
-              label="Date de début"
-              type="datetime-local"
-              fullWidth
-              value={startTime}
-              onChange={(e) => setStartTime(e.target.value)}
-              InputLabelProps={{ shrink: true }}
-              error={errors.startTime}
-            />
-            <TextField
-              label="Date de fin estimé"
-              type="datetime-local"
-              fullWidth
-              value={endTime}
-              onChange={(e) => setEndTime(e.target.value)}
-              InputLabelProps={{ shrink: true }}
-              error={errors.endTime}
-            /> */}
           </div>
         </section>
 
@@ -332,9 +267,7 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
             <hr />
           </div>
           {!(interventionDate && startTime && endTime) && (
-            <p className={styles.noDate}>
-              {pauseWarningMessage}
-            </p>
+            <p className={styles.noDate}>{pauseWarningMessage}</p>
           )}
           <IconButton
             text="Ajouter une pause"
@@ -392,26 +325,6 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
           ))}
         </section>
 
-        {/* <section className={styles.section}>
-          <div className={styles.sectionTitle}>
-            <h3>Commentaires supplémentaires</h3>
-            <p>
-              Vous pouvez ajouter des commentaires sur la session de travail
-              pour votre employeur
-            </p>
-            <hr />
-          </div>
-          <TextField
-            label="Commentaires"
-            multiline
-            minRows={5}
-            fullWidth
-            value={details}
-            // onChange={(e) => setDetails(e.target.value)}
-            placeholder="Ajoutez des commentaires ici..."
-          />
-        </section> */}
-
         <section className={styles.section}>
           <div className={styles.sectionTitle}>
             <h3>Choix d’une mission existante (optionnel)</h3>
@@ -435,9 +348,7 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
               <p>Aucune mission vous est attribuée ce jour.</p>
             )
           ) : (
-            <p className={styles.noDate}>
-              {pauseWarningMessage}
-            </p>
+            <p className={styles.noDate}>{pauseWarningMessage}</p>
           )}
         </section>
 
