@@ -22,9 +22,8 @@ import { useGetEmployee } from "../../hooks/useGetEmployee";
 import { useGetUserFiles } from "../../hooks/useGetUserFiles";
 import PlanningPage from "../PlanningPage/PlanningPage";
 import CreateEmployeePage from "../Employee/CreateEmployeePage/CreateEmployeePage";
-import AddSessionDrawer from "../../components/AddSessionDrawer/AddSessionDrawer";
-import styles from "./ParentPage.module.scss";
 import TimePointingCalendar from "../TimePointingCalendar/TimePointingCalendar";
+import styles from "./ParentPage.module.scss";
 
 type BreadcrumbItem = {
   label: string;

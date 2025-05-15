@@ -19,8 +19,8 @@ import { enqueueSnackbar } from '../../utils/snackbarUtils';
 import { CreateMissionPayload, useCreateMission } from '../../hooks/useCreateMission';
 import { useQueryClient } from '@tanstack/react-query';
 import { useListEmployee } from '../../hooks/useGetAllEmployees';
-import styles from './PlanningPage.module.scss';
 import { getWeekRange, toParisISOString } from '../../utils/dates';
+import styles from './PlanningPage.module.scss';
 
 interface MissionEvent extends EventInput {
     /**

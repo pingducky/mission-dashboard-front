@@ -9,13 +9,13 @@ import MuiIconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
 import IconButton from '../../components/layout/IconButton/IconButton';
 import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, ToggleButton, ToggleButtonGroup } from "@mui/material";
-import styles from "./TimePointingCalendar.module.scss";
 import { getUserDataFromToken } from "../../utils/auth";
 import { useListEmployee } from "../../hooks/useGetAllEmployees";
 import { getWeekRange, toParisISOString, toParisISOStringV2 } from "../../utils/dates";
 import { useGetWorkSessionsByAccount } from "../../hooks/useGetWorkSessionsByAccount";
 import { formatInTimeZone } from 'date-fns-tz';
 import { EventInput } from "@fullcalendar/core/index.js";
+import styles from "./TimePointingCalendar.module.scss";
 
 interface WorkSessionEvent extends EventInput {
     /**
@@ -31,7 +31,7 @@ interface WorkSessionEvent extends EventInput {
      */
     end: string;
     /**
-     * Description détaillée de la mission
+     * Description
      */
     description?: string;
   }

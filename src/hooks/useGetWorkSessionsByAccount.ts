@@ -3,27 +3,75 @@ import { useQuery } from "@tanstack/react-query";
 const API_URL = import.meta.env.VITE_API_URL;
 
 export type Duration = {
+    /**
+     * Hours
+     */
     hours: number;
+    /**
+     * Minutes
+     */
     minutes: number;
+    /**
+     * Secondes
+     */
     seconds: number;
 };
 
 export type WorkSessionPause = {
+    /**
+     * Id
+     */
     id: number;
+    /**
+     * Temps de pause
+     */
     pauseTime: string;
+    /**
+     * Fin
+     */
     resumeTime: string;
 };
 
 export type WorkSession = {
+    /**
+     * Id
+     */
     id: number;
+    /**
+     * Id du compte utilisateur
+     */
     idAccount: number;
+    /**
+     * Id de la mission
+     */
     idMission: number;
+    /**
+     * Date de début
+     */
     startTime: string;
+    /**
+     * Date de fin
+     */
     endTime: string | null;
+    /**
+     * Status
+     */
     status: string;
+    /**
+     * Pauses
+     */
     pauses: WorkSessionPause[];
+    /**
+     * Durée total
+     */
     totalDuration: Duration;
+    /**
+     * Durée de la pause
+     */
     totalPause: Duration;
+    /**
+     * Durée effective
+     */
     effectiveDuration: Duration;
 };
 
