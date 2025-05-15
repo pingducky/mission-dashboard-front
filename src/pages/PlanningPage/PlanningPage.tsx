@@ -240,7 +240,6 @@ const PlanningPage: React.FC = () => {
       {!areMissionTypesLoading && missionTypes?.length && (
         <div className={styles.missionsType}>
           <p>Types de misssions :</p>
-
           <div className={styles.missionsTypeList}>
             {missionTypes?.map((type) => (
               <MissionType

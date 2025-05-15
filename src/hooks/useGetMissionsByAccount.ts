@@ -123,6 +123,6 @@ export const useGetMissionsByAccount = (params: Params, enabled = true) => {
         queryFn: () => getMissionsByAccount(params),
         enabled,
         refetchOnWindowFocus: false, // Pour éviter les requêtes intempestives
-        staleTime: 1000 * 60 * 5,   // 5 minutes pour limiter les recharges
+        staleTime: 1000 * 5,   // 5 secondes pour limiter les recharges
     });
 };

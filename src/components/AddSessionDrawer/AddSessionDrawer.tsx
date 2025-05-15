@@ -9,6 +9,7 @@ import { useGetMissionsByAccount } from "../../hooks/useGetMissionsByAccount";
 import { getUserDataFromToken } from "../../utils/auth";
 import { useCreateSession } from "../../hooks/useCreateSession";
 import { enqueueSnackbar } from "../../utils/snackbarUtils";
+import { toISOStringWithTime } from "../../utils/dates";
 import styles from "./AddSessionDrawer.module.scss";
 
 interface AddSessionDrawerProps {
@@ -36,10 +37,7 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
   endDate,
   onClose,
 }) => {
-  const [pauses, setPauses] = useState<
-    { start: string; end: string; error: boolean }[]
-  >([]);
-  // const [selectedMissions, setSelectedMissions] = useState<string>("");
+  const [pauses, setPauses] = useState<{ start: string; end: string; error: boolean }[]>([]);
   const [selectedMissions, setSelectedMissions] = useState<string[]>([]);
 
   const [interventionDate, setInterventionDate] = useState<string>("");
@@ -70,17 +68,13 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
     return Object.values(newErrors).every((error) => !error);
   };
 
-  const toISOStringWithTimezone = (date: string, time: string) => {
-    return new Date(`${date}T${time}`).toISOString();
-  };
-
   const handleDateChange = (value: string) => setInterventionDate(value);
   const handleStartTimeChange = (value: string) => setStartTime(value);
   const handleEndTimeChange = (value: string) => setEndTime(value);
   // Récupération de l'idAccount depuis le token
   const tokenData = useMemo(() => getUserDataFromToken(), []);
 
-  // Utilisation de votre hook useCreateSession
+  // Utilisation du hook useCreateSession
   const { mutateAsync: createSession } = useCreateSession();
   const handleCreate = async () => {
     if (!validateFields()) {
@@ -96,15 +90,15 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
       return;
     }
 
-    const isoStartDate = toISOStringWithTimezone(interventionDate, startTime);
-    const isoEndDate = toISOStringWithTimezone(interventionDate, endTime);
+    const isoStartDate = toISOStringWithTime(interventionDate, startTime);
+    const isoEndDate = toISOStringWithTime(interventionDate, endTime);
 
     // Formater les pauses
     const formattedPauses = pauses
       .filter((pause) => pause.start && pause.end)
       .map((pause) => ({
-        pauseTime: toISOStringWithTimezone(interventionDate, pause.start),
-        resumeTime: toISOStringWithTimezone(interventionDate, pause.end),
+        pauseTime: toISOStringWithTime(interventionDate, pause.start),
+        resumeTime: toISOStringWithTime(interventionDate, pause.end),
       }));
 
     const payload = {
@@ -118,7 +112,7 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
 
     try {
       // Appel à votre hook pour créer la session
-      const response = await createSession(payload);
+      await createSession(payload);
       enqueueSnackbar("Session créée avec succès", "success");
       onClose(); // Fermer le Drawer après la création
       // Réinitialiser les champs

@@ -4,15 +4,7 @@ import styles from "./IconButton.module.scss";
 
 type fontWeight = "regular" | "medium" | "semibold" | "bold";
 type variant = "ghost" | "outlined" | "filled";
-type color =
-  | "white"
-  | "darkblue"
-  | "blue"
-  | "pink"
-  | "black"
-  | "darkGray"
-  | "red"
-  | "lightGray";
+type color = "white" | "darkblue" | "blue" | "pink" | "black" | "darkGray" | "red" | "lightGray";
 
 interface IconButtonProps {
   /**
@@ -88,8 +80,16 @@ const IconButton: React.FC<IconButtonProps> = ({
       disabled={isDisabled}
       onClick={isDisabled ? undefined : onClick}
     >
-      {startIcon && <span className={styles.iconBtn}>{startIcon}</span>}
-      {text && <span className={`iconTextGlobal ${styles.iconText}`}>{text}</span>}
+      {
+        startIcon && <span className={styles.iconBtn}>
+          {startIcon}
+        </span>
+      }
+      {
+        text && <span className={`iconTextGlobal ${styles.iconText}`}>
+          {text}
+        </span>
+      }
     </button>
   );
 };
