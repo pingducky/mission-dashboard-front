@@ -7,7 +7,7 @@ import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import { useGetMissionsByAccount } from "../../hooks/useGetMissionsByAccount";
 import { getUserDataFromToken } from "../../utils/auth";
-import { useCreateSession  } from "../../hooks/useCreateSession";
+import { useCreateSession } from "../../hooks/useCreateSession";
 import { enqueueSnackbar } from "../../utils/snackbarUtils";
 import styles from "./AddSessionDrawer.module.scss";
 
@@ -84,7 +84,10 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
   const { mutateAsync: createSession } = useCreateSession();
   const handleCreate = async () => {
     if (!validateFields()) {
-      enqueueSnackbar("Veuillez remplir tous les champs obligatoires.", "error");
+      enqueueSnackbar(
+        "Veuillez remplir tous les champs obligatoires.",
+        "error"
+      );
       return;
     }
 
@@ -96,28 +99,40 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
     const isoStartDate = toISOStringWithTimezone(interventionDate, startTime);
     const isoEndDate = toISOStringWithTimezone(interventionDate, endTime);
 
+    // Formater les pauses
+    const formattedPauses = pauses
+      .filter((pause) => pause.start && pause.end)
+      .map((pause) => ({
+        pauseTime: toISOStringWithTimezone(interventionDate, pause.start),
+        resumeTime: toISOStringWithTimezone(interventionDate, pause.end),
+      }));
+
     const payload = {
       idAccount: Number(tokenData.id),
       idMission: Number(selectedMissions),
       startTime: isoStartDate,
       endTime: isoEndDate,
       status: "ended", // ou le statut désiré
-      pauses: [],
+      pauses: formattedPauses,
     };
 
     try {
       // Appel à votre hook pour créer la session
       const response = await createSession(payload);
-      enqueueSnackbar('Session créée avec succès', 'success');
+      enqueueSnackbar("Session créée avec succès", "success");
       onClose(); // Fermer le Drawer après la création
       // Réinitialiser les champs
       setInterventionDate("");
       setStartTime("");
       setEndTime("");
+      setPauses([]);
       setSelectedMissions([]);
       setErrors({});
     } catch (error) {
-      enqueueSnackbar(error.message || "Erreur lors de la création de la session", "error");
+      enqueueSnackbar(
+        error.message || "Erreur lors de la création de la session",
+        "error"
+      );
     }
   };
 
@@ -142,18 +157,13 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
     setPauses(pauses.filter((_, i) => i !== index));
   };
 
-  const handlePauseChange = (index: number, field: string, value: string) => {
+  const updatePause = (
+    index: number,
+    field: "start" | "end",
+    value: string
+  ) => {
     const updatedPauses = [...pauses];
     updatedPauses[index][field] = value;
-
-    const start = new Date(`${interventionDate}T${updatedPauses[index].start}`);
-    const end = new Date(`${interventionDate}T${updatedPauses[index].end}`);
-    const sessionStart = new Date(`${interventionDate}T${startTime}`);
-    const sessionEnd = new Date(`${interventionDate}T${endTime}`);
-
-    const isInvalid = start < sessionStart || end > sessionEnd || start >= end;
-    updatedPauses[index].error = isInvalid;
-
     setPauses(updatedPauses);
   };
 
@@ -292,9 +302,7 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
                     : ""
                 }
                 InputLabelProps={{ shrink: true }}
-                onChange={(e) =>
-                  handlePauseChange(index, "start", e.target.value)
-                }
+                onChange={(e) => updatePause(index, "start", e.target.value)}
               />
               <TextField
                 label="Fin pause"
@@ -308,9 +316,7 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
                     : ""
                 }
                 InputLabelProps={{ shrink: true }}
-                onChange={(e) =>
-                  handlePauseChange(index, "end", e.target.value)
-                }
+                onChange={(e) => updatePause(index, "end", e.target.value)}
               />
               <IconButton
                 startIcon={<ClearOutlinedIcon />}

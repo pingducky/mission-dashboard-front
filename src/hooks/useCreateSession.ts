@@ -30,11 +30,11 @@ export type CreateSessionPayload = {
     /**
      * Début de la pause
      */
-    start: string;
+    pauseTime: string;
     /**
      * Fin de la pause
      */
-    end: string;
+    resumeTime: string;
   }[];
 };
 
