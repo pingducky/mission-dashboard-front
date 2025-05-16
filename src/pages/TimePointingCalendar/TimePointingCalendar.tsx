@@ -64,7 +64,6 @@ const TimePointingCalendar: React.FC = () => {
       };
       
       const { data: workSessions } = useGetWorkSessionsByAccount(workSessionQueryParams);
-      console.debug("workSessions : ", workSessions);
 
     const handlePrev = () => {
         const calendarApi = calendarRef.current?.getApi();

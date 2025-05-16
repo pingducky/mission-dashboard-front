@@ -58,9 +58,6 @@ export const EmployeePage: React.FC<EmployeePageProps> = ({
                         variant={'ghost'}
                         color={'darkGray'}
                         specialClass={styles.deleteFileButton}
-                        onClick={() => {
-                            console.log("delete file "+file.id)
-                        }}
                     />
                 </li>
             );
