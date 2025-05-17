@@ -14,14 +14,13 @@ import MissionType from './MissionType/MissionType';
 import { getUserDataFromToken } from '../../utils/auth';
 import { useGetMissionTypes } from '../../hooks/useGetMissionTypes';
 import { useGetMissionsByAccount } from '../../hooks/useGetMissionsByAccount';
-// import AddMissionDrawer from '../../components/AddMissionDrawer/AddMissionDrawer';
+import AddMissionDrawer from '../../components/AddMissionDrawer/AddMissionDrawer';
 import { enqueueSnackbar } from '../../utils/snackbarUtils';
 import { CreateMissionPayload, useCreateMission } from '../../hooks/useCreateMission';
 import { useQueryClient } from '@tanstack/react-query';
 import { useListEmployee } from '../../hooks/useGetAllEmployees';
-import AddSessionDrawer from '../../components/AddSessionDrawer/AddSessionDrawer';
+import { getWeekRange, toParisISOString } from '../../utils/dates';
 import styles from './PlanningPage.module.scss';
-
 
 interface MissionEvent extends EventInput {
     /**
@@ -75,19 +74,6 @@ const PlanningPage: React.FC = () => {
 
   const { data: missionTypes, isLoading: areMissionTypesLoading } = useGetMissionTypes();
   
-  const getWeekRange = (date: Date) => {
-    const day = date.getDay();
-    const diffToMonday = (day === 0 ? -6 : 1) - day;
-    const monday = new Date(date);
-    monday.setDate(date.getDate() + diffToMonday);
-    const sunday = new Date(monday);
-    sunday.setDate(monday.getDate() + 6);
-    return {
-      monday: monday.toISOString(),
-      sunday: sunday.toISOString(),
-    };
-  };
-
   const defaultFrom = viewMode === 'timeGridDay'
     ? today.toISOString()
     : getWeekRange(today).monday;
@@ -124,12 +110,6 @@ const PlanningPage: React.FC = () => {
     }
   };
 
-  const toParisISOString = (utcDateString : string | undefined) => {
-    if (!utcDateString) return '';
-    const date = new Date(utcDateString);
-    return date.toLocaleString('sv-SE', { timeZone: 'Europe/Paris' }).replace(' ', 'T');
-  };
-
   useEffect(() => {
     if (missions) {
       const transformedEvents: MissionEvent[] = missions.map((mission) => ({
@@ -162,10 +142,6 @@ const PlanningPage: React.FC = () => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-
-  const handleEmployeeChange = (event: SelectChangeEvent) => {
-    setSelectedEmployee(event.target.value);
-  };
 
   const formatDateRange = (startStr: Date, endStr: Date) => {
     const locale = 'fr-FR';
@@ -237,31 +213,36 @@ const PlanningPage: React.FC = () => {
   };
   return (
     <div>
-      {!areMissionTypesLoading && missionTypes?.length && (
-        <div className={styles.missionsType}>
-          <p>Types de misssions :</p>
-          <div className={styles.missionsTypeList}>
-            {missionTypes?.map((type) => (
-              <MissionType
-                nom={type.longLibel}
-                code={type.shortLibel}
-                color={type.color}
-              />
-            ))}
+      {
+        !areMissionTypesLoading && missionTypes?.length && (
+          <div className={styles.missionsType}>
+            <p>Types de misssions :</p>
+  
+            <div className={styles.missionsTypeList}>
+              {
+                missionTypes?.map((type) => (
+                  <MissionType
+                    nom={type.longLibel}
+                    code={type.shortLibel}
+                    color={type.color}
+                  />
+                ))
+              }
+            </div>
           </div>
-        </div>
-      )}
-
+        )
+      }
+  
       <div className={styles.detachedHeader}>
         <div className={styles.leftSection}>
           <MuiIconButton size="small" onClick={handlePrev}>
             <ChevronLeftIcon />
           </MuiIconButton>
-
+  
           <MuiIconButton size="small" onClick={handleNext}>
             <ChevronRightIcon />
           </MuiIconButton>
-
+  
           <ToggleButtonGroup
             value={viewMode}
             exclusive
@@ -277,52 +258,52 @@ const PlanningPage: React.FC = () => {
             </ToggleButton>
           </ToggleButtonGroup>
         </div>
-
+  
         <p className={styles.dateRange}>{dateRange}</p>
-
+  
         <div>
           <div className={styles.rightSection}>
-            {!areMissionTypesLoading && tokenData?.isAdmin && (
-              <>
-                <FormControl className={styles.employeeForm} size="small">
-                  <InputLabel id="employee-select-label">
-                    Choix des employé(e)s
-                  </InputLabel>
-                  <Select
-                    labelId="employee-select-label"
-                    id="employee-select"
-                    value={selectedEmployee}
-                    onChange={handleEmployeeChange}
-                    label="Choix des employé(e)s"
-                  >
-                    {employeeData?.map((employee) => (
-                      <MenuItem value={employee.id}>
-                        {employee.firstName}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-
-                <IconButton
-                  text="Créer une mission"
-                  variant="filled"
-                  isRounded={false}
-                  startIcon={<AddIcon />}
-                  onClick={() => setOpenDialog(true)}
-                />
-              </>
-            )}
+            {
+              !areMissionTypesLoading && tokenData?.isAdmin && (
+                <>
+                  <FormControl className={styles.employeeForm} size="small">
+                    <InputLabel id="employee-select-label">Choix des employé(e)s</InputLabel>
+                    <Select
+                      labelId="employee-select-label"
+                      id="employee-select"
+                      value={selectedEmployee}
+                      onChange={(value: SelectChangeEvent) => setSelectedEmployee(value.target.value)}
+                      label="Choix des employé(e)s"
+                    >
+                      {
+                        employeeData?.map((employee) => (
+                          <MenuItem value={employee.id}>{employee.firstName}</MenuItem>
+                        ))
+                      }
+                    </Select>
+                  </FormControl>
+  
+                  <IconButton
+                    text="Créer une mission"
+                    variant="filled"
+                    isRounded={false}
+                    startIcon={<AddIcon />}
+                    onClick={() => setOpenDialog(true)}
+                  />
+                </>
+              )
+            }
           </div>
         </div>
       </div>
-
+  
       <div className={styles.calendarContainer}>
         <FullCalendar
           ref={calendarRef}
           headerToolbar={{
-            left: "",
-            center: "",
-            right: "",
+            left: '',
+            center: '',
+            right: ''
           }}
           plugins={[timeGridPlugin, interactionPlugin]}
           eventStartEditable={false}
@@ -346,17 +327,15 @@ const PlanningPage: React.FC = () => {
           eventContent={(eventInfo) => (
             <div className={styles.missionEvent}>
               <b>{eventInfo.timeText}</b>
-              <i>{eventInfo.event.title}</i>
-              <br />
-              <span>{eventInfo.event.extendedProps.description}</span>
-              <br />
+              <i>{eventInfo.event.title}</i><br />
+              <span>{eventInfo.event.extendedProps.description}</span><br />
               <span>{eventInfo.event.extendedProps.adresse}</span>
             </div>
           )}
         />
       </div>
-
-      {/* <AddMissionDrawer
+  
+      <AddMissionDrawer
         employees={employeeData?.map((employee) => ({
           id: employee.id,
           fullName: employee.firstName
@@ -367,14 +346,7 @@ const PlanningPage: React.FC = () => {
         missionTypes={missionTypes}
         onClose={() => setOpenDialog(false)}
         onCreate={handleCreateMission}
-      /> */}
-
-      <AddSessionDrawer
-        isOpen={openDialog}
-        onClose={() => setOpenDialog(false)}
-        startDate={newEvent.start}
-        endDate={newEvent.end}
-        />
+      />
     </div>
   );
 };
