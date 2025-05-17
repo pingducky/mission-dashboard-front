@@ -92,14 +92,30 @@ type Params = {
     limit?: number;
 };
 
-const getMissionsByAccount = async ({ accountId, from, to, filterByType, limit }: Params): Promise<Mission[]> => {
+type CategorizedMissions = {
+  /**
+   * Missions passées
+   */
+  past: Mission[];
+  /**
+   * Missions en cours
+   */
+  current: Mission[];
+  /**
+   * Missions futures
+   */
+  future: Mission[];
+};
+
+const getMissionsByAccount = async ({ accountId, from, to, filterByType, limit }: Params): Promise<CategorizedMissions> => {
     const params = new URLSearchParams();
 
     if (from) params.append("from", from);
     if (to) params.append("to", to);
     if (filterByType !== undefined) params.append("filterByType", filterByType.toString());
     if (limit !== undefined) params.append("limit", limit.toString());
-    const url = `${API_URL}/mission/listMissions/${accountId}?${params.toString()}`;
+
+    const url = `${API_URL}/mission/missionCategorized/${accountId}?${params.toString()}`;
 
     const response = await fetch(url, {
         method: "GET",
@@ -114,11 +130,16 @@ const getMissionsByAccount = async ({ accountId, from, to, filterByType, limit }
     }
 
     const data = await response.json();
-    return data.missions;
+    return {
+        past: data.past ?? [],
+        current: data.current ?? [],
+        future: data.future ?? []
+    };
 };
 
+
 export const useGetMissionsByAccount = (params: Params, enabled = true) => {
-    return useQuery({
+    return useQuery<CategorizedMissions>({
         queryKey: ["missions", params],
         queryFn: () => getMissionsByAccount(params),
         enabled,

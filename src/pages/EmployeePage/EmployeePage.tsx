@@ -166,7 +166,7 @@ export const EmployeePage: React.FC<EmployeePageProps> = ({
                     </ul>
                 </div>
                 <div className={styles.component}>
-                    <MissionsWrapper accountId={employee.id} />
+                    <MissionsWrapper accountId={employee.id.toString()} />
                 </div>
             </div>
         ) : (

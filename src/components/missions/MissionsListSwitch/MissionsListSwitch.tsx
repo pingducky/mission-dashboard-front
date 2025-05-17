@@ -2,7 +2,7 @@ import { useState } from "react";
 import Switch from "./Switch/Switch";
 import MissionsList, { MissionCard } from "./MissionsList/MissionsList";
 import { getUserDataFromToken } from "../../../utils/auth";
-import { Mission, useGetMissionsByAccount } from "../../../hooks/useGetMissionsByAccount";
+import { Mission, useGetMissionsByAccount } from "../../../hooks/useGetMissionsByAccountWithFilter";
 import { safeDate } from "../../../utils/dates";
 import styles from "./MissionsListSwitch.module.scss";
 
