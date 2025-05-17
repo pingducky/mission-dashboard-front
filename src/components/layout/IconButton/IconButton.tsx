@@ -49,7 +49,6 @@ interface IconButtonProps {
   onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
-
 const IconButton: React.FC<IconButtonProps> = ({
   text,
   fontWeight = "regular",
@@ -58,7 +57,7 @@ const IconButton: React.FC<IconButtonProps> = ({
   specialClass,
   startIcon,
   variant = "filled",
-  color  = "blue",
+  color = "blue",
   isRounded = true,
   onClick,
 }) => {
@@ -83,10 +82,14 @@ const IconButton: React.FC<IconButtonProps> = ({
     >
       {
         startIcon && <span className={styles.iconBtn}>
-            {startIcon}
-          </span>
-        }
-      <span className={`iconTextGlobal ${styles.iconText}`}>{text}</span>
+          {startIcon}
+        </span>
+      }
+      {
+        text && <span className={`iconTextGlobal ${styles.iconText}`}>
+          {text}
+        </span>
+      }
     </button>
   );
 };

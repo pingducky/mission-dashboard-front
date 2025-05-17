@@ -14,13 +14,15 @@ import MissionType from './MissionType/MissionType';
 import { getUserDataFromToken } from '../../utils/auth';
 import { useGetMissionTypes } from '../../hooks/useGetMissionTypes';
 import { useGetMissionsByAccount } from '../../hooks/useGetMissionsByAccount';
-import AddMissionDrawer from '../../components/AddMissionDrawer/AddMissionDrawer';
+// import AddMissionDrawer from '../../components/AddMissionDrawer/AddMissionDrawer';
 import { enqueueSnackbar } from '../../utils/snackbarUtils';
 import { CreateMissionPayload, useCreateMission } from '../../hooks/useCreateMission';
 import { useQueryClient } from '@tanstack/react-query';
 import { useListEmployee } from '../../hooks/useGetAllEmployees';
 import { getWeekRange, toParisISOString } from '../../utils/dates';
+import AddSessionDrawer from '../../components/AddSessionDrawer/AddSessionDrawer';
 import styles from './PlanningPage.module.scss';
+
 
 interface MissionEvent extends EventInput {
     /**
@@ -213,36 +215,31 @@ const PlanningPage: React.FC = () => {
   };
   return (
     <div>
-      {
-        !areMissionTypesLoading && missionTypes?.length && (
-          <div className={styles.missionsType}>
-            <p>Types de misssions :</p>
-  
-            <div className={styles.missionsTypeList}>
-              {
-                missionTypes?.map((type) => (
-                  <MissionType
-                    nom={type.longLibel}
-                    code={type.shortLibel}
-                    color={type.color}
-                  />
-                ))
-              }
-            </div>
+      {!areMissionTypesLoading && missionTypes?.length && (
+        <div className={styles.missionsType}>
+          <p>Types de misssions :</p>
+          <div className={styles.missionsTypeList}>
+            {missionTypes?.map((type) => (
+              <MissionType
+                nom={type.longLibel}
+                code={type.shortLibel}
+                color={type.color}
+              />
+            ))}
           </div>
-        )
-      }
-  
+        </div>
+      )}
+
       <div className={styles.detachedHeader}>
         <div className={styles.leftSection}>
           <MuiIconButton size="small" onClick={handlePrev}>
             <ChevronLeftIcon />
           </MuiIconButton>
-  
+
           <MuiIconButton size="small" onClick={handleNext}>
             <ChevronRightIcon />
           </MuiIconButton>
-  
+
           <ToggleButtonGroup
             value={viewMode}
             exclusive
@@ -258,9 +255,9 @@ const PlanningPage: React.FC = () => {
             </ToggleButton>
           </ToggleButtonGroup>
         </div>
-  
+
         <p className={styles.dateRange}>{dateRange}</p>
-  
+
         <div>
           <div className={styles.rightSection}>
             {
@@ -296,14 +293,14 @@ const PlanningPage: React.FC = () => {
           </div>
         </div>
       </div>
-  
+
       <div className={styles.calendarContainer}>
         <FullCalendar
           ref={calendarRef}
           headerToolbar={{
-            left: '',
-            center: '',
-            right: ''
+            left: "",
+            center: "",
+            right: "",
           }}
           plugins={[timeGridPlugin, interactionPlugin]}
           eventStartEditable={false}
@@ -327,15 +324,17 @@ const PlanningPage: React.FC = () => {
           eventContent={(eventInfo) => (
             <div className={styles.missionEvent}>
               <b>{eventInfo.timeText}</b>
-              <i>{eventInfo.event.title}</i><br />
-              <span>{eventInfo.event.extendedProps.description}</span><br />
+              <i>{eventInfo.event.title}</i>
+              <br />
+              <span>{eventInfo.event.extendedProps.description}</span>
+              <br />
               <span>{eventInfo.event.extendedProps.adresse}</span>
             </div>
           )}
         />
       </div>
-  
-      <AddMissionDrawer
+
+      {/* <AddMissionDrawer
         employees={employeeData?.map((employee) => ({
           id: employee.id,
           fullName: employee.firstName
@@ -346,7 +345,14 @@ const PlanningPage: React.FC = () => {
         missionTypes={missionTypes}
         onClose={() => setOpenDialog(false)}
         onCreate={handleCreateMission}
-      />
+      /> */}
+
+      <AddSessionDrawer
+        isOpen={openDialog}
+        onClose={() => setOpenDialog(false)}
+        startDate={newEvent.start}
+        endDate={newEvent.end}
+        />
     </div>
   );
 };
