@@ -2,7 +2,7 @@ import { useState } from "react";
 import Switch from "./Switch/Switch";
 import MissionsList, { MissionCard } from "./MissionsList/MissionsList";
 import { getUserDataFromToken } from "../../../utils/auth";
-import { MissionModel, useGetMissionsByAccount } from "../../../hooks/useGetMissionsByAccount";
+import { Mission, useGetMissionsByAccount } from "../../../hooks/useGetMissionsByAccount";
 import { safeDate } from "../../../utils/dates";
 import styles from "./MissionsListSwitch.module.scss";
 
@@ -15,16 +15,15 @@ const MissionsListSwitch = () => {
 
   const { data: missions, isLoading } = useGetMissionsByAccount({
     accountId: tokenData!.id,
-    filters: ["past", "current", "future"],
     limit: 2,
-  });
+});
 
-  const formatMission = (mission: MissionModel) => {
+  const formatMission = (mission: Mission) => {
     return {
       id: mission.id,
       startDate: safeDate(mission.timeBegin)!,
       estimatedEndDate: safeDate(mission.estimatedEnd),
-      endDate: safeDate(mission.timeEnd),
+      endDate: safeDate(mission.timeEnd ?? undefined),
       type: mission.missionType?.longLibel || "Type inconnu",
       place: mission.address,
       team: "Seul",

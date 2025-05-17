@@ -107,10 +107,12 @@ type CategorizedMissions = {
   future: Mission[];
 };
 
-const getMissionsByAccount = async ({ accountId, filters, limit }: Params): Promise<CategorizedMissions> => {
+const getMissionsByAccount = async ({ accountId, from, to, filterByType, limit }: Params): Promise<CategorizedMissions> => {
     const params = new URLSearchParams();
 
-    if (filters) params.append("filters", filters.join(","));
+    if (from) params.append("from", from);
+    if (to) params.append("to", to);
+    if (filterByType !== undefined) params.append("filterByType", filterByType.toString());
     if (limit !== undefined) params.append("limit", limit.toString());
 
     const url = `${API_URL}/mission/missionCategorized/${accountId}?${params.toString()}`;
@@ -134,6 +136,7 @@ const getMissionsByAccount = async ({ accountId, filters, limit }: Params): Prom
         future: data.future ?? []
     };
 };
+
 
 export const useGetMissionsByAccount = (params: Params, enabled = true) => {
     return useQuery<CategorizedMissions>({
