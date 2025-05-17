@@ -93,8 +93,17 @@ type Params = {
 };
 
 type CategorizedMissions = {
+  /**
+   * Missions passées
+   */
   past: Mission[];
+  /**
+   * Missions en cours
+   */
   current: Mission[];
+  /**
+   * Missions futures
+   */
   future: Mission[];
 };
 
