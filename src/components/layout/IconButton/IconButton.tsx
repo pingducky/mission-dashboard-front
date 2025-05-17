@@ -81,7 +81,7 @@ const IconButton: React.FC<IconButtonProps> = ({
       disabled={isDisabled}
       onClick={isDisabled ? undefined : onClick}
     >
-     {
+      {
         startIcon && <span className={styles.iconBtn}>
           {startIcon}
         </span>
