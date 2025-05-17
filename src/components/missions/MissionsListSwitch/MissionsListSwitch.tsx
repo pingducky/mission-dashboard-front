@@ -9,6 +9,9 @@ import styles from "./MissionsListSwitch.module.scss";
 type MissionTab = "upcoming" | "past";
 
 interface MissionsListSwitchProps {
+  /**
+   * Id de l'account du salarié
+   */
   accountId?: string;
 }
 
