@@ -15,8 +15,8 @@ import { getWeekRange, toParisISOString, toParisISOStringV2 } from "../../utils/
 import { useGetWorkSessionsByAccount } from "../../hooks/useGetWorkSessionsByAccount";
 import { formatInTimeZone } from 'date-fns-tz';
 import { EventInput } from "@fullcalendar/core/index.js";
-import styles from "./TimePointingCalendar.module.scss";
 import AddSessionDrawer from "../../components/AddSessionDrawer/AddSessionDrawer";
+import styles from "./TimePointingCalendar.module.scss";
 
 interface WorkSessionEvent extends EventInput {
     /**
