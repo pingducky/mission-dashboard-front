@@ -33,3 +33,20 @@ export const toParisISOStringV2 = (date: string | Date) => {
   d.setMinutes(d.getMinutes() - offset);
   return d.toISOString();
 };
+
+export const toParisISOStringV2Two = (date: string | Date, time: string): string => {
+  // Convertir la date en objet Date si c'est une chaîne
+  const d = new Date(date);
+
+  // Extraire les heures et les minutes à partir du paramètre time
+  const [hours, minutes] = time.split(":").map(Number);
+
+  // Ajouter l'heure et les minutes à la date
+  d.setHours(hours, minutes, 0, 0);
+
+  // Appliquer le décalage de -120 minutes (2 heures)
+  d.setMinutes(d.getMinutes() + 120);
+
+  return d.toISOString();
+};
+
