@@ -16,6 +16,7 @@ import { useGetWorkSessionsByAccount } from "../../hooks/useGetWorkSessionsByAcc
 import { formatInTimeZone } from 'date-fns-tz';
 import { EventInput } from "@fullcalendar/core/index.js";
 import styles from "./TimePointingCalendar.module.scss";
+import AddSessionDrawer from "../../components/AddSessionDrawer/AddSessionDrawer";
 
 interface WorkSessionEvent extends EventInput {
     /**
@@ -43,9 +44,16 @@ const TimePointingCalendar: React.FC = () => {
     const [calendarEndDate, setCalendarEndDate] = useState<string | null>(null);
     const [selectedEmployee, setSelectedEmployee] = useState<string>('');
     const [events, setEvents] = useState<WorkSessionEvent[]>([]);
+    const [newEvent, setNewEvent] = useState<WorkSessionEvent>({
+        title: '',
+        start: '',
+        end: '',
+        description: '',
+    });
     const calendarRef = useRef<FullCalendar | null>(null);
     const tokenData = getUserDataFromToken();
     const today = new Date();
+    const [openDialog, setOpenDialog] = useState<boolean>(false);
 
     const { data: employeeData } = useListEmployee('all');
 
@@ -192,7 +200,7 @@ const TimePointingCalendar: React.FC = () => {
                                         variant="filled"
                                         isRounded={false}
                                         startIcon={<AddIcon />}
-                                    // onClick={() => setOpenDialog(true)}
+                                        onClick={() => setOpenDialog(true)}
                                     />
                                 </>
                             )
@@ -240,6 +248,13 @@ const TimePointingCalendar: React.FC = () => {
                     }}
                 />
             </div>
+
+            <AddSessionDrawer
+                isOpen={openDialog}
+                startDate={newEvent.start}
+                endDate={newEvent.end}
+                onClose={() => setOpenDialog(false)}
+            />
         </div>
     )
 }

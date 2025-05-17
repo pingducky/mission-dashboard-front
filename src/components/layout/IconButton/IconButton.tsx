@@ -81,12 +81,16 @@ const IconButton: React.FC<IconButtonProps> = ({
       disabled={isDisabled}
       onClick={isDisabled ? undefined : onClick}
     >
-      {
+     {
         startIcon && <span className={styles.iconBtn}>
-            {startIcon}
-          </span>
-        }
-      <span className={`iconTextGlobal ${styles.iconText}`}>{text}</span>
+          {startIcon}
+        </span>
+      }
+      {
+        text && <span className={`iconTextGlobal ${styles.iconText}`}>
+          {text}
+        </span>
+      }
     </button>
   );
 };
