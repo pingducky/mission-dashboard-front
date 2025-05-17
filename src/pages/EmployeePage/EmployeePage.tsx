@@ -8,6 +8,7 @@ import { File } from '../../hooks/useGetUserFiles';
 import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined';
 import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
 import { Loading } from '../../components/loading/Loading';
+import MissionsWrapper from "../../components/missions/MissionsListSwitch/MissionsListSwitch";
 import styles from './EmployeePage.module.scss'
 
 interface EmployeePageProps {
@@ -164,7 +165,9 @@ export const EmployeePage: React.FC<EmployeePageProps> = ({
                         { areFilesLoading ? <Loading/> : handleFiles(files)}
                     </ul>
                 </div>
-                <div className={styles.component}></div>
+                <div className={styles.component}>
+                    <MissionsWrapper accountId={employee.id} />
+                </div>
             </div>
         ) : (
             <Loading />

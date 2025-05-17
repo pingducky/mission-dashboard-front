@@ -8,27 +8,31 @@ import styles from "./MissionsListSwitch.module.scss";
 
 type MissionTab = "upcoming" | "past";
 
-const MissionsListSwitch = () => {
+interface MissionsListSwitchProps {
+  accountId?: string;
+}
+
+const MissionsListSwitch: React.FC<MissionsListSwitchProps> = ({ accountId }) => {
   const [activeTab, setActiveTab] = useState<MissionTab>("upcoming");
 
+  // Si pas de accountId passé en props, on utilise celui du token courant
   const tokenData = getUserDataFromToken();
+  const idToUse = accountId ?? tokenData?.id;
 
   const { data: missions, isLoading } = useGetMissionsByAccount({
-    accountId: tokenData!.id,
+    accountId: idToUse!,
     limit: 2,
-});
+  });
 
-  const formatMission = (mission: Mission) => {
-    return {
-      id: mission.id,
-      startDate: safeDate(mission.timeBegin)!,
-      estimatedEndDate: safeDate(mission.estimatedEnd),
-      endDate: safeDate(mission.timeEnd ?? undefined),
-      type: mission.missionType?.longLibel || "Type inconnu",
-      place: mission.address,
-      team: "Seul",
-    };
-  };
+  const formatMission = (mission: Mission) => ({
+    id: mission.id,
+    startDate: safeDate(mission.timeBegin)!,
+    estimatedEndDate: safeDate(mission.estimatedEnd),
+    endDate: safeDate(mission.timeEnd ?? undefined),
+    type: mission.missionType?.longLibel || "Type inconnu",
+    place: mission.address,
+    team: "Seul",
+  });
 
   let selectedMissions: MissionCard[] = [];
 
@@ -36,10 +40,7 @@ const MissionsListSwitch = () => {
     if (activeTab === "past") {
       selectedMissions = missions.past?.slice(-2).reverse().map(formatMission);
     } else {
-      selectedMissions = [
-        ...(missions.current || []),
-        ...(missions.future || []),
-      ]
+      selectedMissions = [...(missions.current || []), ...(missions.future || [])]
         .slice(0, 2)
         .map(formatMission);
     }
@@ -53,9 +54,7 @@ const MissionsListSwitch = () => {
           <MissionsList missions={selectedMissions} />
         ) : (
           <p className={styles.noMissionMessage}>
-            {activeTab === "past"
-              ? "Aucune mission passée."
-              : "Aucune mission prévue."}
+            {activeTab === "past" ? "Aucune mission passée." : "Aucune mission prévue."}
           </p>
         )}
       </div>
