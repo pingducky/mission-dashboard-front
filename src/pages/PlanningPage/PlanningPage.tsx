@@ -19,6 +19,7 @@ import { enqueueSnackbar } from '../../utils/snackbarUtils';
 import { CreateMissionPayload, useCreateMission } from '../../hooks/useCreateMission';
 import { useQueryClient } from '@tanstack/react-query';
 import { useListEmployee } from '../../hooks/useGetAllEmployees';
+import { getWeekRange, toParisISOString } from '../../utils/dates';
 import styles from './PlanningPage.module.scss';
 
 interface MissionEvent extends EventInput {
@@ -73,19 +74,6 @@ const PlanningPage: React.FC = () => {
 
   const { data: missionTypes, isLoading: areMissionTypesLoading } = useGetMissionTypes();
   
-  const getWeekRange = (date: Date) => {
-    const day = date.getDay();
-    const diffToMonday = (day === 0 ? -6 : 1) - day;
-    const monday = new Date(date);
-    monday.setDate(date.getDate() + diffToMonday);
-    const sunday = new Date(monday);
-    sunday.setDate(monday.getDate() + 6);
-    return {
-      monday: monday.toISOString(),
-      sunday: sunday.toISOString(),
-    };
-  };
-
   const defaultFrom = viewMode === 'timeGridDay'
     ? today.toISOString()
     : getWeekRange(today).monday;
@@ -122,12 +110,6 @@ const PlanningPage: React.FC = () => {
     }
   };
 
-  const toParisISOString = (utcDateString : string | undefined) => {
-    if (!utcDateString) return '';
-    const date = new Date(utcDateString);
-    return date.toLocaleString('sv-SE', { timeZone: 'Europe/Paris' }).replace(' ', 'T');
-  };
-
   useEffect(() => {
     if (missions) {
       const transformedEvents: MissionEvent[] = missions.map((mission) => ({
@@ -160,10 +142,6 @@ const PlanningPage: React.FC = () => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-
-  const handleEmployeeChange = (event: SelectChangeEvent) => {
-    setSelectedEmployee(event.target.value);
-  };
 
   const formatDateRange = (startStr: Date, endStr: Date) => {
     const locale = 'fr-FR';
@@ -294,7 +272,7 @@ const PlanningPage: React.FC = () => {
                       labelId="employee-select-label"
                       id="employee-select"
                       value={selectedEmployee}
-                      onChange={handleEmployeeChange}
+                      onChange={(value: SelectChangeEvent) => setSelectedEmployee(value.target.value)}
                       label="Choix des employé(e)s"
                     >
                       {

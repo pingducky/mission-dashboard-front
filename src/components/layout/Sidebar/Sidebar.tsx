@@ -4,6 +4,7 @@ import clsx from "clsx";
 import LogoCClean53 from "../../../assets/images/LogoCClean53.png";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
+import WorkHistoryOutlinedIcon from '@mui/icons-material/WorkHistoryOutlined';
 import GroupIcon from "@mui/icons-material/Group";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
@@ -131,6 +132,20 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, name, firstname, isLoadin
                 isActive={activePage === "planning"}
                 specialClass={clsx(styles.specialButton, {
                   [styles.active]: activePage == "planning",
+                })}
+              />
+              <IconButton
+                startIcon={<WorkHistoryOutlinedIcon />}
+                text="Suivi des Heures"
+                fontWeight="medium"
+                onClick={() => onMenuClick("pointage")}
+                isDisabled={false}
+                variant={"ghost"}
+                color={"darkGray"}
+                isRounded={false}
+                isActive={activePage === "pointage"}
+                specialClass={clsx(styles.specialButton, {
+                  [styles.active]: activePage == "pointage",
                 })}
               />
               {isAdmin && (

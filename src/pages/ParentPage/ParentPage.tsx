@@ -22,6 +22,7 @@ import { useGetEmployee } from "../../hooks/useGetEmployee";
 import { useGetUserFiles } from "../../hooks/useGetUserFiles";
 import PlanningPage from "../PlanningPage/PlanningPage";
 import CreateEmployeePage from "../Employee/CreateEmployeePage/CreateEmployeePage";
+import TimePointingCalendar from "../TimePointingCalendar/TimePointingCalendar";
 import styles from "./ParentPage.module.scss";
 
 type BreadcrumbItem = {
@@ -130,6 +131,8 @@ const ParentPage: React.FC = () => {
         return <DashboardPage firstname={userData?.firstName} />;
       case "planning":
         return <PlanningPage/>
+      case "pointage":
+        return <TimePointingCalendar/>
       case "salarie":
         return <EmployeesPage
           handleNavigation={handleNavigation}
