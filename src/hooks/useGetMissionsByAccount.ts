@@ -98,35 +98,6 @@ type CategorizedMissions = {
   future: Mission[];
 };
 
-// const getMissionsByAccount = async ({ accountId, from, to, filterByType, limit }: Params): Promise<Mission[]> => {
-//     const params = new URLSearchParams();
-
-//     if (from) params.append("from", from);
-//     if (to) params.append("to", to);
-//     if (filterByType !== undefined) params.append("filterByType", filterByType.toString());
-//     if (limit !== undefined) params.append("limit", limit.toString());
-//     const url = `${API_URL}/mission/missionCategorized/${accountId}?${params.toString()}`;
-
-//     const response = await fetch(url, {
-//         method: "GET",
-//         headers: {
-//             "Content-Type": "application/json",
-//             "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
-//         },
-//     });
-
-//     if (!response.ok) {
-//         throw new Error("Erreur lors de la récupération des missions");
-//     }
-
-//     const data = await response.json();
-//     // return data.missions;
-//     return {
-//         past: data.past || [],
-//         current: data.current || [],
-//         future: data.future || []
-//     };
-// };
 const getMissionsByAccount = async ({ accountId, filters, limit }: Params): Promise<CategorizedMissions> => {
     const params = new URLSearchParams();
 
