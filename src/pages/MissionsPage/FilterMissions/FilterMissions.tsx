@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import clsx from "clsx";
-import { useGetmissionTypes } from "../../../hooks/useGetMissionTypes";
+import { MissionFilter } from "../../../hooks/useGetMissions";
 import styles from "./FilterMissions.module.scss";
 
 type Tab = {
   /**
    * Id du filtre
    */
-  id: number
+  id: string
   /**
-   * Filtre des employés
+   * Filtre des missions
    */
-  filter: string;
+  filter: MissionFilter;
   /**
    * Nom du filtre
    */
@@ -22,32 +22,25 @@ type Tab = {
   count: number;
 };
 
+const tabs: Tab[] = [
+  { id: "allMissions", filter: "all", label: "Toutes les missions", count: 22 },
+  { id: "activeMissions", filter: "actives", label: "Missions actives", count: 18 },
+  { id: "CanceledMissions", filter: "canceled", label: "Missions inactives", count: 4 },
+  { id: "PastMissions", filter: "past", label: "Missions passées", count: 3 },
+  { id: "UpcomingMissions", filter: "upcoming", label: "Missions prévues", count: 3 },
+];
+
 interface FilterMissionsProps {
   /**
-   * Fonction pour mettre à jour le filtre des employés
+   * Fonction pour mettre à jour le filtre des missions
    */
-  setFilter: (filter: number) => void;
+  setFilter: (filter: MissionFilter) => void;
 }
 
 const FilterMissions: React.FC<FilterMissionsProps> = ({setFilter}) => {
   const [activeIndex, setActiveIndex] = useState<number>(0);
-  const { data: missionTypes = [], isLoading } = useGetmissionTypes() ?? [];
-  const tabs: Tab[] = !isLoading && missionTypes?.length > 0 ? [
-    {
-      id: 0,
-      filter: "all",
-      label: "Toutes les missions",
-      count: 0,
-    },
-    ...missionTypes.map((type) => ({
-      id: type.id,
-      filter: type.shortLibel,
-      label: type.longLibel,
-      count: 0,
-    })),
-  ] : [];
 
-  return !isLoading && (
+  return (
     <div
       className={styles.filterEmployeesContainer}
       data-tab-active={tabs[activeIndex].id}
@@ -63,7 +56,7 @@ const FilterMissions: React.FC<FilterMissionsProps> = ({setFilter}) => {
           data-tab-id={tab.id}
           onClick={() => {
             setActiveIndex(index);
-            setFilter(tab.id);
+            setFilter(tab.filter);
           }}
         >
           <span className={styles.label}>{tab.label}</span>

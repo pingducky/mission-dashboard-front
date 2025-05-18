@@ -24,8 +24,8 @@ import { useGetUserFiles } from "../../hooks/useGetUserFiles";
 import PlanningPage from "../PlanningPage/PlanningPage";
 import CreateEmployeePage from "../Employee/CreateEmployeePage/CreateEmployeePage";
 import TimePointingCalendar from "../TimePointingCalendar/TimePointingCalendar";
-import styles from "./ParentPage.module.scss";
 import ReadMissionPage from "../MissionsPage/ReadMission/ReadMissionPage";
+import styles from "./ParentPage.module.scss";
 
 type BreadcrumbItem = {
   label: string;
@@ -155,10 +155,10 @@ const ParentPage: React.FC = () => {
           userId={userData?.id!}
         />
       case "missionDetail":
-        return <ReadMissionPage 
-          handleNavigation={handleNavigation}
-          missionId={parseInt(breadcrumbs[breadcrumbs.length - 1]?.id!)}
-        />;
+        // return <ReadMissionPage 
+        //   handleNavigation={handleNavigation}
+        //   missionId={parseInt(breadcrumbs[breadcrumbs.length - 1]?.id!)}
+        // />;
       case "notifications":
         return <div>Notifications Page</div>;
       case "compte":

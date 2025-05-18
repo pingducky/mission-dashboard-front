@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Loading } from '../../components/loading/Loading';
-import { useGetMissions } from '../../hooks/useGetMissions';
-import { MissionModel } from '../../hooks/useGetMissionsByAccount';
+import { MissionFilter, useGetMissions } from '../../hooks/useGetMissions';
+import { Mission } from '../../hooks/useGetMissionsByAccount';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import { User } from '../../hooks/useUserData';
 import { safeDate } from '../../utils/dates';
@@ -27,7 +27,7 @@ export const MissionsPage: React.FC<MisionsPageProps> = ({
 }) => {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(15);
-    const [filter, setFilter] = React.useState<number>(0);
+    const [filter, setFilter] = React.useState<MissionFilter>("all");
     const {data: missionsData, isLoading } = useGetMissions(filter, userId) ?? [];
     const handleChangePage = (e: unknown, newPage: number) => {
         setPage(newPage);
@@ -38,7 +38,7 @@ export const MissionsPage: React.FC<MisionsPageProps> = ({
         setPage(0);
     };
 
-    const getMissionDates = (mission: MissionModel) => {
+    const getMissionDates = (mission: Mission) => {
         const datebegin = safeDate(mission.timeBegin);
         const dateEnd = safeDate(mission.estimatedEnd);
 
@@ -61,7 +61,7 @@ export const MissionsPage: React.FC<MisionsPageProps> = ({
         );
     }
 
-    const getMissionEmployees = (mission: MissionModel) => {
+    const getMissionEmployees = (mission: Mission) => {
         const nbrAssigned = mission.assignedUsers?.length;
         if (nbrAssigned === 1) {
             const employee = mission.assignedUsers[0];
@@ -96,7 +96,7 @@ export const MissionsPage: React.FC<MisionsPageProps> = ({
     }
 
     const missions = missionsData?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-        .map((mission: MissionModel) => {
+        .map((mission: Mission) => {
         return (
             <tr key={mission.id} onClick={() => handleNavigation('missionDetail', mission.description, mission.id.toString())}>
                 <th scope="row">{mission.description}</th>

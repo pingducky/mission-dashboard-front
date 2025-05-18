@@ -1,11 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import { MissionModel } from "./useGetMissionsByAccount";
+import { Mission } from "./useGetMissionsByAccount";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-const getAllMissions = async (filter: number, id: number): Promise<MissionModel[]> => {
-    const filterByType = filter && filter !== 0 ? `?filterByType=${filter}` : '';
-    return await fetch(`${API_URL}/mission/listMissions/${id}${filterByType}`, {
+export type MissionFilter = 'actives' | 'past' | 'upcoming' | 'canceled' | 'all';
+
+const getAllMissions = async (filter: string, id: number): Promise<Mission[]> => {
+    return await fetch(`${API_URL}/mission/listMissions/${id}?status=${filter}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -19,7 +20,7 @@ const getAllMissions = async (filter: number, id: number): Promise<MissionModel[
     });
 }
 
-export const useGetMissions = (filter: number, id: number) => {
+export const useGetMissions = (filter: string, id: number) => {
     return useQuery({
         queryKey: ["employees", filter],
         queryFn: () => getAllMissions(filter, id),
