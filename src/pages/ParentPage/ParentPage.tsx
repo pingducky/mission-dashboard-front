@@ -21,7 +21,9 @@ import DashboardPage from "../DashboardPage/DashboardPage";
 import { EmployeePage } from "../EmployeePage/EmployeePage";
 import { useGetEmployee } from "../../hooks/useGetEmployee";
 import { useGetUserFiles } from "../../hooks/useGetUserFiles";
+import PlanningPage from "../PlanningPage/PlanningPage";
 import CreateEmployeePage from "../Employee/CreateEmployeePage/CreateEmployeePage";
+import TimePointingCalendar from "../TimePointingCalendar/TimePointingCalendar";
 import styles from "./ParentPage.module.scss";
 import ReadMissionPage from "../MissionsPage/ReadMission/ReadMissionPage";
 
@@ -36,7 +38,7 @@ const ParentPage: React.FC = () => {
   const navigate = useNavigate();
   const logoutMutation = useLogout();
   const [employeeId, setEmployeeId] = useState<number>(0);
-  const tokenData = getUserDataFromToken();
+  const tokenData = getUserDataFromToken(); 
 
   useEffect(() => {
     if (!tokenData) {
@@ -130,7 +132,9 @@ const ParentPage: React.FC = () => {
       case "dashboard":
         return <DashboardPage firstname={userData?.firstName} />;
       case "planning":
-        return <div>Planning Page</div>;
+        return <PlanningPage/>
+      case "pointage":
+        return <TimePointingCalendar/>
       case "salarie":
         return <EmployeesPage
           handleNavigation={handleNavigation}
@@ -176,6 +180,7 @@ const ParentPage: React.FC = () => {
         name={userData?.lastName}
         firstname={userData?.firstName}
         onMenuClick={(page) => handleNavigation(page, capitalize(page))}
+        isAdmin={userData?.isAdmin}
       />
 
       <div className={styles.content}>

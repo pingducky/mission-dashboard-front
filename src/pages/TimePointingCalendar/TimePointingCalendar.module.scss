@@ -8,23 +8,10 @@
     background-color: white;
   }
 
-  .missionEvent {
+  .workEvent {
     padding: 0 5px;
     display: flex;
     flex-direction: column;
-  }
-}
-
-.missionsType {
-  background-color: white;
-  padding: 15px;
-  border-radius: 15px;
-
-  .missionsTypeList {
-    display: flex;
-    gap: 15px;
-    margin-top: 15px;
-    flex-wrap: wrap;
   }
 }
 

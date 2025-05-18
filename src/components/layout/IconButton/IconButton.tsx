@@ -90,7 +90,7 @@ const IconButton: React.FC<IconButtonProps> = ({
           text && <span className={`iconTextGlobal ${styles.iconText}`}>
             {text}
           </span>
-  }
+        }
     </button>
   );
 };

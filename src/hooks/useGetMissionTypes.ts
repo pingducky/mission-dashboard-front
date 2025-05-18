@@ -1,20 +1,25 @@
 import { useQuery } from "@tanstack/react-query";
 
-const API_URL = import.meta.env.VITE_API_URL;
 export type MissionType = {
     /**
-     * Identifiant de la mission
+     * Id
      */
     id: number;
     /**
-     * Libellé court de la mission
+     * Libellé court
      */
     shortLibel: string;
     /**
-     * Libellé long de la mission
+     * Libellé long
      */
     longLibel: string;
-};
+    /**
+     * Code couleur
+     */
+    color: string;
+}
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 const getMissionTypes = async (): Promise<MissionType[]> => {
     return await fetch(`${API_URL}/mission/type`, {
@@ -23,16 +28,20 @@ const getMissionTypes = async (): Promise<MissionType[]> => {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${sessionStorage.getItem('token')}`,
         },
-    }).then (data => {
-        return data.json();
+    }).then(response => {
+        if (!response.ok) {
+            throw new Error("Erreur lors de la récupération des types de mission");
+        }
+        return response.json();
     }).catch(error => {
         throw error;
     });
 }
 
-export const useGetmissionTypes = () => {
+export const useGetMissionTypes = (enabled = true) => {
     return useQuery({
         queryKey: ["missionTypes"],
-        queryFn: () => getMissionTypes(),
-    })
+        queryFn: getMissionTypes,
+        enabled: enabled,
+    });
 }

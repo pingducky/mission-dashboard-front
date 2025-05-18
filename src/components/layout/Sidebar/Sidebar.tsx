@@ -4,6 +4,7 @@ import clsx from "clsx";
 import LogoCClean53 from "../../../assets/images/LogoCClean53.png";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
+import WorkHistoryOutlinedIcon from '@mui/icons-material/WorkHistoryOutlined';
 import GroupIcon from "@mui/icons-material/Group";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
@@ -13,8 +14,8 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeftOutlined";
 import ChevronRightIcon from "@mui/icons-material/ChevronRightOutlined";
 import { Drawer } from "@mui/material";
 import IconButton from "../IconButton/IconButton";
+import DisplayProfilName from "./profilName/displayProfilName";
 import styles from "./Sidebar.module.scss";
-import DisplayProfilName from "../../sidebar/profilName/displayProfilName";
 
 interface SidebarProps {
   /**
@@ -37,9 +38,13 @@ interface SidebarProps {
    * Props pour gérer les clicks
    */
   onMenuClick: (page: string) => void;
+  /**
+   * Vérifier si admin
+   */
+  isAdmin?: boolean; 
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ activePage, name, firstname, isLoading, onMenuClick }) => {
+const Sidebar: React.FC<SidebarProps> = ({ activePage, name, firstname, isLoading, onMenuClick, isAdmin }) => {
   const [isOpen, setIsOpen] = useState(true);
   const drawerRef = useRef<HTMLDivElement>(null);
 
@@ -95,7 +100,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, name, firstname, isLoadin
             <img src={LogoCClean53} alt="Logo" />
           </div>
 
-          {isOpen && !isLoading && name && firstname && <DisplayProfilName name={firstname} firstname={name}/>}
+          {isOpen && !isLoading && name && firstname && isAdmin && <DisplayProfilName name={firstname} firstname={name} isAdmin={isAdmin}/>}
 
           <div className={styles.iconButtonListParent}>
             <div className={styles.iconButtonList}>
@@ -104,7 +109,6 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, name, firstname, isLoadin
                 startIcon={<HomeOutlinedIcon />}
                 text="Tableau de bord"
                 fontWeight="medium"
-                onClick={() => onMenuClick("dashboard")}
                 isDisabled={false}
                 variant={"ghost"}
                 color={"darkGray"}
@@ -113,13 +117,13 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, name, firstname, isLoadin
                 specialClass={clsx(styles.specialButton, {
                   [styles.active]: activePage == "dashboard",
                 })}
+                onClick={() => onMenuClick("dashboard")}
               />
 
               <IconButton
                 startIcon={<CalendarMonthOutlinedIcon />}
                 text="Planning"
                 fontWeight="medium"
-                onClick={() => onMenuClick("planning")}
                 isDisabled={false}
                 variant={"ghost"}
                 color={"darkGray"}
@@ -128,37 +132,55 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, name, firstname, isLoadin
                 specialClass={clsx(styles.specialButton, {
                   [styles.active]: activePage == "planning",
                 })}
+                onClick={() => onMenuClick("planning")}
               />
-
               <IconButton
-                startIcon={<GroupIcon />}
-                text="Salarié"
+                startIcon={<WorkHistoryOutlinedIcon />}
+                text="Suivi des Heures"
                 fontWeight="medium"
-                onClick={() => onMenuClick("salarie")}
                 isDisabled={false}
                 variant={"ghost"}
                 color={"darkGray"}
                 isRounded={false}
-                isActive={activePage === "salarie"}
+                isActive={activePage === "pointage"}
                 specialClass={clsx(styles.specialButton, {
-                  [styles.active]: activePage == "salarie",
+                  [styles.active]: activePage == "pointage",
                 })}
+                onClick={() => onMenuClick("pointage")}
               />
+              {isAdmin && (
+                <>
+                  <IconButton
+                    startIcon={<GroupIcon />}
+                    text="Salarié"
+                    fontWeight="medium"
+                    isDisabled={false}
+                    variant={"ghost"}
+                    color={"darkGray"}
+                    isRounded={false}
+                    isActive={activePage === "salarie"}
+                    specialClass={clsx(styles.specialButton, {
+                      [styles.active]: activePage == "salarie",
+                    })}
+                    onClick={() => onMenuClick("salarie")}
+                  />
 
-              <IconButton
-                startIcon={<ListAltIcon />}
-                text="Liste missions"
-                fontWeight="medium"
-                onClick={() => onMenuClick("missions")}
-                isDisabled={false}
-                variant={"ghost"}
-                color={"darkGray"}
-                isRounded={false}
-                isActive={activePage === "missions"}
-                specialClass={clsx(styles.specialButton, {
-                  [styles.active]: activePage == "missions",
-                })}
-              />
+                  <IconButton
+                    startIcon={<ListAltIcon />}
+                    text="Liste missions"
+                    fontWeight="medium"
+                    isDisabled={false}
+                    variant={"ghost"}
+                    color={"darkGray"}
+                    isRounded={false}
+                    isActive={activePage === "missions"}
+                    specialClass={clsx(styles.specialButton, {
+                      [styles.active]: activePage == "missions",
+                    })}
+                    onClick={() => onMenuClick("missions")}
+                  />
+                </>
+              )}
             </div>
 
             <div className={styles.iconButtonList}>
@@ -167,7 +189,6 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, name, firstname, isLoadin
                 startIcon={<NotificationsNoneIcon />}
                 text="Notifications"
                 fontWeight="medium"
-                onClick={() => onMenuClick("notifications")}
                 isDisabled={false}
                 variant={"ghost"}
                 color={"darkGray"}
@@ -176,13 +197,13 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, name, firstname, isLoadin
                 specialClass={clsx(styles.specialButton, {
                   [styles.active]: activePage == "notifications",
                 })}
+                onClick={() => onMenuClick("notifications")}
               />
 
               <IconButton
                 startIcon={<PersonOutlineIcon />}
                 text="Compte"
                 fontWeight="medium"
-                onClick={() => onMenuClick("compte")}
                 isDisabled={false}
                 variant={"ghost"}
                 color={"darkGray"}
@@ -191,18 +212,19 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, name, firstname, isLoadin
                 specialClass={clsx(styles.specialButton, {
                   [styles.active]: activePage == "compte",
                 })}
+                onClick={() => onMenuClick("compte")}
               />
 
               <IconButton
                 startIcon={<LogoutIcon />}
                 text="Se déconnecter"
                 fontWeight="medium"
-                onClick={() => onMenuClick("logout")}
                 isDisabled={false}
                 variant={"ghost"}
                 color={"darkGray"}
                 isRounded={false}
                 specialClass={styles.specialButton}
+                onClick={() => onMenuClick("logout")}
               />
             </div>
           </div>

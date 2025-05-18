@@ -113,5 +113,11 @@
                 }
             }
         }
+
+        .noInfosCard {
+            padding: 8px 15px;
+            font-style: italic;
+            color: $darkGray;
+        }
     }
 }
