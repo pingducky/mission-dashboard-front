@@ -50,6 +50,10 @@ interface AddMissionDrawerProps {
    */
   missionTypes?: MissionType[];
   /**
+   * Mission correspondant à l'évènement
+   */
+  mission: EventImpl | null;
+  /**
    * Evènement à la création d'une mission
    */
   onCreate: (payload: CreateMissionPayload) => void;
@@ -57,10 +61,6 @@ interface AddMissionDrawerProps {
    * Evènement lors de la fermeture
    */
   onClose: () => void;
-  /**
-   * Lectur seul
-   */
-  mission: EventImpl|null;
 }
 
 const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
@@ -69,9 +69,9 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
   startDate,
   endDate,
   missionTypes,
+  mission = null,
   onCreate,
   onClose,
-  mission = null,
 }) => {
   const [selectedEmployees, setSelectedEmployees] = React.useState<string[]>([]);
   const [selectedMissionType, setSelectedMissionType] = React.useState<number | "">("");
@@ -194,14 +194,6 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
     setSelectedMissionType('');
     setErrors({});
   };
-
-  const handleValidationSection = (mission: boolean) => !mission && (
-    <div className={styles.formValidationSection}>
-      <Button variant="contained" color="primary" onClick={handleCreate}>
-        Créer
-      </Button>
-    </div>
-  );
 
   return (
     <Drawer anchor="right" open={isOpen} onClose={onClose}>
@@ -369,7 +361,13 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
           </FormControl>
         </section>
 
-        {handleValidationSection(!!mission)}
+        {!mission && (
+          <div className={styles.formValidationSection}>
+            <Button variant="contained" color="primary" onClick={handleCreate}>
+              Créer
+            </Button>
+          </div>
+        )}
       </div>
     </Drawer>
   );

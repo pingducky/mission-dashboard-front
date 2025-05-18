@@ -60,10 +60,9 @@ interface MissionEvent extends EventInput {
      */
     countryCode?: string|null;
     /**
-     * Liste des employés associés à la mission (optionnelle)
+     * Liste des employés associés à la mission
      */
     employees?: string[];
-
 }
   
 
@@ -322,7 +321,10 @@ const PlanningPage: React.FC = () => {
                     >
                       {
                         employeeData?.map((employee) => (
-                          <MenuItem key={employee.id} value={employee.id}>{employee.firstName}</MenuItem>
+                          <MenuItem 
+                            key={employee.id} 
+                            value={employee.id}
+                          >{employee.firstName}</MenuItem>
                         ))
                       }
                     </Select>
