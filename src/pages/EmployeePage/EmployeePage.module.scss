@@ -207,14 +207,102 @@
     }
 
     .component {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-gap: 20px;
         grid-column: 1 / span 3;
 
         @include mixinBreakpoints(xl) {
             grid-column: 1 / span 2;
+            grid-template-columns: repeat(2, 1fr);
         }
     
         @include mixinBreakpoints(lg) {
             grid-column: 1;
+            grid-template-columns: repeat(1, 1fr);
+        }
+
+        > :not(.map) {
+            grid-column: 1 / span 2;
+
+            @include mixinBreakpoints(xl) {
+                grid-column: 1;
+            }
+
+            @include mixinBreakpoints(lg) {
+                grid-row: 1;
+            }
+        }
+
+        .mapContainer {
+            background-color: $white;
+            grid-column: 3;
+            padding: 20px 20px 30px 20px;
+            border-radius: 5px;
+
+            @include mixinBreakpoints(xl) {
+                grid-column: 2;
+            }
+
+            @include mixinBreakpoints(lg) {
+                grid-row: 2;
+                grid-column: 1;
+            }
+
+
+            h3 {
+                display: flex;
+                align-items: center;
+
+                .wifiIcon {
+                    color: $darkGray;
+                    margin-left: 10px;
+
+                    &.enabled {
+                        color: $blue;
+                    }
+                }
+            }
+
+            p {
+                @include PoppinsMedium();
+                margin: 20px 0;
+                color: $darkGray;
+            }
+
+            .map {
+                height: 70%;
+                min-height: 200px;
+                background-color: $white;
+                position: relative;
+
+                .mapInfo {
+                    position: absolute;
+                    bottom: 5px;
+                    background-color: $white;
+                    padding: 10px;
+                    border-radius: 5px;
+                    z-index: 999;
+                    height: 40px;
+                    right: 5px;
+
+                    h4 {
+                        @include PoppinsSemiBold();
+                        display: flex;
+                        align-items: center;
+                        font-size: var(--font-size-text);
+
+                        .icon { 
+                            color: $blue;
+                        }
+                    }
+
+                    .timeSessionStart {
+                        margin: 0;
+                        padding-left: 20px;
+                    }
+                }
+            }
         }
     }
 }
