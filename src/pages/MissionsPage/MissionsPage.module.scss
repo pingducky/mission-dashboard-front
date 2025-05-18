@@ -16,7 +16,7 @@
         box-sizing: border-box;
 
         thead {
-            background-color: $lightBlue;
+            background-color: $lightGrayBlue;
             position: sticky;
             top: 0;
             z-index: 10;
@@ -57,7 +57,7 @@
                 padding-left: 2px;
 
                 &:hover {
-                    background-color: $lightBlue;
+                    background-color: $lightGrayBlue;
                     border-left-color: $darkBlue;
                     padding-left: 0;
                 }
