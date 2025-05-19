@@ -38,10 +38,6 @@ export type latestWorkSession = {
 }
 
 const getLatestWorkSession = async (id: number) : Promise<latestWorkSession|null> => {
-    if(!id) {
-        return null;
-    }
-
     return await fetch(`${API_URL}/workSession/latest/${id}`, {
         method: 'GET',
         headers: {
