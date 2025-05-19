@@ -1,0 +1,50 @@
+@use '../../app/styles/global.scss' as *;
+@use "../../app/styles/colors" as *;
+@use "../../app/styles/mixins.scss" as *;
+
+.actionButton {
+    justify-content: center;
+    border-radius: 50%;
+    height: 30px;
+    width: 30px;
+    transform: rotate(90deg);
+
+    &.open {
+        display: none;
+    }
+}
+
+
+td:has(.actionButtonList) {
+    min-width: 160px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    min-height: 50px;
+
+    .actionButtonList {
+        display: none;
+        flex-direction: row;
+        padding: 5px;
+
+        &.open {
+            display: flex;
+        }
+
+        li {
+            button {
+                border-radius: 0;
+            }
+
+            &:first-child > button {
+                border-top-left-radius: 50%;
+                border-bottom-left-radius: 50%;
+            }
+
+            &:last-child > button {
+                border-top-right-radius: 50%;
+                border-bottom-right-radius: 50%;
+            }
+        }
+    }
+}

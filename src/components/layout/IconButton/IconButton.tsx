@@ -86,7 +86,11 @@ const IconButton: React.FC<IconButtonProps> = ({
             {startIcon}
           </span>
         }
-      <span className={`iconTextGlobal ${styles.iconText}`}>{text}</span>
+        {
+          text && <span className={`iconTextGlobal ${styles.iconText}`}>
+            {text}
+          </span>
+        }
     </button>
   );
 };

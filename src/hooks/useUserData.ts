@@ -68,7 +68,7 @@ export type User = {
     /** 
      * Indique si le compte de l'utilisateur est activé. 
      */ 
-    archivedAt: Date;
+    archivedAt?: Date;
     /**
      * Indique si l'utilisateur est en ligne.
      */
@@ -99,7 +99,7 @@ export type User = {
     roles: Role[]
 };
 
-const fetchUserById = async (id: string, token: string): Promise<User> => {
+const fetchUserById = async (id: number, token: string): Promise<User> => {
     const API_URL = import.meta.env.VITE_API_URL;
 
     const response = await fetch(`${API_URL}/employee/${id}`, {
