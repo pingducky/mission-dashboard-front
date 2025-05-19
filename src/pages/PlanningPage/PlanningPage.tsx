@@ -20,6 +20,7 @@ import { CreateMissionPayload, useCreateMission } from '../../hooks/useCreateMis
 import { useQueryClient } from '@tanstack/react-query';
 import { useListEmployee } from '../../hooks/useGetAllEmployees';
 import { getWeekRange, toParisISOString } from '../../utils/dates';
+import { EventImpl } from '@fullcalendar/core/internal';
 import styles from './PlanningPage.module.scss';
 
 interface MissionEvent extends EventInput {
@@ -47,7 +48,23 @@ interface MissionEvent extends EventInput {
      * Description détaillée de la mission (optionnelle)
      */
     description?: string;
-  }
+    /**
+     * Ville où se déroule la mission (optionnelle)
+     */
+    city?: string|null;
+    /**
+     * Code postal de la ville où se déroule la mission (optionnelle)
+     */
+    postalCode?: string|null;
+    /**
+     * Code pays de où se déroule la mission (optionnelle)
+     */
+    countryCode?: string|null;
+    /**
+     * Liste des employés associés à la mission
+     */
+    employees?: string[];
+}
   
 
 const PlanningPage: React.FC = () => {
@@ -58,7 +75,7 @@ const PlanningPage: React.FC = () => {
   const [calendarStartDate, setCalendarStartDate] = useState<string | null>(null);
   const [calendarEndDate, setCalendarEndDate] = useState<string | null>(null);
   const [events, setEvents] = useState<MissionEvent[]>([]);
-
+  const [selectedMission, setSelectedMission] = useState<EventImpl | null>(null);
   const { data: employeeData } = useListEmployee('all');
 
   const [newEvent, setNewEvent] = useState<MissionEvent>({
@@ -118,8 +135,12 @@ const PlanningPage: React.FC = () => {
         start: toParisISOString(mission.timeBegin),
         end: toParisISOString(mission.estimatedEnd),
         adresse: mission.address,
-        categorie: mission.missionType?.shortLibel,
+        categorie: mission.missionType?.id.toString(),
+        city: mission.city,
+        postalCode: mission.postalCode,
+        countryCode: mission.countryCode,
         description: mission.description,
+        employees: mission.AccountModels.map((employee) => employee.id.toString()),
         backgroundColor: mission.missionType?.color,
         borderColor: mission.missionType?.color,
       }));
@@ -222,6 +243,7 @@ const PlanningPage: React.FC = () => {
               {
                 missionTypes?.map((type) => (
                   <MissionType
+                    key={type.id}
                     nom={type.longLibel}
                     code={type.shortLibel}
                     color={type.color}
@@ -277,7 +299,10 @@ const PlanningPage: React.FC = () => {
                     >
                       {
                         employeeData?.map((employee) => (
-                          <MenuItem value={employee.id}>{employee.firstName}</MenuItem>
+                          <MenuItem 
+                            key={employee.id} 
+                            value={employee.id}
+                          >{employee.firstName}</MenuItem>
                         ))
                       }
                     </Select>
@@ -288,7 +313,10 @@ const PlanningPage: React.FC = () => {
                     variant="filled"
                     isRounded={false}
                     startIcon={<AddIcon />}
-                    onClick={() => setOpenDialog(true)}
+                    onClick={() => {
+                      setOpenDialog(true)
+                      setSelectedMission(null)
+                    }}
                   />
                 </>
               )
@@ -325,7 +353,10 @@ const PlanningPage: React.FC = () => {
             setCalendarEndDate(arg.end.toISOString());
           }}
           eventContent={(eventInfo) => (
-            <div className={styles.missionEvent}>
+            <div className={styles.missionEvent} onClick={() => {
+              setSelectedMission(eventInfo.event);
+              setOpenDialog(true);
+            }}>
               <b>{eventInfo.timeText}</b>
               <i>{eventInfo.event.title}</i><br />
               <span>{eventInfo.event.extendedProps.description}</span><br />
@@ -346,6 +377,7 @@ const PlanningPage: React.FC = () => {
         missionTypes={missionTypes}
         onClose={() => setOpenDialog(false)}
         onCreate={handleCreateMission}
+        mission={selectedMission}
       />
     </div>
   );

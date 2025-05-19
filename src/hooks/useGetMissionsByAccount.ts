@@ -118,8 +118,7 @@ const getMissionsByAccount = async ({ accountId, from, to, filterByType, limit }
         throw new Error("Erreur lors de la récupération des missions");
     }
 
-    const data = await response.json();
-    return data.missions;
+    return await response.json();
 };
 
 export const useGetMissionsByAccount = (params: Params, enabled = true) => {
