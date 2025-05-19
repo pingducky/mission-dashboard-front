@@ -51,9 +51,10 @@ const getLatestWorkSession = async (id: number) : Promise<latestWorkSession|null
     });
 }
 
-export const useGetLatestWorkSession = (id: number) => {
+export const useGetLatestWorkSession = (id: number, isAdmin: boolean) => {
     return useQuery({
         queryKey: ["workSession", id],
         queryFn: () => getLatestWorkSession(id),
+        enabled: isAdmin && Boolean(id),
     })
 }

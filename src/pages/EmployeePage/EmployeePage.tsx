@@ -36,6 +36,10 @@ interface EmployeePageProps {
      * Indique si la requête de récupération des fichiers est en cours
      */
     areFilesLoading: boolean;
+    /**
+     * indique si l'utilisateur connecté est un admin
+     */
+    isAdmin?: boolean;
 }
 
 export const EmployeePage: React.FC<EmployeePageProps> = ({
@@ -43,8 +47,9 @@ export const EmployeePage: React.FC<EmployeePageProps> = ({
     files,
     isEmployeeLoading,
     areFilesLoading,
+    isAdmin,
 }) => {
-    const { data: latestWorkSession, isLoading: latestIsloading} = useGetLatestWorkSession(employee?.id);
+    const { data: latestWorkSession, isLoading: latestIsloading} = useGetLatestWorkSession(employee?.id, isAdmin!);
     const mapRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -190,7 +195,11 @@ export const EmployeePage: React.FC<EmployeePageProps> = ({
                         { areFilesLoading ? <Loading/> : handleFiles(files)}
                     </ul>
                 </div>
-                <div className={styles.component}>
+                <div className={clsx(styles.component,
+                    {
+                        [styles.adminMap]: isAdmin,
+                    }
+                )}>
                     <MissionsWrapper accountId={employee.id.toString()} />
                     <div className={styles.mapContainer}>
                         <h3>
@@ -206,7 +215,7 @@ export const EmployeePage: React.FC<EmployeePageProps> = ({
                         </h3>
                         <p>{latestWorkSession ? "Mission en cours : " + latestWorkSession.description : "Aucune mission en cours"}</p>
                         <div id="map" className={styles.map} ref={mapRef}>
-                            {latestWorkSession && (
+                            { isAdmin && latestWorkSession && (
                                 <div className={styles.mapInfo}>
                                     <h4> <PushPinOutlinedIcon className={styles.icon}/> Pointage</h4>
                                     <p className={styles.timeSessionStart}>Pointé à {format(new Date(latestWorkSession.startTime), "HH:mm").toString()}</p>

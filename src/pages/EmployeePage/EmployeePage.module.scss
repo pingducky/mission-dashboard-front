@@ -222,15 +222,17 @@
             grid-template-columns: repeat(1, 1fr);
         }
 
-        > :not(.map) {
-            grid-column: 1 / span 2;
+        &.adminMap {
+            > :not(.mapContainer) {
+                grid-column: 1 / span 2;
 
-            @include mixinBreakpoints(xl) {
-                grid-column: 1;
-            }
+                @include mixinBreakpoints(xl) {
+                    grid-column: 1;
+                }
 
-            @include mixinBreakpoints(lg) {
-                grid-row: 1;
+                @include mixinBreakpoints(lg) {
+                    grid-row: 1;
+                }
             }
         }
 
