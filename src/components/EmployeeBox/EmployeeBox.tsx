@@ -64,7 +64,7 @@ function EmployeeBox({ employee, refetchEmployees }: EmployeeBoxProps) {
                     }
                 ) }
             >
-                {capitalize(employee.firstName[0] + employee.lastName[0])}
+                {capitalize((employee?.firstName?.[0] ?? "") + (employee?.lastName?.[0] ?? ""))}
             </span>
             <div className={styles.ellipsise}>
                 <IconButton
@@ -77,8 +77,7 @@ function EmployeeBox({ employee, refetchEmployees }: EmployeeBoxProps) {
                         e?.stopPropagation();
                         setAnchorEl(anchorEl ? null : e?.target as HTMLElement);
                     }}
-                >
-                </IconButton>
+                />
                 <Popper
                     open={open}
                     anchorEl={anchorEl}

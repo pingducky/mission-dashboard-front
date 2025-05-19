@@ -16,6 +16,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useLogout } from "../../hooks/useLogout";
 import EmployeesPage from "../EmployeesPage/EmployeesPage";
+import { MissionsPage } from "../MissionsPage/MissionsPage"
 import DashboardPage from "../DashboardPage/DashboardPage";
 import { EmployeePage } from "../EmployeePage/EmployeePage";
 import { useGetEmployee } from "../../hooks/useGetEmployee";
@@ -40,9 +41,9 @@ const ParentPage: React.FC = () => {
 
   useEffect(() => {
     if (!tokenData) {
-      window.location.href = '/login';
+      navigate('/login');
     }
-  }, [tokenData]);
+  }, [tokenData, navigate]);
 
   const { data: userData, isLoading } = useUserData();
 
@@ -148,14 +149,10 @@ const ParentPage: React.FC = () => {
       case "salarieCreation": 
         return <CreateEmployeePage handleNavigation={handleNavigation}/>
       case "missions":
-        return (
-          <div>
-            <div>Liste des missions</div>
-            <button onClick={() => handleNavigation("missionDetail", "Mission A", "42")}>
-              Voir Mission A
-            </button>
-          </div>
-        );
+        return <MissionsPage
+          handleNavigation={handleNavigation}
+          userId={userData?.id!}
+        />
       case "missionDetail":
         return <div>Détails de la mission #{breadcrumbs[breadcrumbs.length - 1].id}</div>;
       case "notifications":

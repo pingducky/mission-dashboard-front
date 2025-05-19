@@ -188,10 +188,13 @@ const TimePointingCalendar: React.FC = () => {
                                             onChange={(value: SelectChangeEvent) => setSelectedEmployee(value.target.value)}
                                         >
                                             {
-                        employeeData?.map((employee) => (
-                          <MenuItem value={employee.id}>{employee.firstName}</MenuItem>
-                        ))
-                      }
+                                                employeeData?.map((employee) => (
+                                                    <MenuItem 
+                                                        key={employee.id}
+                                                        value={employee.id}
+                                                    >{employee.firstName}</MenuItem>
+                                                ))
+                                            }
                                         </Select>
                                     </FormControl>
 

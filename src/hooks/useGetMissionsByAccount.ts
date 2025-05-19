@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { MissionType } from "./useGetMissionTypes";
+import { User } from "./useUserData";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -67,6 +68,10 @@ export type Mission = {
      * Type de mission
      */
     missionType: MissionType;
+    /**
+     * Utilisateurs assignés à la mission
+     */
+    assignedUsers: User[];
 };
 
 type Params = {
