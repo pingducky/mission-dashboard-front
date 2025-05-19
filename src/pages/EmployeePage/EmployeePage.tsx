@@ -9,6 +9,14 @@ import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutl
 import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
 import { Loading } from '../../components/loading/Loading';
 import MissionsWrapper from "../../components/missions/MissionsListSwitch/MissionsListSwitch";
+import WifiIcon from '@mui/icons-material/Wifi';
+import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
+import { useEffect, useRef } from 'react';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+import { useGetLatestWorkSession } from '../../hooks/useGetLatestWorkSession';
+import clsx from 'clsx';
+import { format } from 'date-fns';
 import styles from './EmployeePage.module.scss'
 
 interface EmployeePageProps {
@@ -28,6 +36,10 @@ interface EmployeePageProps {
      * Indique si la requête de récupération des fichiers est en cours
      */
     areFilesLoading: boolean;
+    /**
+     * indique si l'utilisateur connecté est un admin
+     */
+    isAdmin?: boolean;
 }
 
 export const EmployeePage: React.FC<EmployeePageProps> = ({
@@ -35,7 +47,25 @@ export const EmployeePage: React.FC<EmployeePageProps> = ({
     files,
     isEmployeeLoading,
     areFilesLoading,
+    isAdmin,
 }) => {
+    const { data: latestWorkSession, isLoading: latestIsloading} = useGetLatestWorkSession(employee?.id, isAdmin!);
+    const mapRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (mapRef.current && !(window as any)._leafletMapInitialized && !latestIsloading && latestWorkSession) {
+            const map = L.map(mapRef.current).setView([48.07580821401472, -0.7811754739238855], 11);
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+            }).addTo(map);
+            const coordinates = latestWorkSession?.startLocation.split(',');
+            if(coordinates && coordinates.length === 2) {
+                L.marker([parseFloat(coordinates[0].trim()), parseFloat(coordinates[1].trim())]).addTo(map);
+            }
+            (window as any)._leafletMapInitialized = true;
+        }
+    }, [mapRef.current, employee]);
+
     const handleFiles = (files: File[]) => {
         if(files.length <= 0) {
             return (
@@ -165,9 +195,36 @@ export const EmployeePage: React.FC<EmployeePageProps> = ({
                         { areFilesLoading ? <Loading/> : handleFiles(files)}
                     </ul>
                 </div>
-                <div className={styles.component}>
+                <div className={clsx(styles.component,
+                    {
+                        [styles.adminMap]: isAdmin,
+                    }
+                )}>
                     <MissionsWrapper accountId={employee.id.toString()} />
+                    <div className={styles.mapContainer}>
+                        <h3>
+                            Activités en direct 
+                            <WifiIcon 
+                                className={clsx(
+                                    styles.wifiIcon,
+                                    {
+                                        [styles.enabled]: !!latestWorkSession,
+                                    })
+                                } 
+                            />
+                        </h3>
+                        <p>{latestWorkSession ? "Mission en cours : " + latestWorkSession.description : "Aucune mission en cours"}</p>
+                        <div id="map" className={styles.map} ref={mapRef}>
+                            { isAdmin && latestWorkSession && (
+                                <div className={styles.mapInfo}>
+                                    <h4> <PushPinOutlinedIcon className={styles.icon}/> Pointage</h4>
+                                    <p className={styles.timeSessionStart}>Pointé à {format(new Date(latestWorkSession.startTime), "HH:mm").toString()}</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
                 </div>
+                
             </div>
         ) : (
             <Loading />

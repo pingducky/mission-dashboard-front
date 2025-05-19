@@ -145,6 +145,7 @@ const ParentPage: React.FC = () => {
           files={employeeFiles || []}
           isEmployeeLoading={isEmployeeLoading}
           areFilesLoading={areFilesLoading}
+          isAdmin={userData?.isAdmin}
         />;
       case "salarieCreation": 
         return <CreateEmployeePage handleNavigation={handleNavigation}/>
