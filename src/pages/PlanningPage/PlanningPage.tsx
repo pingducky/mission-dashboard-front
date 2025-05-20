@@ -19,8 +19,8 @@ import { enqueueSnackbar } from '../../utils/snackbarUtils';
 import { CreateMissionPayload, useCreateMission } from '../../hooks/useCreateMission';
 import { useQueryClient } from '@tanstack/react-query';
 import { useListEmployee } from '../../hooks/useGetAllEmployees';
-import { getWeekRange, toParisISOString } from '../../utils/dates';
 import { EventImpl } from '@fullcalendar/core/internal';
+import { formatDateForInput, getWeekRange, toParisISOString } from '../../utils/dates';
 import styles from './PlanningPage.module.scss';
 
 interface MissionEvent extends EventInput {
@@ -201,12 +201,6 @@ const PlanningPage: React.FC = () => {
     }
   };
 
-  const formatDateForInput = (dateStr: string) => {
-    const date = new Date(dateStr);
-    const offset = date.getTimezoneOffset();
-    const localDate = new Date(date.getTime() - offset * 60 * 1000);
-    return localDate.toISOString().slice(0, 16); // YYYY-MM-DDTHH:mm
-  };
   const handleDateSelect = (selectInfo: { startStr: string; endStr: string }) => {
     const selectedStart = new Date(selectInfo.startStr);
     const selectedEnd = new Date(selectInfo.endStr);
@@ -232,6 +226,7 @@ const PlanningPage: React.FC = () => {
     });
     setOpenDialog(true);
   };
+
   return (
     <div>
       {

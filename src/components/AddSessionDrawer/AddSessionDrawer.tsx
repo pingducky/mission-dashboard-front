@@ -9,7 +9,8 @@ import { useGetMissionsByAccount } from "../../hooks/useGetMissionsByAccount";
 import { getUserDataFromToken } from "../../utils/auth";
 import { useCreateSession } from "../../hooks/useCreateSession";
 import { enqueueSnackbar } from "../../utils/snackbarUtils";
-import { toParisISOStringV2Two } from "../../utils/dates";
+import { toISOStringWithTimezone, toParisISOStringV2Two } from "../../utils/dates";
+import { useQueryClient } from "@tanstack/react-query";
 import styles from "./AddSessionDrawer.module.scss";
 
 interface AddSessionDrawerProps {
@@ -18,13 +19,17 @@ interface AddSessionDrawerProps {
    */
   isOpen: boolean;
   /**
-   * Date de début
+   * Temporalité de début
    */
   startDate?: string;
   /**
-   * Date de fin
+   * Temporalité de fin
    */
   endDate?: string;
+  /**
+   * Compte sélectionné
+   */
+  selectedAccountId?: string,
   /**
    * Evènement lors de la fermeture
    */
@@ -35,6 +40,7 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
   isOpen,
   startDate,
   endDate,
+  selectedAccountId,
   onClose,
 }) => {
   const [pauses, setPauses] = useState<
@@ -42,28 +48,30 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
   >([]);
   const [selectedMissions, setSelectedMissions] = useState<string[]>([]);
 
-  const [interventionDate, setInterventionDate] = useState<string>("");
+  const [interventionDate, setInterventionDate] = useState<string>('2025-05-22');
   const [startTime, setStartTime] = useState<string>(startDate || "");
   const [endTime, setEndTime] = useState<string>(endDate || "");
 
   const [errors, setErrors] = useState<{ [key: string]: boolean }>({});
+  const queryClient = useQueryClient();
 
-  // Effect Hook pour réinitialiser les erreurs
+  console.log("selectedAccountId : ", selectedAccountId);
+
   useEffect(() => {
     if (isOpen) setErrors({});
   }, [isOpen]);
 
-  // // Effet pour la mise à jour des heures de début et de fin
-  useEffect(() => setStartTime(startDate || ""), [startDate]);
-  useEffect(() => setEndTime(endDate || ""), [endDate]);
-
-  useEffect(() => setStartTime(startDate || ""), [startDate]);
-  useEffect(() => setEndTime(endDate || ""), [endDate]);
-
+  // useEffect(() => setStartTime(startDate || ""), [startDate]);
+  // useEffect(() => setEndTime(endDate || ""), [endDate]);
+  
+  useEffect(() => {
+    if(startDate) {
+      setInterventionDate(toISOStringWithTimezone(new Date(startDate)).split('T')[0])
+    }
+  }, [startDate])
+  
   const validateFields = () => {
-    // Ne valider que si les 3 champs sont remplis
     if (!interventionDate || !startTime || !endTime) {
-      // Nettoyer les erreurs dans ce cas (pas de validation partielle)
       setErrors({});
       return false;
     }
@@ -99,11 +107,10 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
     setEndTime(value);
     validateFields();
   };
-  // Récupération de l'idAccount depuis le token
   const tokenData = useMemo(() => getUserDataFromToken(), []);
 
-  // Utilisation du hook useCreateSession
   const { mutateAsync: createSession } = useCreateSession();
+
   const handleCreate = async () => {
     if (!validateFields()) {
       enqueueSnackbar(
@@ -130,8 +137,6 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
     const isoStartDate = toParisISOStringV2Two(interventionDate, startTime);
     const isoEndDate = toParisISOStringV2Two(interventionDate, endTime);
 
-    console.log('isoStartDate : ' + isoStartDate);
-    console.log('isoEndDate : ' + isoEndDate);
     if (new Date(isoStartDate) >= new Date(isoEndDate)) {
       enqueueSnackbar(
         "La date/heure de début doit être antérieure à la date/heure de fin.",
@@ -149,20 +154,21 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
       }));
 
     const payload = {
-      idAccount: Number(tokenData.id),
+      idAccount:  Number(selectedAccountId || tokenData.id),
       idMission: Number(selectedMissions),
       startTime: isoStartDate,
       endTime: isoEndDate,
-      status: "ended", // ou le statut désiré
+      status: "ended",
       pauses: formattedPauses,
     };
     
     try {
-      // Appel à votre hook pour créer la session
       await createSession(payload);
       enqueueSnackbar("Session créée avec succès", "success");
-      onClose(); // Fermer le Drawer après la création
-      // Réinitialiser les champs
+      queryClient.invalidateQueries({
+        queryKey: ["workSessions"],
+      });
+      onClose();
       setInterventionDate("");
       setStartTime("");
       setEndTime("");
@@ -220,7 +226,6 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
     setPauses(updatedPauses);
   };
 
-  // MISSIONS
   const [viewMode, setViewMode] = useState<"timeGridDay" | "timeGridWeek">(
     "timeGridWeek"
   );
@@ -258,15 +263,6 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
     [viewMode, today]
   );
 
-  // Préparer les paramètres en dehors de l'effet
-  // const missionQueryParams = useMemo(
-  //   () => ({
-  //     accountId: tokenData.id,
-  //     from: calendarStartDate ?? defaultFrom,
-  //     to: calendarEndDate ?? defaultTo,
-  //   }),
-  //   [calendarStartDate, calendarEndDate, defaultFrom, defaultTo]
-  // );
   const missionQueryParams = useMemo(() => {
     // Construire la date/heure de début et de fin en utilisant les champs d'intervention
     const from = interventionDate && startTime 
@@ -278,14 +274,12 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
       : defaultTo;
 
     return {
-      accountId: tokenData.id,
+      accountId: selectedAccountId || tokenData!.id,
       from,
       to,
     };
   }, [calendarStartDate, calendarEndDate, interventionDate, startTime, endTime, defaultFrom, defaultTo]);
 
-  console.log('defaultFrom ' + defaultFrom);
-  console.log('missionQueryParams : ' + missionQueryParams.from);
 
   const { data: missions } = useGetMissionsByAccount(missionQueryParams);
 
@@ -313,7 +307,7 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
               label="Date d'intervention"
               type="date"
               fullWidth
-              value={interventionDate}
+              value={interventionDate }
               onChange={(e) => handleDateChange(e.target.value)}
               InputLabelProps={{ shrink: true }}
               error={errors.start}

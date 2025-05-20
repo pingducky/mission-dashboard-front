@@ -50,3 +50,41 @@ export const toParisISOStringV2Two = (date: string | Date, time: string): string
   return d.toISOString();
 };
 
+export const formatDateForInput = (dateStr: string) => {
+  const date = new Date(dateStr);
+  const offset = date.getTimezoneOffset();
+  const localDate = new Date(date.getTime() - offset * 60 * 1000);
+  return localDate.toISOString().slice(0, 16); // YYYY-MM-DDTHH:mm
+};
+
+const pad = (n: number): string => String(Math.floor(Math.abs(n))).padStart(2, '0');
+
+const getTimezoneOffset = (date: Date): string => {
+  const tzOffset = -date.getTimezoneOffset();
+  const sign = tzOffset >= 0 ? '+' : '-';
+  return sign + pad(Math.floor(tzOffset / 60)) + ':' + pad(Math.abs(tzOffset % 60));
+};
+
+export const toISOStringWithTimezone = (date: Date): string => {
+  return date.getFullYear() +
+    '-' + pad(date.getMonth() + 1) +
+    '-' + pad(date.getDate()) +
+    'T' + pad(date.getHours()) +
+    ':' + pad(date.getMinutes()) +
+    ':' + pad(date.getSeconds()) +
+    getTimezoneOffset(date);
+};
+
+export const formatTimeString = (date: string | Date) => {
+  console.log("formatTimeString date : ", date);
+  const d = (typeof date === 'string' && date.trim() === '') ? new Date() : new Date(date);
+
+  const returned = d.toLocaleTimeString('fr-FR', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  });
+
+  console.log("returned from formatTimeString", returned);
+  return returned;
+};
