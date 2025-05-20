@@ -18,6 +18,7 @@ import { CreateMissionPayload } from '../../hooks/useCreateMission';
 import { enqueueSnackbar } from '../../utils/snackbarUtils';
 import { EventImpl } from '@fullcalendar/core/internal';
 import styles from './AddMissionDrawer.module.scss';
+import { toISOStringWithTimezone } from '../../utils/dates';
 
 interface AddMissionDrawerProps {
   /**
@@ -136,24 +137,6 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
     };
     setErrors(newErrors);
     return Object.values(newErrors).every((error) => !error);
-  };
-
-  const pad = (n: number): string => String(Math.floor(Math.abs(n))).padStart(2, '0');
-
-  const getTimezoneOffset = (date: Date): string => {
-    const tzOffset = -date.getTimezoneOffset();
-    const sign = tzOffset >= 0 ? '+' : '-';
-    return sign + pad(Math.floor(tzOffset / 60)) + ':' + pad(Math.abs(tzOffset % 60));
-  };
-
-  const toISOStringWithTimezone = (date: Date): string => {
-    return date.getFullYear() +
-      '-' + pad(date.getMonth() + 1) +
-      '-' + pad(date.getDate()) +
-      'T' + pad(date.getHours()) +
-      ':' + pad(date.getMinutes()) +
-      ':' + pad(date.getSeconds()) +
-      getTimezoneOffset(date);
   };
 
   const handleCreate = () => {

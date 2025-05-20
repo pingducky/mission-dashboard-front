@@ -11,11 +11,12 @@ import IconButton from '../../components/layout/IconButton/IconButton';
 import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { getUserDataFromToken } from "../../utils/auth";
 import { useListEmployee } from "../../hooks/useGetAllEmployees";
-import { getWeekRange, toParisISOString, toParisISOStringV2 } from "../../utils/dates";
+import { formatDateForInput, getWeekRange, toParisISOString, toParisISOStringV2 } from "../../utils/dates";
 import { useGetWorkSessionsByAccount } from "../../hooks/useGetWorkSessionsByAccount";
 import { formatInTimeZone } from 'date-fns-tz';
 import { EventInput } from "@fullcalendar/core/index.js";
 import AddSessionDrawer from "../../components/AddSessionDrawer/AddSessionDrawer";
+import { enqueueSnackbar } from "../../utils/snackbarUtils";
 import styles from "./TimePointingCalendar.module.scss";
 
 interface WorkSessionEvent extends EventInput {
@@ -35,8 +36,8 @@ interface WorkSessionEvent extends EventInput {
      * Description
      */
     description?: string;
-  }
-  
+}
+
 const TimePointingCalendar: React.FC = () => {
     const [viewMode, setViewMode] = useState<'timeGridDay' | 'timeGridWeek'>('timeGridWeek');
     const [dateRange, setDateRange] = useState<string>('');
@@ -60,19 +61,19 @@ const TimePointingCalendar: React.FC = () => {
     const defaultFrom = viewMode === 'timeGridDay'
         ? today.toISOString()
         : getWeekRange(today).monday;
-      
-      const defaultTo = viewMode === 'timeGridDay'
+
+    const defaultTo = viewMode === 'timeGridDay'
         ? new Date(today.getTime() + 24 * 60 * 60 * 1000).toISOString()
         : getWeekRange(today).sunday;
-    
-      const workSessionQueryParams = {
+
+    const workSessionQueryParams = {
         accountId: selectedEmployee || tokenData!.id,
         from: calendarStartDate ?? defaultFrom,
         to: calendarEndDate ?? defaultTo,
-      };
-      
-      const { data: workSessions } = useGetWorkSessionsByAccount(workSessionQueryParams);
+    };
+    console.log("workSessionQueryParams : ", workSessionQueryParams)
 
+    const { data: workSessions } = useGetWorkSessionsByAccount(workSessionQueryParams);
     const handlePrev = () => {
         const calendarApi = calendarRef.current?.getApi();
         if (calendarApi) {
@@ -110,37 +111,63 @@ const TimePointingCalendar: React.FC = () => {
         return `${start.toLocaleDateString(locale, options)} – ${end.toLocaleDateString(locale, options)} ${end.getFullYear()}`;
     };
 
-      useEffect(() => {
+    useEffect(() => {
         const handleResize = () => {
-          const isMobile = window.innerWidth < 768;
-          setViewMode(isMobile ? 'timeGridDay' : 'timeGridWeek');
-          const calendarApi = calendarRef.current?.getApi();
-          if (calendarApi) {
-            calendarApi.changeView(isMobile ? 'timeGridDay' : 'timeGridWeek');
-          }
+            const isMobile = window.innerWidth < 768;
+            setViewMode(isMobile ? 'timeGridDay' : 'timeGridWeek');
+            const calendarApi = calendarRef.current?.getApi();
+            if (calendarApi) {
+                calendarApi.changeView(isMobile ? 'timeGridDay' : 'timeGridWeek');
+            }
         };
-      
+
         handleResize();
-      
+
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
-      }, []);
+    }, []);
 
     useEffect(() => {
         const date = new Date();
         const parisDateNow = formatInTimeZone(date, 'Europe/Paris', 'yyyy-MM-dd HH:mm:ss');
 
-    if (workSessions) {
-        const transformedEvents: WorkSessionEvent[] = workSessions.map((workSession) => ({
-        id: workSession.id.toString(),
-        title: 'Session de travail',
-        start: toParisISOString(workSession.startTime),
-        end: workSession.endTime ? toParisISOString(workSession.endTime) : toParisISOStringV2(parisDateNow),
-        isOngoing: !workSession.endTime
-        }));
-        setEvents(transformedEvents);
-    }
+        if (workSessions) {
+            const transformedEvents: WorkSessionEvent[] = workSessions.map((workSession) => ({
+                id: workSession.id.toString(),
+                title: 'Session de travail',
+                start: toParisISOString(workSession.startTime),
+                end: workSession.endTime ? toParisISOString(workSession.endTime) : toParisISOStringV2(parisDateNow),
+                isOngoing: !workSession.endTime
+            }));
+            setEvents(transformedEvents);
+        }
     }, [workSessions]);
+
+    const handleDateSelect = (selectInfo: { startStr: string; endStr: string }) => {
+        const selectedStart = new Date(selectInfo.startStr);
+        const selectedEnd = new Date(selectInfo.endStr);
+
+        const isConflict = events.some(event => {
+            const eventStart = new Date(event.start as string);
+            const eventEnd = new Date(event.end as string);
+
+            return (
+                (selectedStart < eventEnd && selectedEnd > eventStart)
+            );
+        });
+
+        if (isConflict) {
+            enqueueSnackbar('Une mission existe déjà dans cette plage horaire.', 'error')
+            return;
+        }
+
+        setNewEvent({
+            title: '',
+            start: formatDateForInput(selectInfo.startStr),
+            end: formatDateForInput(selectInfo.endStr),
+        });
+        setOpenDialog(true);
+    };
 
 
     return (
@@ -197,17 +224,16 @@ const TimePointingCalendar: React.FC = () => {
                                             }
                                         </Select>
                                     </FormControl>
-
-                                    <IconButton
-                                        text="Enregistrer une session de travail"
-                                        variant="filled"
-                                        isRounded={false}
-                                        startIcon={<AddIcon />}
-                                        onClick={() => setOpenDialog(true)}
-                                    />
                                 </>
                             )
                         }
+                        <IconButton
+                            text="Enregistrer une session de travail"
+                            variant="filled"
+                            isRounded={false}
+                            startIcon={<AddIcon />}
+                            onClick={() => setOpenDialog(true)}
+                        />
                     </div>
                 </div>
             </div>
@@ -226,7 +252,7 @@ const TimePointingCalendar: React.FC = () => {
                     events={events}
                     editable={true}
                     selectable={tokenData?.isAdmin || false}
-                    // select={handleDateSelect}
+                    select={handleDateSelect}
                     nowIndicator={true}
                     slotMinTime="08:00:00"
                     timeZone="Europe/Paris"
@@ -256,6 +282,7 @@ const TimePointingCalendar: React.FC = () => {
                 isOpen={openDialog}
                 startDate={newEvent.start}
                 endDate={newEvent.end}
+                selectedAccountId={selectedEmployee}
                 onClose={() => setOpenDialog(false)}
             />
         </div>
