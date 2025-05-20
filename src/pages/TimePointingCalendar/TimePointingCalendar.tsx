@@ -16,8 +16,8 @@ import { useGetWorkSessionsByAccount } from "../../hooks/useGetWorkSessionsByAcc
 import { formatInTimeZone } from 'date-fns-tz';
 import { EventInput } from "@fullcalendar/core/index.js";
 import AddSessionDrawer from "../../components/AddSessionDrawer/AddSessionDrawer";
-import styles from "./TimePointingCalendar.module.scss";
 import { enqueueSnackbar } from "../../utils/snackbarUtils";
+import styles from "./TimePointingCalendar.module.scss";
 
 interface WorkSessionEvent extends EventInput {
     /**

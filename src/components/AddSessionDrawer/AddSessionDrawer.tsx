@@ -55,8 +55,6 @@ const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
   const [errors, setErrors] = useState<{ [key: string]: boolean }>({});
   const queryClient = useQueryClient();
 
-  console.log("selectedAccountId : ", selectedAccountId);
-
   useEffect(() => {
     if (isOpen) setErrors({});
   }, [isOpen]);

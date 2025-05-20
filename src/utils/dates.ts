@@ -76,15 +76,11 @@ export const toISOStringWithTimezone = (date: Date): string => {
 };
 
 export const formatTimeString = (date: string | Date) => {
-  console.log("formatTimeString date : ", date);
   const d = (typeof date === 'string' && date.trim() === '') ? new Date() : new Date(date);
 
-  const returned = d.toLocaleTimeString('fr-FR', {
+  return d.toLocaleTimeString('fr-FR', {
     hour: '2-digit',
     minute: '2-digit',
     hour12: false
   });
-
-  console.log("returned from formatTimeString", returned);
-  return returned;
 };
