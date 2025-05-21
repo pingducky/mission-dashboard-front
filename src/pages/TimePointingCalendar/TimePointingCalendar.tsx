@@ -71,7 +71,6 @@ const TimePointingCalendar: React.FC = () => {
         from: calendarStartDate ?? defaultFrom,
         to: calendarEndDate ?? defaultTo,
     };
-    console.log("workSessionQueryParams : ", workSessionQueryParams)
 
     const { data: workSessions } = useGetWorkSessionsByAccount(workSessionQueryParams);
     const handlePrev = () => {
@@ -130,13 +129,12 @@ const TimePointingCalendar: React.FC = () => {
     useEffect(() => {
         const date = new Date();
         const parisDateNow = formatInTimeZone(date, 'Europe/Paris', 'yyyy-MM-dd HH:mm:ss');
-
         if (workSessions) {
             const transformedEvents: WorkSessionEvent[] = workSessions.map((workSession) => ({
                 id: workSession.id.toString(),
                 title: 'Session de travail',
-                start: toParisISOString(workSession.startTime),
-                end: workSession.endTime ? toParisISOString(workSession.endTime) : toParisISOStringV2(parisDateNow),
+                start: toParisISOStringV2(workSession.startTime),
+                end: workSession.endTime ? toParisISOStringV2(workSession.endTime) : toParisISOStringV2(parisDateNow),
                 isOngoing: !workSession.endTime
             }));
             setEvents(transformedEvents);
