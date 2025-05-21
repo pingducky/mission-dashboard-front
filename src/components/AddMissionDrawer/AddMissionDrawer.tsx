@@ -18,9 +18,9 @@ import { CreateMissionPayload } from '../../hooks/useCreateMission';
 import { enqueueSnackbar } from '../../utils/snackbarUtils';
 import { EventImpl } from '@fullcalendar/core/internal';
 import { Mission } from '../../hooks/useGetMissionsByAccount';
-import styles from './AddMissionDrawer.module.scss';
 import { User } from '../../hooks/useUserData';
 import { toParisISOString } from '../../utils/dates';
+import styles from './AddMissionDrawer.module.scss';
 
 interface AddMissionDrawerProps {
   /**
