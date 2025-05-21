@@ -45,7 +45,7 @@ export const toParisISOStringV2Two = (date: string | Date, time: string): string
   d.setHours(hours, minutes, 0, 0);
 
   // Appliquer le décalage de -120 minutes (2 heures)
-  d.setMinutes(d.getMinutes() + 120);
+  d.setMinutes(d.getMinutes());
 
   return d.toISOString();
 };
