@@ -20,7 +20,7 @@ import { CreateMissionPayload, useCreateMission } from '../../hooks/useCreateMis
 import { useQueryClient } from '@tanstack/react-query';
 import { useListEmployee } from '../../hooks/useGetAllEmployees';
 import { EventImpl } from '@fullcalendar/core/internal';
-import { formatDateForInput, getWeekRange, toParisISOString } from '../../utils/dates';
+import { formatDateForInput, getWeekRange, toParisISOString, toParisISOStringV2 } from '../../utils/dates';
 import styles from './PlanningPage.module.scss';
 
 interface MissionEvent extends EventInput {
@@ -132,8 +132,8 @@ const PlanningPage: React.FC = () => {
       const transformedEvents: MissionEvent[] = missions.map((mission) => ({
         id: mission.id.toString(),
         title: mission.missionType?.longLibel || 'Mission',
-        start: toParisISOString(mission.timeBegin),
-        end: toParisISOString(mission.estimatedEnd),
+        start: toParisISOStringV2(mission.timeBegin),
+        end: toParisISOStringV2(mission.estimatedEnd),
         adresse: mission.address,
         categorie: mission.missionType?.id.toString(),
         city: mission.city,
