@@ -8,13 +8,10 @@ import { safeDate } from '../../utils/dates';
 import TablePagination from '@mui/material/TablePagination';
 import { ActionButtons } from '../../components/ActionButtons/ActionButtons';
 import FilterMissions from './FilterMissions/FilterMissions';
+import AddMissionDrawer from '../../components/AddMissionDrawer/AddMissionDrawer';
 import style from './MissionsPage.module.scss'
 
 interface MisionsPageProps {
-    /**
-     * Fonction de navigation
-     */
-    handleNavigation: (page: string, label: string, id?: string) => void;
     /**
      * Id de l'utilisateur connecté
      */
@@ -22,9 +19,10 @@ interface MisionsPageProps {
 }
 
 export const MissionsPage: React.FC<MisionsPageProps> = ({
-    handleNavigation,
     userId,
 }) => {
+    const [selectedMission, setSelectedMission] = React.useState<Mission|null>(null);
+    const [isOpen, setOpen] = React.useState<boolean>(false);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(15);
     const [filter, setFilter] = React.useState<MissionFilter>("all");
@@ -98,7 +96,13 @@ export const MissionsPage: React.FC<MisionsPageProps> = ({
     const missions = missionsData?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
         .map((mission: Mission) => {
         return (
-            <tr key={mission.id} onClick={() => handleNavigation('missionDetail', mission.description, mission.id.toString())}>
+            <tr 
+                key={mission.id} 
+                onClick={() => {
+                    setSelectedMission(mission);
+                    setOpen(true);
+                }}
+            >
                 <th scope="row">{mission.description}</th>
                 <td>{mission.address}</td>
                 <td>{getMissionDates(mission)}</td>
@@ -113,6 +117,12 @@ export const MissionsPage: React.FC<MisionsPageProps> = ({
         <>
             <FilterMissions
                 setFilter={setFilter}
+            />
+            <AddMissionDrawer
+                isOpen={isOpen}
+                mission={selectedMission}
+                onCreate={() => {}}
+                onClose={() => {setOpen(false)}}
             />
             <div className={style.missionsContainer}>
                 <table className={style.MissionsList}>

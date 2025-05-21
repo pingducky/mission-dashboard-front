@@ -17,7 +17,10 @@ import MissionTypeColor from '../../pages/PlanningPage/MissionType/MissionType';
 import { CreateMissionPayload } from '../../hooks/useCreateMission';
 import { enqueueSnackbar } from '../../utils/snackbarUtils';
 import { EventImpl } from '@fullcalendar/core/internal';
+import { Mission } from '../../hooks/useGetMissionsByAccount';
 import styles from './AddMissionDrawer.module.scss';
+import { User } from '../../hooks/useUserData';
+import { toParisISOString } from '../../utils/dates';
 
 interface AddMissionDrawerProps {
   /**
@@ -52,7 +55,7 @@ interface AddMissionDrawerProps {
   /**
    * Mission correspondant à l'évènement
    */
-  mission: EventImpl | null;
+  mission: EventImpl | Mission | null;
   /**
    * Evènement à la création d'une mission
    */
@@ -87,6 +90,14 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
   const [details, setDetails] = React.useState('');
 
   const [errors, setErrors] = React.useState<{ [key: string]: boolean }>({});
+
+  const [missionData, setMissionData] = React.useState<MissionDrawer|null>(null);
+  
+  type MissionDrawer = Mission & {
+    assignedEmployees: string[]
+    start: Date | null;
+    end: Date  | null;
+  }
 
   const countryList = [
     { code: 'FR', name: 'France' },
@@ -194,6 +205,31 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
     setSelectedMissionType('');
     setErrors({});
   };
+  console.log(!mission, mission)
+
+  useEffect(() => {
+    if(mission instanceof EventImpl) {
+      setMissionData({
+        "id": +mission._def.publicId!,
+        "description": mission.extendedProps.description!,
+        "start": mission.start,
+        "end": mission.end,
+        "address": mission.extendedProps.addresse,
+        "city": mission.extendedProps.city,
+        "postalCode": mission.extendedProps.postalCode,
+        "countryCode": mission.extendedProps.countryCode,
+        "idMissionType": +mission.extendedProps.categorie,
+        "assignedEmployees": mission.extendedProps.employees ?? [],
+      } as MissionDrawer)
+    } else if (typeof mission === "object") {
+      setMissionData({
+        ...mission,
+        "assignedEmployees": mission?.assignedUsers.map((user: User) => {
+          return user.id.toString();
+        }) ?? []
+      } as MissionDrawer);
+    }
+  }, [mission]);
 
   return (
     <Drawer anchor="right" open={isOpen} onClose={onClose}>
@@ -207,17 +243,17 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
               label="Date de début"
               type="datetime-local"
               fullWidth
-              value={!mission ? start : new Date((mission.start ?? '')).toISOString().slice(0, 16)}
+              value={!missionData?.start ? start : toParisISOString(missionData?.start ?? '').slice(0, 16)}
               onChange={(e) => setStart(e.target.value)}
               InputLabelProps={{ shrink: true }}
               error={errors.start}
-              disabled={!!mission}
+              disabled={!!missionData}
             />
             <TextField
               label="Date de fin estimé"
               type="datetime-local"
               fullWidth
-              value={!mission ? end : new Date((mission.end ?? '')).toISOString().slice(0, 16)}
+              value={!missionData?.end ? end : new Date((missionData?.end ?? '')).toISOString().slice(0, 16)}
               onChange={(e) => setEnd(e.target.value)}
               InputLabelProps={{ shrink: true }}
               error={errors.end}
@@ -230,7 +266,7 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
               <InputLabel id="mission-type-label">Type de mission</InputLabel>
               <Select
                 labelId="mission-type-label"
-                value={!mission ? selectedMissionType : mission.extendedProps.categorie}
+                value={!mission ? selectedMissionType : missionData?.idMissionType}
                 onChange={handleMissionTypeChange}
                 input={<OutlinedInput label="Type de mission" />}
                 disabled={!!mission}
@@ -279,7 +315,7 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
             <TextField
               label="Adresse"
               fullWidth
-              value={!mission ? address : mission.extendedProps.adresse}
+              value={!mission ? address : missionData?.address}
               onChange={(e) => setAddress(e.target.value)}
               error={errors.address}
               disabled={!!mission}
@@ -287,7 +323,7 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
             <TextField
               label="Ville"
               fullWidth
-              value={!mission ? city : mission.extendedProps.city}
+              value={!mission ? city : missionData?.city}
               onChange={(e) => setCity(e.target.value)}
               error={errors.city}
               disabled={!!mission}
@@ -298,7 +334,7 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
               label="Code postal"
               type="number"
               fullWidth
-              value={!mission ? postalCode : mission.extendedProps.postalCode}
+              value={!mission ? postalCode : missionData?.postalCode}
               onChange={(e) => setPostalCode(e.target.value)}
               error={errors.postalCode}
               disabled={!!mission}
@@ -306,8 +342,8 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
             <Select
               labelId="country-select-label"
               id="country-select"
-              value={!mission ? countryCode : mission.extendedProps.countryCode}
-              onChange={(e) => setCountryCode(e.target.value)}
+              value={!mission ? countryCode : missionData?.countryCode}
+              onChange={(e) => setCountryCode(e.target.value ?? "")}
               fullWidth
               disabled={!!mission}
             >
@@ -327,7 +363,7 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
             multiline
             minRows={5}
             fullWidth
-            value={!mission ? details : mission.extendedProps.description}
+            value={!mission ? details : missionData?.description}
             onChange={(e) => setDetails(e.target.value)}
             placeholder="Ajoutez des détails ici..."
             disabled={!!mission}
@@ -340,7 +376,7 @@ const AddMissionDrawer: React.FC<AddMissionDrawerProps> = ({
             <InputLabel>Salariés</InputLabel>
             <Select
               multiple
-              value={!mission ? selectedEmployees : mission.extendedProps.employees}
+              value={(!mission ? selectedEmployees : missionData?.assignedEmployees) ?? []}
               onChange={handleSelectChange}
               input={<OutlinedInput label="Salariés" />}
               renderValue={(selected) =>
