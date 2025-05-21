@@ -20,7 +20,7 @@ import { CreateMissionPayload, useCreateMission } from '../../hooks/useCreateMis
 import { useQueryClient } from '@tanstack/react-query';
 import { useListEmployee } from '../../hooks/useGetAllEmployees';
 import { EventImpl } from '@fullcalendar/core/internal';
-import { formatDateForInput, getWeekRange, toParisISOString, toParisISOStringV2 } from '../../utils/dates';
+import { formatDateForInput, getWeekRange, toParisISOStringV2 } from '../../utils/dates';
 import styles from './PlanningPage.module.scss';
 
 interface MissionEvent extends EventInput {

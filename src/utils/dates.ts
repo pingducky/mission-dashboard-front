@@ -1,3 +1,5 @@
+import { DateTime } from "luxon";
+
 export const safeDate = (dateString?: string): Date | undefined => {
   if (!dateString) return undefined;
   const date = new Date(dateString);
@@ -34,27 +36,23 @@ export const toParisISOStringV2 = (date: string | Date) => {
   return d.toISOString();
 };
 
-export const toParisISOStringV2Two = (date: string | Date, time: string): string => {
-  // Convertir la date en objet Date si c'est une chaîne
-  const d = new Date(date);
-
-  // Extraire les heures et les minutes à partir du paramètre time
+export const  toParisISOStringV2Two = (date: string | Date, time: string): string => {
   const [hours, minutes] = time.split(":").map(Number);
 
-  // Ajouter l'heure et les minutes à la date
-  d.setHours(hours, minutes, 0, 0);
+  const parisTime = DateTime.fromISO(
+    typeof date === "string" ? date : date.toISOString(),
+    { zone: "Europe/Paris" }
+  ).set({ hour: hours, minute: minutes, second: 0, millisecond: 0 });
 
-  // Appliquer le décalage de -120 minutes (2 heures)
-  d.setMinutes(d.getMinutes() + 120);
+  return parisTime.toUTC().toISO()!;
 
-  return d.toISOString();
 };
 
 export const formatDateForInput = (dateStr: string) => {
   const date = new Date(dateStr);
   const offset = date.getTimezoneOffset();
   const localDate = new Date(date.getTime() - offset * 60 * 1000);
-  return localDate.toISOString().slice(0, 16); // YYYY-MM-DDTHH:mm
+  return localDate.toISOString().slice(0, 16); 
 };
 
 const pad = (n: number): string => String(Math.floor(Math.abs(n))).padStart(2, '0');
