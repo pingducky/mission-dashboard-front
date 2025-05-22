@@ -471,30 +471,15 @@ import { getUserDataFromToken } from "../../utils/auth";
 import { useCreateSession } from "../../hooks/useCreateSession";
 import { enqueueSnackbar } from "../../utils/snackbarUtils";
 import { toISOStringWithTimezone, toParisISOStringV2Two } from "../../utils/dates";
-import { useQueryClient } from "@tanstack/react-query";
 import styles from "./AddSessionDrawer.module.scss";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface AddSessionDrawerProps {
-  /**
-   * Ouverture drawer
-   */
   isOpen: boolean;
-  /**
-   * Temporalité de début
-   */
   startDate?: string;
-  /**
-   * Temporalité de fin
-   */
   endDate?: string;
-  /**
-   * Compte sélectionné
-   */
-  selectedAccountId?: string,
-  /**
-   * Evènement lors de la fermeture
-   */
   onClose: () => void;
+  selectedAccountId?: string,
 }
 
 const AddSessionDrawer: React.FC<AddSessionDrawerProps> = ({
